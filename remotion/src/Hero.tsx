@@ -577,14 +577,12 @@ export const Hero: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
   const TL = mobile ? T_MOBILE : T;
   const frame = useCurrentFrame();
   const {fps, width: W, height: H} = useVideoConfig();
-  const isPortrait = H > W;
-
-  /* format-aware layout */
-  const cardW = isPortrait ? 900 : 780;
+  /* format-aware layout: mobile is a tight square cut */
+  const cardW = mobile ? 900 : 780;
   const cardH = 586;
   const cardX = (W - cardW) / 2;
-  const cardY = isPortrait ? (H - cardH) / 2 - 70 : 252;
-  const zoomTarget = isPortrait ? (W * 0.97) / cardW : 1.78;
+  const cardY = mobile ? (H - cardH) / 2 - 16 : 252;
+  const zoomTarget = mobile ? (W * 0.97) / cardW : 1.78;
   const originX = W / 2;
   const originY = cardY + cardH / 2;
 
