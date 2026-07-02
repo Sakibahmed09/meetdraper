@@ -7,6 +7,7 @@
 <meta name="description" content="Draper is your LinkedIn content strategist. It drafts, schedules and posts for you, in your voice, and texts you first when your meetings are hiding a good post.">
 <link rel="preload" as="image" href="assets/hero-demo-poster.jpg" media="(min-width: 641px)">
 <link rel="preload" as="image" href="assets/hero-demo-poster-portrait.jpg" media="(max-width: 640px)">
+<link rel="preload" as="image" href="assets/hero-coast.jpg">
 <link rel="icon" href="assets/app-icon.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -410,10 +411,12 @@ footer{position:relative;padding:40px 20px 0}
     <div class="hero-video pl" style="--d:.6s">
       <video id="heroFilm" autoplay muted loop playsinline preload="auto"></video>
       <script>
-        /* start the film download during parse, not after page scripts */
+        /* start the film download during parse, not after page scripts;
+           reserve the box immediately so nothing below jumps when metadata lands */
         (function(){
           var v=document.getElementById('heroFilm');
           var p=matchMedia('(max-width:640px)').matches;
+          v.style.aspectRatio=p?'4 / 5':'4 / 3';
           v.poster=p?'assets/hero-demo-poster-portrait.jpg':'assets/hero-demo-poster.jpg';
           v.src=p?'assets/hero-demo-portrait.mp4':'assets/hero-demo.mp4';
         })();
@@ -446,7 +449,7 @@ footer{position:relative;padding:40px 20px 0}
   <!-- (2) arcs -->
   <section class="feature" id="arcs">
     <div class="visual vis-first" data-reveal>
-      <img class="bgimg" src="assets/sky-card.jpg" alt="">
+      <img class="bgimg" loading="lazy" src="assets/sky-card.jpg" alt="">
       <div class="fan" id="fan">
         <div class="recipe-card">
           <div class="rlogo"><img src="assets/icons/linkedin_com.png" alt=""></div>
@@ -488,12 +491,12 @@ footer{position:relative;padding:40px 20px 0}
       <p>Send a voice note between meetings. Draper writes it like you, books the slot and shows you before it goes</p>
     </div>
     <div class="visual" data-reveal style="--d:.12s">
-      <img class="bgimg" src="assets/sky-card.jpg" alt="" style="opacity:.8">
+      <img class="bgimg" loading="lazy" src="assets/sky-card.jpg" alt="" style="opacity:.8">
       <div class="phone-wrap">
         <div class="phone">
           <div class="island"></div>
           <div class="screen">
-            <img class="wall" src="assets/sky-card.jpg" alt="">
+            <img class="wall" loading="lazy" src="assets/sky-card.jpg" alt="">
             <div class="thread" id="thread">
               <div class="bubble in">your post is live. 40 comments before lunch, three from investors</div>
               <div class="bubble out">nice. line up the follow up</div>
@@ -517,7 +520,7 @@ footer{position:relative;padding:40px 20px 0}
   <!-- (4) meeting mining -->
   <section class="feature">
     <div class="visual vis-first" data-reveal>
-      <img class="bgimg" src="assets/sunset-sky.jpg" alt="" style="opacity:.75">
+      <img class="bgimg" loading="lazy" src="assets/sunset-sky.jpg" alt="" style="opacity:.75">
       <div class="cgrid-wrap">
         <div class="cgrid">
           <div class="cperson"><div class="pav"><img src="assets/av1.jpg" alt=""></div><span class="pname">Ronnie</span></div>
@@ -550,7 +553,7 @@ footer{position:relative;padding:40px 20px 0}
       </a>
     </div>
     <div class="visual" data-reveal style="--d:.12s">
-      <img class="bgimg" src="assets/sky-card.jpg" alt="">
+      <img class="bgimg" loading="lazy" src="assets/sky-card.jpg" alt="">
       <div class="kitchen">
         <div class="kpanel">
           <div class="kin"><span id="ktext"></span><span class="caret"></span></div>

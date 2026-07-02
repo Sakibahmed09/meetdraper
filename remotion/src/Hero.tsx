@@ -67,7 +67,7 @@ const pop = (frame: number, at: number, fps: number): React.CSSProperties =>
   frame < at
     ? {opacity: 0, transform: 'scale(0.7) translateY(12px)'}
     : (() => {
-        const s = spring({frame: frame - at, fps, config: {damping: 13, stiffness: 140, mass: 0.9}});
+        const s = spring({frame: frame - at, fps, config: {damping: 15, stiffness: 130, mass: 0.9}});
         return {
           opacity: Math.min(1, s * 1.4),
           transform: `scale(${0.7 + 0.3 * s}) translateY(${12 * (1 - s)}px)`,
@@ -399,10 +399,10 @@ const ResultsCard: React.FC<{frame: number; anim: React.CSSProperties; bottom: n
   );
 };
 
-/* ---------- iOS keyboard with suggestion strip ---------- */
+/* ---------- iOS keyboard with suggestion strip (total height = KB_H, flush under compose) ---------- */
+export const KB_H = 290;
 const KEY_ROWS = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
 const Keyboard: React.FC<{progress: number; width: number}> = ({progress, width}) => {
-  const H = 336;
   return (
     <div
       style={{
@@ -410,15 +410,15 @@ const Keyboard: React.FC<{progress: number; width: number}> = ({progress, width}
         left: 0,
         right: 0,
         bottom: 0,
-        height: H,
+        height: KB_H,
         background: '#D6D9DE',
-        transform: `translateY(${(1 - progress) * (H + 30)}px)`,
-        padding: '0 10px 14px',
+        transform: `translateY(${(1 - progress) * (KB_H + 30)}px)`,
+        padding: '6px 10px 0',
         borderBottomLeftRadius: 44,
         borderBottomRightRadius: 44,
       }}
     >
-      <div style={{display: 'flex', alignItems: 'stretch', height: 52, marginBottom: 8}}>
+      <div style={{display: 'flex', alignItems: 'stretch', height: 42, marginBottom: 8}}>
         {['"instead"', 'monday', 'tuesday'].map((s, i) => (
           <div
             key={s}
@@ -427,7 +427,7 @@ const Keyboard: React.FC<{progress: number; width: number}> = ({progress, width}
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: 19,
+              fontSize: 18,
               fontWeight: i === 1 ? 600 : 400,
               color: '#1b1b1d',
               borderRight: i < 2 ? '1px solid rgba(0,0,0,0.12)' : 'none',
@@ -438,20 +438,20 @@ const Keyboard: React.FC<{progress: number; width: number}> = ({progress, width}
         ))}
       </div>
       {KEY_ROWS.map((row, ri) => (
-        <div key={ri} style={{display: 'flex', justifyContent: 'center', gap: 9, marginBottom: 12}}>
+        <div key={ri} style={{display: 'flex', justifyContent: 'center', gap: 9, marginBottom: 9}}>
           {row.split('').map((k) => (
             <div
               key={k}
               style={{
                 width: (width - 20 - 9 * 9) / 10,
-                height: 56,
+                height: 46,
                 background: '#FEFEFE',
-                borderRadius: 8,
+                borderRadius: 7,
                 boxShadow: '0 1px 0 rgba(0,0,0,0.28)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: 24,
+                fontSize: 22,
                 color: '#1b1b1d',
               }}
             >
@@ -464,14 +464,14 @@ const Keyboard: React.FC<{progress: number; width: number}> = ({progress, width}
         <div
           style={{
             width: width * 0.5,
-            height: 56,
+            height: 46,
             background: '#FEFEFE',
-            borderRadius: 8,
+            borderRadius: 7,
             boxShadow: '0 1px 0 rgba(0,0,0,0.28)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: 17,
+            fontSize: 16,
             color: 'rgba(27,27,29,0.55)',
           }}
         >
@@ -550,17 +550,24 @@ export const Hero: React.FC = () => {
   const originX = W / 2;
   const originY = cardY + cardH / 2;
 
-  /* ambient drift — period divides duration so frame 0 == frame 1200 */
+  /* ambient drift — periods divide duration so frame 0 == frame 1200 */
   const drift = Math.sin((frame / 600) * Math.PI * 2);
   const driftY = drift * 5;
+  const driftX = Math.sin((frame / 400) * Math.PI * 2) * 3;
 
-  /* camera */
-  const pushIn = interpolate(frame, [T.pushStart, T.pushEnd], [0, 1], {...clamp, easing: easePage});
-  const pullOut = interpolate(frame, [T.pullStart, T.pullEnd], [0, 1], {...clamp, easing: easePage});
-  const creep = interpolate(frame, [T.pushEnd, T.pullStart], [0, 0.05], clamp);
-  const zoomed = 1 + pushIn * (zoomTarget - 1) - creep * pushIn;
-  const camScale = zoomed + (1 - zoomed) * pullOut;
-  const cam = camScale * (1 + 0.004 * drift);
+  /* camera — scale expressed as a pure function of frame so we can
+     derive per-frame velocity for a filmic motion-blur pass */
+  const camOf = (f: number) => {
+    const pushIn = interpolate(f, [T.pushStart, T.pushEnd], [0, 1], {...clamp, easing: easePage});
+    const pullOut = interpolate(f, [T.pullStart, T.pullEnd], [0, 1], {...clamp, easing: easePage});
+    const creep = interpolate(f, [T.pushEnd, T.pullStart], [0, 0.05], clamp);
+    const zoomed = 1 + pushIn * (zoomTarget - 1) - creep * pushIn;
+    const d = Math.sin((f / 600) * Math.PI * 2);
+    return (zoomed + (1 - zoomed) * pullOut) * (1 + 0.004 * d);
+  };
+  const cam = camOf(frame);
+  const camVel = Math.abs(camOf(frame) - camOf(frame - 1));
+  const motionBlur = Math.min(2.4, camVel * 90);
 
   /* face crossfades */
   const toChat = interpolate(frame, [T.swapStart, T.swapEnd], [0, 1], {...clamp, easing: easePage});
@@ -568,9 +575,10 @@ export const Hero: React.FC = () => {
   const chatOp = toChat * (1 - toContact);
   const contactOp = 1 - chatOp;
 
-  /* keyboard */
-  const kbUp = frame < T.kbUp ? 0 : spring({frame: frame - T.kbUp, fps, config: {damping: 17, stiffness: 120}});
-  const kbDown = frame < T.kbDown + 26 ? 0 : spring({frame: frame - (T.kbDown + 26), fps, config: {damping: 17, stiffness: 120}});
+  /* keyboard — dismisses shortly after send, soft weighty slide */
+  const kbUp = frame < T.kbUp ? 0 : spring({frame: frame - T.kbUp, fps, config: {damping: 18, stiffness: 110}});
+  const kbDismiss = T.send + 12;
+  const kbDown = frame < kbDismiss ? 0 : spring({frame: frame - kbDismiss, fps, config: {damping: 18, stiffness: 110}});
   const kb = Math.max(0, kbUp - kbDown);
 
   /* compose typing */
@@ -594,7 +602,7 @@ export const Hero: React.FC = () => {
     {key: 'results', at: T.results, h: 262},
     {key: 'm10', at: T.m10, h: 96},
   ];
-  const kbLift = kb * 290;
+  const kbLift = kb * KB_H;
   const base = 108 + kbLift;
   const bottoms: Record<string, number> = {};
   STACK.forEach((m, i) => {
@@ -607,7 +615,13 @@ export const Hero: React.FC = () => {
 
   return (
     <AbsoluteFill style={{background: BG, fontFamily: DM}}>
-      <AbsoluteFill style={{transform: `scale(${cam}) translateY(${driftY}px)`, transformOrigin: `${originX}px ${originY}px`}}>
+      <AbsoluteFill
+        style={{
+          transform: `scale(${cam}) translate(${driftX}px, ${driftY}px)`,
+          transformOrigin: `${originX}px ${originY}px`,
+          filter: motionBlur > 0.08 ? `blur(${motionBlur.toFixed(2)}px)` : undefined,
+        }}
+      >
         {/* side contacts */}
         <SideCard x={cardX - cardW - 120} y={cardY + 10} w={cardW} img={staticFile('memoji-man.jpg')} name="Mustafa" drift={drift * 8} />
         <SideCard x={cardX + cardW + 120} y={cardY + 10} w={cardW} img={staticFile('memoji-woman.jpg')} name="Maryam" drift={drift * -8} />
@@ -629,7 +643,14 @@ export const Hero: React.FC = () => {
           <ContactFace opacity={contactOp} scale={1 + toChat * 0.04 - toContact * 0.04} />
 
           {/* chat face */}
-          <div style={{position: 'absolute', inset: 0, opacity: chatOp, transform: `scale(${0.985 + 0.015 * chatOp})`}}>
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              opacity: chatOp,
+              transform: `scale(${0.985 + 0.015 * chatOp}) translateY(${8 * (1 - chatOp)}px)`,
+            }}
+          >
             {/* header */}
             <div
               style={{
@@ -695,7 +716,7 @@ export const Hero: React.FC = () => {
                 position: 'absolute',
                 left: 0,
                 right: 0,
-                bottom: kb * 290,
+                bottom: kb * KB_H,
                 height: 96,
                 display: 'flex',
                 alignItems: 'center',
