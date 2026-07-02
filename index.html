@@ -811,6 +811,13 @@ wform.addEventListener('submit',e=>{
   if(!email)return;
   try{localStorage.setItem('draper-waitlist',JSON.stringify({email,at:new Date().toISOString()}))}catch(_){}
   wsection.classList.add('done');
+  /* capture to Kit (form: draper.kit.com). FormData POST is a simple request,
+     so it reaches Kit even if CORS blocks reading the response. */
+  try{
+    const fd=new FormData();
+    fd.append('email_address',email);
+    fetch('https://app.kit.com/forms/9636875/subscriptions',{method:'POST',body:fd,headers:{'Accept':'application/json'}}).catch(()=>{});
+  }catch(_){}
 });
 try{if(localStorage.getItem('draper-waitlist'))wsection.classList.add('done')}catch(_){}
 
