@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
+<title>Draper – Your content strategist</title>
+<meta name="description" content="Draper is your personal content strategist. It drafts, schedules and posts for you, and texts you first when your meetings are hiding a good post.">
+<link rel="icon" href="assets/app-icon.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=DM+Sans:opsz,wght@9..40,400..700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+/* ============ tokens ============ */
+:root{
+  --cream:#EEEBE6;
+  --ink:#1A1F2B;
+  --black:#111110;
+  --muted:rgba(20,22,28,.44);
+  --muted-2:rgba(20,22,28,.62);
+  --hairline:rgba(20,20,15,.10);
+  --blue-link:#5C82C9;
+  --imsg-blue:#0A84FF;
+  --imsg-grey:#E9E9EB;
+  --sans:'DM Sans',Inter,Helvetica,system-ui,sans-serif;
+  --serif:'Fraunces',Georgia,'Times New Roman',serif;
+  --wordmark:'Playfair Display',Georgia,'Times New Roman',serif;
+  --spring:cubic-bezier(.34,1.45,.64,1);
+  --easeout:cubic-bezier(.22,1,.36,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--cream);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizelegibility;
+  overflow-x:hidden;
+}
+::selection{background:rgba(26,31,43,.9);color:#EEEBE6}
+img{user-select:none}
+h1,h2,h3{font-family:var(--serif);font-weight:600;color:var(--black)}
+
+/* ============ shared bits ============ */
+.serif-h{letter-spacing:-.028em;line-height:1.15}
+.btn-dark{
+  display:inline-flex;align-items:center;justify-content:center;
+  height:48px;padding:0 40px;border:none;cursor:pointer;text-decoration:none;
+  font-family:var(--sans);font-size:16px;font-weight:500;color:#fff;
+  border-radius:16px;
+  background:linear-gradient(#3A3A3A 0%,#3A3A3A 52.4%,#2C2C2C 80.29%,#1F1F1F 100%);
+  box-shadow:0 .5px 1px rgba(0,0,0,.08),0 1px 3px rgba(0,0,0,.1),0 4px 12px rgba(0,0,0,.08),inset 0 0 0 1.25px #353535,inset 0 0 12px rgba(255,255,255,.1);
+  transition:transform .25s var(--easeout),filter .25s var(--easeout);
+}
+.btn-dark:hover{filter:brightness(1.12)}
+.btn-dark:active{transform:scale(.97)}
+.btn-dark.sm{height:37px;padding:0 20px;font-size:15px;border-radius:14px}
+.btn-light{
+  display:inline-flex;align-items:center;justify-content:center;
+  height:48px;padding:0 36px;border:none;cursor:pointer;text-decoration:none;
+  font-family:var(--sans);font-size:16px;font-weight:500;color:var(--ink);
+  border-radius:16px;background:rgba(255,255,255,.65);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:0 .5px 1px rgba(0,0,0,.06),0 1px 3px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.06),inset 0 0 0 1px rgba(255,255,255,.7);
+  transition:transform .25s var(--easeout),background .25s;
+}
+.btn-light:hover{background:rgba(255,255,255,.85)}
+.btn-light:active{transform:scale(.97)}
+
+/* scroll reveal: blur-fade stagger */
+[data-reveal]{opacity:0;filter:blur(6px);transform:translateY(6px);transition:opacity .9s var(--easeout),filter .9s var(--easeout),transform .9s var(--easeout);transition-delay:var(--d,0s)}
+[data-reveal].in{opacity:1;filter:blur(0);transform:none}
+
+/* page-load stagger (hero only) */
+@keyframes pageLoad{0%{opacity:0;filter:blur(5px);transform:translateY(-3px)}100%{opacity:1;filter:blur(0);transform:none}}
+.pl{opacity:0;animation:pageLoad 1s var(--easeout) forwards;animation-delay:var(--d,0s)}
+
+/* ============ nav ============ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;height:60px;
+  display:flex;align-items:center;
+  padding:0 clamp(16px,3vw,40px);
+  transition:background .4s,box-shadow .4s;
+}
+.nav.scrolled{background:rgba(238,235,230,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 1px 0 rgba(20,20,15,.07)}
+.nav-logo{display:flex;align-items:center;text-decoration:none;color:var(--black);font-family:var(--wordmark);font-weight:700;font-size:24px;letter-spacing:-.05em;line-height:1}
+.nav-center{position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:26px;align-items:center}
+.nav-center a{font-size:15px;font-weight:500;color:#1C1C1C;text-decoration:none;display:inline-flex;align-items:center;gap:4px;opacity:.9;transition:opacity .2s}
+.nav-center a:hover{opacity:.55}
+.nav-center svg{opacity:.55}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:18px}
+.nav-right .login{font-size:15px;font-weight:500;color:#1C1C1C;text-decoration:none;opacity:.9}
+.nav-right .login:hover{opacity:.55}
+
+/* ============ beach zone (hero + section 1) ============ */
+.beach-zone{position:relative;overflow:hidden}
+.beach-bg{position:absolute;inset:0;z-index:0;pointer-events:none}
+.beach-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 62%;filter:blur(1px) brightness(1.04) saturate(.92);opacity:0;transition:opacity 2.2s ease}
+.beach-bg img.loaded{opacity:1}
+.beach-bg .fog{position:absolute;inset:0;background:
+  linear-gradient(to bottom,
+    rgba(252,251,249,.98) 0%,
+    rgba(252,251,249,.88) 14%,
+    rgba(252,251,249,.55) 30%,
+    rgba(252,251,249,.18) 48%,
+    rgba(238,235,230,0) 62%,
+    rgba(238,235,230,.35) 86%,
+    var(--cream) 100%)}
+.hero{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;padding:118px 20px 24px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:9px;height:33px;padding:0 7px 0 7px;
+  background:rgba(238,235,230,.85);border:1px solid rgba(199,199,199,.9);border-radius:999px;
+  font-size:13px;font-weight:500;color:#1C1C1C;text-decoration:none;
+  box-shadow:0 1px 2px rgba(0,0,0,.04);
+}
+.hero-badge .chip{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:999px;padding:2.5px 9px;font-size:12.5px}
+.hero-badge svg{opacity:.45}
+.hero-h1{
+  margin-top:26px;font-size:clamp(38px,4.4vw,58px);letter-spacing:-.04em;line-height:1.02;
+  color:#0e0e0c;min-height:2.1em;max-width:16ch;
+}
+.hero-h1 .ch{display:inline-block;white-space:pre;transition:opacity .42s var(--easeout),filter .42s var(--easeout),transform .42s var(--easeout)}
+.hero-h1 .ch.out{opacity:0;filter:blur(6px);transform:translateY(5px)}
+.hero-sub{margin-top:14px;font-size:15px;font-weight:500;color:var(--muted);transition:opacity .5s var(--easeout),filter .5s var(--easeout)}
+.hero-sub.out{opacity:0;filter:blur(4px)}
+
+/* hero ambient film */
+.hero-video{position:relative;margin-top:10px;width:min(960px,98vw);pointer-events:none}
+.hero-video video{
+  display:block;width:100%;height:auto;
+  -webkit-mask-image:radial-gradient(ellipse 78% 88% at 50% 48%,#000 66%,transparent 98%);
+  mask-image:radial-gradient(ellipse 78% 88% at 50% 48%,#000 66%,transparent 98%);
+}
+.hero-cta{margin-top:34px;position:relative;z-index:2}
+.hero-signup{margin-top:16px;font-size:13.5px;font-weight:500;color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.hero-signup:hover{color:var(--muted-2)}
+
+/* ============ section 1: works around you ============ */
+.fits{position:relative;z-index:1;text-align:center;padding:150px 20px 0}
+.fits h2{font-size:clamp(30px,3vw,40px);letter-spacing:-.03em;line-height:1.2}
+.fits h2 .l2{color:rgba(26,31,43,.52)}
+.fits sup{font-size:.45em;font-weight:600;color:rgba(26,31,43,.45);letter-spacing:0;vertical-align:.9em;font-family:var(--sans);margin:0 2px}
+.icon-field{position:relative;height:430px;max-width:1160px;margin:24px auto 0;z-index:1}
+.f-icon{
+  position:absolute;border-radius:15px;overflow:hidden;background:#fff;
+  width:calc(var(--sz,56px)*var(--icon-scale,1));height:calc(var(--sz,56px)*var(--icon-scale,1));
+  box-shadow:0 2px 5px rgba(30,30,25,.08),0 10px 26px rgba(30,30,25,.12);
+  animation:bob var(--bobd,7s) ease-in-out var(--bobdel,0s) infinite alternate;
+}
+.f-icon img{width:100%;height:100%;object-fit:cover}
+@keyframes bob{from{transform:translateY(-7px) rotate(var(--rot,0deg))}to{transform:translateY(7px) rotate(var(--rot,0deg))}}
+.footnote{position:relative;z-index:1;max-width:1160px;margin:0 auto;padding:10px 20px 74px;text-align:left}
+.footnote-inner{max-width:400px;margin-left:calc(50% - 180px)}
+.footnote .num{font-size:18px;font-weight:600;color:var(--muted);display:block;margin-bottom:10px}
+.footnote p{font-size:15.5px;font-weight:500;color:var(--ink);line-height:1.42}
+.footnote p .dim{color:var(--muted)}
+
+/* ============ paper zone ============ */
+.paper-zone{position:relative;background:var(--cream)}
+.paper-zone::before{content:"";position:absolute;inset:0;background-image:url('assets/paper-texture.jpg');background-size:420px;opacity:.5;mix-blend-mode:multiply;pointer-events:none}
+.paper-zone>*{position:relative}
+.hr{max-width:1160px;margin:0 auto;border:0;border-top:1px solid var(--hairline)}
+
+/* feature rows */
+.feature{max-width:1160px;margin:0 auto;padding:96px 20px;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.feature .txt .num{font-size:18px;font-weight:600;color:var(--muted);display:block;margin-bottom:14px}
+.feature .txt h3{font-size:clamp(28px,2.6vw,37px);letter-spacing:-.02em;line-height:1.15;max-width:14ch}
+.feature .txt p{margin-top:14px;font-size:15.5px;font-weight:500;color:var(--muted-2);line-height:1.45;max-width:40ch}
+.feature .txt .learn{margin-top:18px;display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:500;color:var(--blue-link);text-decoration:none}
+.feature .txt .learn:hover{text-decoration:underline}
+.visual{
+  position:relative;height:440px;border-radius:28px;overflow:hidden;
+  background:#dfe4e8;box-shadow:0 2px 8px rgba(30,30,25,.06),0 24px 60px rgba(30,30,25,.10);
+}
+.visual>.bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(1.03) saturate(.95)}
+
+/* (2) arc card fan */
+.fan{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.recipe-card{
+  position:absolute;width:238px;background:#fff;border-radius:18px;padding:16px 16px 12px;
+  box-shadow:0 3px 10px rgba(30,30,25,.10),0 16px 34px rgba(30,30,25,.14);
+  transition:transform .8s var(--spring),opacity .6s ease;text-align:left;
+}
+.recipe-card .rlogo{width:30px;height:30px;border-radius:8px;overflow:hidden;margin-bottom:10px}
+.recipe-card .rlogo img{width:100%;height:100%;object-fit:cover}
+.recipe-card h4{font-family:var(--sans);font-size:15px;font-weight:600;color:#20242c;margin-bottom:4px}
+.recipe-card p{font-size:12px;font-weight:500;color:var(--muted);line-height:1.4;height:34px;overflow:hidden}
+.recipe-card .rfoot{margin-top:10px;padding-top:9px;border-top:1px solid rgba(20,22,28,.07);display:flex;align-items:center;justify-content:space-between;font-size:11px;font-weight:600;color:var(--muted)}
+.recipe-card .rfoot .by{display:inline-flex;align-items:center;gap:4px}
+.recipe-card .rfoot img{width:13px;height:13px;border-radius:4px}
+
+/* (3) phone */
+.phone-wrap{display:flex;align-items:flex-end;justify-content:center;position:absolute;inset:0;padding-top:34px}
+.phone{
+  width:300px;height:100%;border-radius:44px 44px 0 0;background:#0f0f10;
+  padding:9px 9px 0;box-shadow:0 10px 40px rgba(20,20,25,.30);position:relative;
+}
+.phone .screen{width:100%;height:100%;border-radius:36px 36px 0 0;overflow:hidden;position:relative;background:linear-gradient(180deg,#f4efe9 0%,#eef0f2 100%)}
+.phone .screen img.wall{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55}
+.phone .island{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:84px;height:24px;border-radius:999px;background:#0f0f10;z-index:3}
+.thread{position:absolute;inset:0;padding:52px 12px 16px;display:flex;flex-direction:column;gap:7px;z-index:2}
+.bubble{
+  max-width:82%;padding:8px 12px;font-size:12.5px;font-weight:500;line-height:1.35;border-radius:16px;
+  opacity:0;transform:scale(.7) translateY(8px);
+}
+.bubble.show{animation:popIn .45s var(--spring) forwards}
+@keyframes popIn{from{opacity:0;transform:scale(.7) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.bubble.in{align-self:flex-start;background:var(--imsg-grey);color:#111;border-bottom-left-radius:5px}
+.bubble.out{align-self:flex-end;background:var(--imsg-blue);color:#fff;border-bottom-right-radius:5px}
+.bubble.chipmsg{align-self:flex-end;background:var(--imsg-blue);color:#fff;padding:8px 14px}
+.bubble.memo{align-self:flex-end;background:#fff;display:flex;align-items:center;gap:8px;border-bottom-right-radius:5px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.memo .bars{display:flex;align-items:center;gap:1.5px;height:16px}
+.memo .bars i{width:2px;border-radius:2px;background:#E23D3D;display:block}
+.memo.playing .bars i{animation:memobar .8s ease-in-out infinite alternate;animation-delay:calc(var(--i)*.05s)}
+@keyframes memobar{from{transform:scaleY(.45)}to{transform:scaleY(1)}}
+.memo .dur{font-size:11px;font-weight:600;color:#E23D3D}
+.memo .stop{width:16px;height:16px;border-radius:50%;background:#E23D3D;display:flex;align-items:center;justify-content:center}
+.memo .stop::after{content:"";width:6px;height:6px;background:#fff;border-radius:1.5px}
+
+/* (4) contacts grid + notification */
+.cgrid-wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.cgrid{
+  width:min(340px,88%);background:rgba(255,255,255,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border-radius:24px;padding:30px 24px;display:grid;grid-template-columns:1fr 1fr;gap:26px 12px;
+  box-shadow:0 2px 8px rgba(30,30,25,.06),0 16px 40px rgba(30,30,25,.12);position:relative;
+}
+.cperson{display:flex;flex-direction:column;align-items:center;gap:8px}
+.cperson .pav{width:66px;height:66px;border-radius:50%;overflow:hidden;box-shadow:0 3px 10px rgba(30,30,25,.18)}
+.cperson .pav.sq{border-radius:17px}
+.cperson .pav img{width:100%;height:100%;object-fit:cover}
+.cperson .pname{font-size:12px;font-weight:500;color:rgba(26,31,43,.75);display:inline-flex;align-items:center;gap:4px}
+.notif{
+  position:absolute;top:44%;left:50%;transform:translate(-50%,-50%) scale(.6);
+  background:#F1F1F0;border-radius:14px;padding:8px 12px;font-size:11px;font-weight:500;color:#3a3d44;
+  max-width:200px;text-align:center;line-height:1.35;box-shadow:0 4px 14px rgba(30,30,25,.18);
+  opacity:0;z-index:3;transition:opacity .4s var(--spring),transform .4s var(--spring);
+}
+.notif.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+
+/* (5) autonomy typing */
+.kitchen{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.kpanel{
+  width:78%;background:#fff;border-radius:18px;padding:18px 18px 14px;
+  box-shadow:0 3px 10px rgba(30,30,25,.10),0 18px 40px rgba(30,30,25,.14);text-align:left;
+}
+.kpanel .kin{min-height:44px;font-size:15px;font-weight:500;color:#26262a;line-height:1.4}
+.kpanel .caret{display:inline-block;width:2px;height:1.05em;background:#26262a;vertical-align:-2px;margin-left:1px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.kpanel .kint{margin-top:6px;font-size:13px;font-weight:500;color:var(--muted);display:flex;align-items:center;gap:5px}
+.kpanel .kfoot{margin-top:14px;padding-top:12px;border-top:1px solid rgba(20,22,28,.07);display:flex;justify-content:flex-end;align-items:center;gap:8px}
+.kpanel .kbd{font-size:11px;font-weight:600;color:var(--muted);border:1px solid rgba(20,22,28,.12);border-radius:6px;padding:3px 7px;background:rgba(20,22,28,.02)}
+.kpanel .create{font-size:12.5px;font-weight:600;color:#fff;background:linear-gradient(#3A3A3A,#1F1F1F);border-radius:9px;padding:6px 13px}
+
+/* ============ waitlist ============ */
+.waitlist{padding:130px 20px 70px;text-align:center}
+.waitlist h2{font-size:clamp(34px,3.4vw,46px);letter-spacing:-.03em}
+.waitlist .wsub{margin:16px auto 0;font-size:15px;font-weight:500;color:var(--muted-2);max-width:380px;line-height:1.45}
+.wform{
+  margin:32px auto 0;display:flex;gap:10px;max-width:440px;
+  transition:opacity .4s var(--easeout),transform .4s var(--easeout);
+}
+.wform input{
+  flex:1;height:48px;border-radius:16px;border:1px solid rgba(20,22,28,.14);
+  background:rgba(255,255,255,.85);padding:0 18px;font-family:var(--sans);
+  font-size:15px;font-weight:500;color:var(--ink);outline:none;min-width:0;
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.03);
+  transition:border-color .25s,box-shadow .25s;
+}
+.wform input::placeholder{color:var(--muted)}
+.wform input:focus{border-color:rgba(20,22,28,.32);box-shadow:0 0 0 3px rgba(20,22,28,.05)}
+.wform .btn-dark{padding:0 26px;flex:none}
+.wdone{
+  margin:32px auto 0;max-width:440px;display:none;align-items:center;justify-content:center;gap:10px;
+  height:48px;border-radius:16px;background:rgba(255,255,255,.75);
+  border:1px solid rgba(20,22,28,.08);font-size:14.5px;font-weight:500;color:var(--ink);
+  opacity:0;transform:scale(.95);transition:opacity .5s var(--spring),transform .5s var(--spring);
+}
+.wdone .tick{width:20px;height:20px;border-radius:50%;background:#4E9B5C;display:flex;align-items:center;justify-content:center;flex:none}
+.waitlist .wfine{margin-top:16px;font-size:12.5px;font-weight:500;color:var(--muted)}
+.waitlist.done .wform{opacity:0;transform:scale(.97);pointer-events:none;position:absolute;left:-9999px}
+.waitlist.done .wdone{display:flex;opacity:1;transform:none}
+
+/* ============ community ============ */
+.community{padding:110px 0 40px;text-align:center}
+.community h2{font-size:clamp(36px,3.6vw,48px);letter-spacing:-.03em}
+.marquee{margin-top:44px;overflow:hidden;position:relative;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent);
+  mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent)}
+.mtrack{display:flex;gap:18px;width:max-content;padding:8px 0;animation:marq 80s linear infinite}
+.marquee:hover .mtrack{animation-play-state:paused}
+@keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tweet{
+  width:284px;flex:none;background:#fff;border-radius:20px;padding:18px;text-align:left;
+  box-shadow:0 1px 4px rgba(30,30,25,.05),0 10px 26px rgba(30,30,25,.07);
+}
+.tweet .thead{display:flex;align-items:flex-start;gap:10px;margin-bottom:11px}
+.tweet .tav{width:38px;height:38px;border-radius:50%;overflow:hidden;flex:none}
+.tweet .tav img{width:100%;height:100%;object-fit:cover}
+.tweet .tinfo{flex:1;min-width:0}
+.tweet .tname{font-size:14px;font-weight:600;color:#16181c;display:flex;align-items:center;gap:4px;white-space:nowrap;overflow:hidden}
+.tweet .thandle{font-size:12.5px;font-weight:500;color:var(--muted)}
+.tweet .bird{color:#9BB8E8;flex:none;margin-top:2px}
+.tweet .tbody{font-size:13px;font-weight:500;color:#1c1f26;line-height:1.5}
+.tweet .tbody .m{color:var(--blue-link)}
+.stories-link{display:inline-flex;align-items:center;gap:6px;margin-top:36px;font-size:14.5px;font-weight:500;color:var(--muted-2);text-decoration:none}
+.stories-link:hover{color:#111}
+
+/* ============ sunset zone: closing + footer ============ */
+.sunset-zone{position:relative;overflow:hidden;margin-top:60px}
+.sunset-bg{position:absolute;inset:0;pointer-events:none}
+.sunset-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:0;transition:opacity 3s ease}
+.sunset-bg img.on{opacity:.85}
+.sunset-bg .fade{position:absolute;inset:0;background:linear-gradient(to bottom,var(--cream) 0%,rgba(238,235,230,.72) 22%,rgba(238,235,230,.25) 48%,rgba(238,235,230,.05) 72%,rgba(238,235,230,.3) 100%)}
+.closing{position:relative;text-align:center;padding:150px 20px 130px}
+.closing h2{font-size:clamp(42px,4.6vw,62px);letter-spacing:-.035em;line-height:1.06;color:#191a17}
+.closing .cta-row{margin-top:34px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+footer{position:relative;padding:40px 20px 0}
+.fgrid{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:left}
+.fcol h5{font-size:13px;font-weight:500;color:var(--muted);margin-bottom:16px}
+.fcol a{display:block;font-size:14px;font-weight:500;color:rgba(26,31,43,.88);text-decoration:none;margin-bottom:12px}
+.fcol a:hover{opacity:.55}
+.fbottom{max-width:1160px;margin:34px auto 0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:13px;font-weight:500;color:var(--muted)}
+.fbottom .sep{margin:0 8px;opacity:.4}
+.status{display:inline-flex;align-items:center;gap:7px;color:#4E9B5C}
+.status i{width:7px;height:7px;border-radius:50%;background:#4E9B5C;box-shadow:0 0 0 3px rgba(78,155,92,.18)}
+.giant{
+  position:relative;height:clamp(80px,22vw,320px);overflow:hidden;margin-top:26px;
+  display:flex;justify-content:center;pointer-events:none;
+}
+.giant span{
+  font-family:var(--wordmark);font-weight:700;letter-spacing:-.05em;line-height:.72;
+  font-size:clamp(88px,26vw,400px);
+  background:linear-gradient(to bottom,rgba(26,31,43,.34) 0%,rgba(26,31,43,.08) 62%,rgba(26,31,43,0) 95%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  transform:translateY(6%);
+}
+
+/* ============ responsive ============ */
+@media (max-width:980px){
+  .nav-center{display:none}
+  .feature{grid-template-columns:1fr;gap:36px;padding:72px 20px}
+  .feature .vis-first{order:-1}
+  .fgrid{grid-template-columns:1fr 1fr;gap:36px 20px}
+  .icon-field{height:330px}
+  .footnote-inner{margin-left:0}
+  .visual{height:380px}
+}
+@media (max-width:640px){
+  .icon-field{--icon-scale:.72;height:300px}
+  .fits{padding-top:110px}
+  .fits h2{font-size:27px}
+  .footnote{padding-bottom:56px}
+  .cgrid{padding:24px 16px;gap:20px 8px}
+  .notif{max-width:170px}
+  .visual{height:360px;border-radius:22px}
+  .phone{width:270px}
+  .recipe-card{width:210px}
+  .hero{padding-top:104px}
+  .hero-h1{font-size:34px}
+  .hero-video{width:calc(100% + 40px);max-width:none;margin:-56px -20px 0}
+  .closing{padding:110px 20px 90px}
+  .waitlist{padding-top:100px}
+  .wform{flex-direction:column;padding:0 8px}
+  .community{padding-top:84px}
+  .tweet{width:250px}
+  .fbottom{flex-direction:column;align-items:flex-start}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+  [data-reveal],.pl{opacity:1;filter:none;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<nav class="nav pl" style="--d:.1s" id="nav">
+  <a class="nav-logo" href="#">Draper</a>
+  <div class="nav-center">
+    <a href="#fits">Product <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    <a href="#arcs">Arcs</a>
+    <a href="#community">Community</a>
+    <a href="#footer">Company</a>
+  </div>
+  <div class="nav-right">
+    <a class="login" href="#">Log in</a>
+    <a class="btn-dark sm" href="#waitlist">Join Waitlist</a>
+  </div>
+</nav>
+
+<!-- ============ BEACH ZONE ============ -->
+<div class="beach-zone">
+  <div class="beach-bg">
+    <img src="assets/hero-coast.jpg" alt="" id="beachImg">
+    <div class="fog"></div>
+  </div>
+
+  <!-- hero -->
+  <header class="hero">
+    <a class="hero-badge pl" style="--d:.25s" href="#arcs">
+      <span class="chip">New</span>
+      <span>Draper Arcs</span>
+      <svg width="11" height="11" viewBox="0 0 10 10" fill="none"><path d="M3.5 2L6.5 5L3.5 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <h1 class="hero-h1 pl" style="--d:.35s" id="heroH1" aria-label="Meet Draper, your content strategist."></h1>
+    <p class="hero-sub pl" style="--d:.5s" id="heroSub">It drafts, schedules and posts for you, straight from your chats</p>
+
+    <div class="hero-video pl" style="--d:.6s">
+      <video id="heroFilm" autoplay muted loop playsinline preload="auto"></video>
+    </div>
+
+    <a class="btn-dark hero-cta pl" style="--d:.75s" href="#waitlist">Join the Waitlist</a>
+    <a class="hero-signup pl" style="--d:.85s" href="#fits">Curious? See how it works
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </header>
+
+  <!-- section 1 -->
+  <section class="fits" id="fits">
+    <h2 class="serif-h" data-reveal>Draper works around you<sup>(1)</sup>,<br><span class="l2">not the other way round</span></h2>
+    <div class="icon-field" id="iconField" data-reveal style="--d:.15s"></div>
+    <div class="footnote" data-reveal style="--d:.1s">
+      <div class="footnote-inner">
+        <span class="num">(1)</span>
+        <p>Draper joins your meetings, reads your notes and knows your calendar (<span class="dim">Granola, Notion, Google Calendar</span>), then turns what you already say into posts for LinkedIn and X.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ============ PAPER ZONE ============ -->
+<div class="paper-zone">
+  <hr class="hr">
+
+  <!-- (2) arcs -->
+  <section class="feature" id="arcs">
+    <div class="visual vis-first" data-reveal>
+      <img class="bgimg" src="assets/sky-card.jpg" alt="">
+      <div class="fan" id="fan">
+        <div class="recipe-card">
+          <div class="rlogo"><img src="assets/icons/linkedin_com.png" alt=""></div>
+          <h4>Founder Arc</h4>
+          <p>The person. Where you came from, what you believe, what it cost</p>
+          <div class="rfoot"><span class="by"><img src="assets/app-icon.jpg" alt="">Draper</span><span>Running</span></div>
+        </div>
+        <div class="recipe-card">
+          <div class="rlogo"><img src="assets/icons/notion_so.png" alt=""></div>
+          <h4>Builder Arc</h4>
+          <p>The work. What you are building, why it is hard, who it is for</p>
+          <div class="rfoot"><span class="by"><img src="assets/app-icon.jpg" alt="">Draper</span><span>Running</span></div>
+        </div>
+        <div class="recipe-card">
+          <div class="rlogo"><img src="assets/icons/x_com.png" alt=""></div>
+          <h4>Pulse Arc</h4>
+          <p>The market. What changed this week, and what you saw first</p>
+          <div class="rfoot"><span class="by"><img src="assets/app-icon.jpg" alt="">Draper</span><span>Running</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="txt" data-reveal style="--d:.12s">
+      <span class="num">(2)</span>
+      <h3 class="serif-h">Learns your voice with Draper Arcs</h3>
+      <p>Three arcs run your story: the person, the work, the market. Every draft fits one, so your feed adds up to something</p>
+      <a class="learn" href="#">Learn more
+        <svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <hr class="hr">
+
+  <!-- (3) drafts + schedules -->
+  <section class="feature">
+    <div class="txt" data-reveal>
+      <span class="num">(3)</span>
+      <h3 class="serif-h">Drafts and schedules while you work</h3>
+      <p>Send a voice note between meetings. Draper writes it like you, books the slot and shows you before it goes</p>
+    </div>
+    <div class="visual" data-reveal style="--d:.12s">
+      <img class="bgimg" src="assets/sky-card.jpg" alt="" style="opacity:.8">
+      <div class="phone-wrap">
+        <div class="phone">
+          <div class="island"></div>
+          <div class="screen">
+            <img class="wall" src="assets/sky-card.jpg" alt="">
+            <div class="thread" id="thread">
+              <div class="bubble in">your post is live. 40 comments before lunch, three from investors</div>
+              <div class="bubble out">nice. line up the follow up</div>
+              <div class="bubble chipmsg">tuesday, 8am</div>
+              <div class="bubble out">make it spikier</div>
+              <div class="bubble in">spikier cut drafted. same story, sharper opener</div>
+              <div class="bubble memo" id="memo">
+                <span class="stop"></span>
+                <span class="bars"></span>
+                <span class="dur">0:07</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="hr">
+
+  <!-- (4) meeting mining -->
+  <section class="feature">
+    <div class="visual vis-first" data-reveal>
+      <img class="bgimg" src="assets/sunset-sky.jpg" alt="" style="opacity:.75">
+      <div class="cgrid-wrap">
+        <div class="cgrid">
+          <div class="cperson"><div class="pav"><img src="assets/av1.jpg" alt=""></div><span class="pname">Ronnie</span></div>
+          <div class="cperson"><div class="pav"><img src="assets/av6.jpg" alt=""></div><span class="pname">Lena</span></div>
+          <div class="cperson"><div class="pav"><img src="assets/av8.jpg" alt=""></div><span class="pname">Theo</span></div>
+          <div class="cperson"><div class="pav sq"><img src="assets/app-icon.jpg" alt=""></div><span class="pname">
+            <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#3478F6"/></svg>Draper
+          </span></div>
+          <div class="notif" id="notif">heard on your 2pm: "we hire slow on purpose". post?</div>
+        </div>
+      </div>
+    </div>
+    <div class="txt" data-reveal style="--d:.12s">
+      <span class="num">(4)</span>
+      <h3 class="serif-h">Comes back from your meetings with questions</h3>
+      <p>Draper sits in on your calls. Say something worth posting and it texts you before you have left the room, quote pulled, draft ready</p>
+    </div>
+  </section>
+
+  <hr class="hr">
+
+  <!-- (5) earned autonomy -->
+  <section class="feature" id="autonomy">
+    <div class="txt" data-reveal>
+      <span class="num">(5)</span>
+      <h3 class="serif-h">Earns the keys as you go</h3>
+      <p>Draper starts by asking. Approve a few drafts and it starts scheduling. Keep approving and it posts on its own, still sounding exactly like you</p>
+      <a class="learn" href="#">Learn more
+        <svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <div class="visual" data-reveal style="--d:.12s">
+      <img class="bgimg" src="assets/sky-card.jpg" alt="">
+      <div class="kitchen">
+        <div class="kpanel">
+          <div class="kin"><span id="ktext"></span><span class="caret"></span></div>
+          <div class="kint">＋ Autonomy</div>
+          <div class="kfoot"><span class="kbd">⌘ Enter</span><span class="create">Allow</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- waitlist -->
+  <section class="waitlist" id="waitlist">
+    <h2 class="serif-h" data-reveal>Get your strategist early</h2>
+    <p class="wsub" data-reveal style="--d:.08s">Draper takes on a few new voices each week while it learns. Leave your email and you are next in line</p>
+    <form class="wform" id="wform" data-reveal style="--d:.14s">
+      <input type="email" id="wemail" placeholder="you@company.com" required autocomplete="email">
+      <button class="btn-dark" type="submit">Join the Waitlist</button>
+    </form>
+    <div class="wdone" id="wdone">
+      <span class="tick"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.8 9L10 3.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      You are on the list. Draper will text first, promise.
+    </div>
+    <p class="wfine" data-reveal style="--d:.2s">No spam. One email when your seat opens</p>
+  </section>
+
+  <!-- community -->
+  <section class="community" id="community">
+    <h2 class="serif-h" data-reveal>Community</h2>
+    <div class="marquee" data-reveal style="--d:.1s">
+      <div class="mtrack" id="mtrack"></div>
+    </div>
+    <a class="stories-link" href="#" data-reveal style="--d:.15s">Explore user stories
+      <svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </section>
+</div>
+
+<!-- ============ SUNSET ZONE ============ -->
+<div class="sunset-zone" id="sunsetZone">
+  <div class="sunset-bg">
+    <img src="assets/sunset-sky.jpg" alt="" id="sunsetImg">
+    <div class="fade"></div>
+  </div>
+
+  <section class="closing">
+    <h2 class="serif-h" data-reveal>Get going<br>with just a text</h2>
+    <div class="cta-row" data-reveal style="--d:.12s">
+      <a class="btn-dark" href="#waitlist">Join the Waitlist</a>
+      <a class="btn-light" href="#fits">Explore</a>
+    </div>
+  </section>
+
+  <footer id="footer">
+    <div class="fgrid" data-reveal>
+      <div class="fcol">
+        <h5>Product</h5>
+        <a href="#fits">How it works</a><a href="#arcs">Arcs</a><a href="#waitlist">Waitlist</a><a href="#community">Community</a>
+      </div>
+      <div class="fcol">
+        <h5>Resources</h5>
+        <a href="#">FAQs</a><a href="#">WhatsApp</a><a href="#">X</a>
+      </div>
+      <div class="fcol">
+        <h5>Company</h5>
+        <a href="#">About</a><a href="#">Careers</a><a href="#">LinkedIn</a>
+      </div>
+      <div class="fcol">
+        <h5>Legal</h5>
+        <a href="#">Cookies</a><a href="#">Privacy</a><a href="#">Terms</a>
+      </div>
+    </div>
+    <div class="fbottom" data-reveal style="--d:.08s">
+      <span>© 2026<span class="sep">|</span>Designed in London</span>
+      <span class="status"><i></i>All systems operational</span>
+    </div>
+    <div class="giant"><span>Draper</span></div>
+  </footer>
+</div>
+
+<script>
+/* ============ nav scroll ============ */
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>10),{passive:true});
+
+/* ============ beach + sunset image fade ============ */
+const beach=document.getElementById('beachImg');
+if(beach.complete)beach.classList.add('loaded');else beach.onload=()=>beach.classList.add('loaded');
+new IntersectionObserver((e)=>{if(e[0].isIntersecting)document.getElementById('sunsetImg').classList.add('on')},{threshold:.05})
+  .observe(document.getElementById('sunsetZone'));
+
+/* ============ hero headline letter cycle ============ */
+const H1S=['Meet Draper,\nyour content strategist','Meet Draper,\nnow on WhatsApp'];
+const SUBS=['It drafts, schedules and posts for you, straight from your chats','Voice note in the cab. Post live before you land'];
+const h1=document.getElementById('heroH1'),sub=document.getElementById('heroSub');
+let hIdx=0,hChars=[];
+function setH1(text){
+  h1.innerHTML='';hChars=[];
+  text.split('\n').forEach((line,li)=>{
+    if(li>0)h1.appendChild(document.createElement('br'));
+    line.split(' ').forEach((word,wi)=>{
+      if(wi>0){
+        const sp=document.createElement('span');sp.className='ch out';sp.textContent=' ';
+        h1.appendChild(sp);hChars.push(sp);
+      }
+      const w=document.createElement('span');
+      w.style.cssText='display:inline-block;white-space:nowrap';
+      [...word].forEach(c=>{
+        const s=document.createElement('span');s.className='ch out';s.textContent=c;
+        w.appendChild(s);hChars.push(s);
+      });
+      h1.appendChild(w);
+    });
+  });
+}
+function inH1(){hChars.forEach((s,i)=>setTimeout(()=>s.classList.remove('out'),16*i))}
+function outH1(cb){hChars.forEach((s,i)=>setTimeout(()=>s.classList.add('out'),9*i));setTimeout(cb,9*hChars.length+430)}
+setH1(H1S[0]);setTimeout(inH1,650);
+setInterval(()=>{
+  sub.classList.add('out');
+  outH1(()=>{
+    hIdx=(hIdx+1)%H1S.length;
+    setH1(H1S[hIdx]);
+    sub.textContent=SUBS[hIdx];sub.classList.remove('out');
+    requestAnimationFrame(()=>requestAnimationFrame(inH1));
+  });
+},7000);
+
+/* ============ hero ambient film (format-aware) ============ */
+const heroFilm=document.getElementById('heroFilm');
+const portraitFilm=matchMedia('(max-width:640px)').matches;
+heroFilm.poster=portraitFilm?'assets/hero-demo-poster-portrait.jpg':'assets/hero-demo-poster.jpg';
+heroFilm.src=portraitFilm?'assets/hero-demo-portrait.mp4':'assets/hero-demo.mp4';
+if(matchMedia('(prefers-reduced-motion: reduce)').matches){
+  heroFilm.removeAttribute('autoplay');heroFilm.pause();
+}
+
+/* ============ floating icon field ============ */
+const ICONS=[
+  ['linkedin_com',64,'12%','16%',-6],['whatsapp_com',58,'30%','6%',5],['notion_so',56,'46%','20%',-4],
+  ['mail_google_com',60,'22%','34%',7],['calendar_google_com',54,'8%','52%',-8],['slack_com',62,'38%','58%',4],
+  ['granola_ai',56,'18%','72%',-5],['typefully_com',52,'44%','80%',6],['figma_com',50,'6%','86%',-3],
+  ['stripe_com',58,'56%','44%',8],['x_com',54,'62%','68%',-7],['github_com',60,'70%','26%',3],
+  ['loom_com',52,'78%','54%',-4],['descript_com',56,'86%','18%',6]
+];
+const field=document.getElementById('iconField');
+ICONS.forEach(([name,sz,x,y,rot],i)=>{
+  const d=document.createElement('div');
+  d.className='f-icon';
+  d.style.cssText=`--sz:${sz}px;left:${x};top:${y};--rot:${rot}deg;--bobd:${5.5+(i%5)}s;--bobdel:${-(i*.7)}s;`;
+  d.innerHTML=`<img src="assets/icons/${name}.png" alt="" loading="lazy">`;
+  field.appendChild(d);
+});
+
+/* ============ scroll reveal ============ */
+const ro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target)}}),{threshold:.18});
+document.querySelectorAll('[data-reveal]').forEach(el=>ro.observe(el));
+
+/* ============ (2) arc fan cycle ============ */
+const fan=document.getElementById('fan');
+const cards=[...fan.children];
+let order=[0,1,2];
+function layoutFan(){
+  const off=Math.min(96,Math.round(fan.clientWidth*.17));
+  const POSES=[
+    {x:-off,y:10,r:-9,s:.94,z:1},
+    {x:0,y:-6,r:0,s:1,z:3},
+    {x:off,y:10,r:9,s:.94,z:2}
+  ];
+  order.forEach((ci,pi)=>{
+    const p=POSES[pi],c=cards[ci];
+    c.style.zIndex=p.z;
+    c.style.transform=`translate(${p.x}px,${p.y}px) rotate(${p.r}deg) scale(${p.s})`;
+  });
+}
+layoutFan();
+addEventListener('resize',layoutFan);
+setInterval(()=>{order.unshift(order.pop());layoutFan()},2600);
+
+/* ============ (3) phone chat loop ============ */
+const thread=document.getElementById('thread');
+const bubbles=[...thread.children];
+const memo=document.getElementById('memo');
+const barsEl=memo.querySelector('.bars');
+for(let i=0;i<22;i++){const b=document.createElement('i');b.style.height=(4+Math.round(9*Math.abs(Math.sin(i*1.35))))+'px';b.style.setProperty('--i',i);barsEl.appendChild(b)}
+function playThread(){
+  bubbles.forEach(b=>{b.classList.remove('show');memo.classList.remove('playing')});
+  let t=500;
+  bubbles.forEach(b=>{
+    setTimeout(()=>{
+      b.classList.add('show');
+      if(b===memo)memo.classList.add('playing');
+    },t);
+    t+=900;
+  });
+  setTimeout(playThread,t+4200);
+}
+new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){playThread();o.disconnect()}},{threshold:.4}).observe(thread);
+
+/* ============ (4) meeting-mining notifications ============ */
+const notif=document.getElementById('notif');
+const NOTES=[
+  'heard on your 2pm: "we hire slow on purpose". post?',
+  'your standup had a story in it. want the draft?',
+  'that line about pricing deserves daylight. thursday?'
+];
+let nIdx=0;
+setInterval(()=>{
+  notif.classList.remove('show');
+  setTimeout(()=>{
+    nIdx=(nIdx+1)%NOTES.length;
+    notif.textContent=NOTES[nIdx];
+    notif.classList.add('show');
+  },600);
+},4200);
+setTimeout(()=>notif.classList.add('show'),1500);
+
+/* ============ (5) earned-autonomy typing loop ============ */
+const KLINES=['Draft it and show me first','Schedule Tuesdays and Thursdays, 8am','Post without asking me'];
+const ktext=document.getElementById('ktext');
+let kIdx=0;
+function typeLine(line,done){
+  let i=0;
+  const tick=()=>{
+    ktext.textContent=line.slice(0,++i);
+    if(i<line.length)setTimeout(tick,38+Math.random()*40);else setTimeout(done,2100);
+  };
+  tick();
+}
+function eraseLine(done){
+  const tick=()=>{
+    ktext.textContent=ktext.textContent.slice(0,-2);
+    if(ktext.textContent.length)setTimeout(tick,12);else setTimeout(done,420);
+  };
+  tick();
+}
+(function kLoop(){typeLine(KLINES[kIdx],()=>eraseLine(()=>{kIdx=(kIdx+1)%KLINES.length;kLoop()}))})();
+
+/* ============ waitlist ============ */
+const wform=document.getElementById('wform');
+const wsection=document.getElementById('waitlist');
+wform.addEventListener('submit',e=>{
+  e.preventDefault();
+  const email=document.getElementById('wemail').value.trim();
+  if(!email)return;
+  try{localStorage.setItem('draper-waitlist',JSON.stringify({email,at:new Date().toISOString()}))}catch(_){}
+  wsection.classList.add('done');
+});
+try{if(localStorage.getItem('draper-waitlist'))wsection.classList.add('done')}catch(_){}
+
+/* ============ community marquee ============ */
+const TWEETS=[
+  {n:'Amara Okafor',h:'@amaraships',a:'av2',t:'it texted me a question about my own board meeting, then drafted the post before i finished replying. <span class="m">@draperhq</span>'},
+  {n:'Theo Lindqvist',h:'@theobuilds',a:'av3',t:'voice note from the back of a cab. post live before my flight boarded. <span class="m">@draperhq</span> is different'},
+  {n:'Priya Nair',h:'@priyaclimate',a:'av4',t:'my cofounder asked who i hired. i showed him the whatsapp thread. <span class="m">@draperhq</span>'},
+  {n:'Dan Mercer',h:'@danmercer',a:'av5',t:'week one it asked before every post. week six it just sends me the link. <span class="m">@draperhq</span> earned it'},
+  {n:'Lena Fischer',h:'@lenawrites',a:'av6',t:'customers started quoting my posts back to me in sales calls. stopped questioning the invoice after that'},
+  {n:'Marcus Cole',h:'@marcusinfra',a:'av7',t:'it caught a line i said at minute 40 and made it thursday’s post. 400k impressions later. <span class="m">@draperhq</span>'},
+  {n:'Sofia Reyes',h:'@sofiahealth',a:'av9',t:'i talk for thirty minutes on a monday and look prolific by friday. <span class="m">@draperhq</span>'},
+  {n:'Yusuf Rahman',h:'@yusufbuilds',a:'av8',t:'openclaw runs my terminal, <span class="m">@draperhq</span> runs my linkedin. we live in the future'},
+  {n:'Grace Park',h:'@graceships',a:'av1',t:'told <span class="m">@draperhq</span> to keep my tuesday post spiky. it argued back. it was right'}
+];
+const bird='<svg class="bird" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23 4.9c-.8.4-1.7.6-2.6.8a4.5 4.5 0 0 0 2-2.5c-.9.5-1.9.9-2.9 1.1a4.5 4.5 0 0 0-7.7 4.1A12.8 12.8 0 0 1 2.5 3.7a4.5 4.5 0 0 0 1.4 6A4.4 4.4 0 0 1 1.8 9v.1a4.5 4.5 0 0 0 3.6 4.4 4.5 4.5 0 0 1-2 .1 4.5 4.5 0 0 0 4.2 3.1A9 9 0 0 1 1 18.6a12.7 12.7 0 0 0 6.9 2c8.3 0 12.8-6.9 12.8-12.8v-.6c.9-.6 1.6-1.4 2.3-2.3z"/></svg>';
+const check='<svg width="14" height="14" viewBox="0 0 22 22" fill="none" style="flex:none"><path d="M11 1.5l2.2 1.9 2.9-.4 1 2.7 2.7 1-.4 2.9 1.9 2.2-1.9 2.2.4 2.9-2.7 1-1 2.7-2.9-.4L11 22l-2.2-1.9-2.9.4-1-2.7-2.7-1 .4-2.9L.7 11.7 2.6 9.5l-.4-2.9 2.7-1 1-2.7 2.9.4L11 1.5z" fill="#3E9FF2"/><path d="M7.5 11.2l2.3 2.3 4.7-4.7" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const mtrack=document.getElementById('mtrack');
+function tweetCard(tw){
+  return `<div class="tweet">
+    <div class="thead">
+      <div class="tav"><img src="assets/${tw.a}.jpg" alt="" loading="lazy"></div>
+      <div class="tinfo"><div class="tname">${tw.n} ${check}</div><div class="thandle">${tw.h}</div></div>
+      ${bird}
+    </div>
+    <div class="tbody">${tw.t}</div>
+  </div>`;
+}
+mtrack.innerHTML=TWEETS.map(tweetCard).join('')+TWEETS.map(tweetCard).join('');
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+.DS_Store
+*.log
+.claude/
+remotion/node_modules/
+remotion/out/
+assets/*.png
+assets/*_thumb.jpeg
