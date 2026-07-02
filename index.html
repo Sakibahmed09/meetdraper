@@ -3,8 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
-<title>Draper – Your content strategist</title>
-<meta name="description" content="Draper is your personal content strategist. It drafts, schedules and posts for you, and texts you first when your meetings are hiding a good post.">
+<title>Draper – Your LinkedIn content strategist</title>
+<meta name="description" content="Draper is your LinkedIn content strategist. It drafts, schedules and posts for you, in your voice, and texts you first when your meetings are hiding a good post.">
+<link rel="preload" as="image" href="assets/hero-demo-poster.jpg" media="(min-width: 641px)">
+<link rel="preload" as="image" href="assets/hero-demo-poster-portrait.jpg" media="(max-width: 640px)">
 <link rel="icon" href="assets/app-icon.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -117,7 +119,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;color:var(--black)}
 .hero-badge svg{opacity:.45}
 .hero-h1{
   margin-top:26px;font-size:clamp(38px,4.4vw,58px);letter-spacing:-.04em;line-height:1.02;
-  color:#0e0e0c;min-height:2.1em;max-width:16ch;
+  color:#0e0e0c;min-height:2.1em;max-width:26ch;
 }
 .hero-h1 .ch{display:inline-block;white-space:pre;transition:opacity .42s var(--easeout),filter .42s var(--easeout),transform .42s var(--easeout)}
 .hero-h1 .ch.out{opacity:0;filter:blur(6px);transform:translateY(5px)}
@@ -402,11 +404,20 @@ footer{position:relative;padding:40px 20px 0}
       <span>Draper Arcs</span>
       <svg width="11" height="11" viewBox="0 0 10 10" fill="none"><path d="M3.5 2L6.5 5L3.5 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
-    <h1 class="hero-h1 pl" style="--d:.35s" id="heroH1" aria-label="Meet Draper, your content strategist."></h1>
-    <p class="hero-sub pl" style="--d:.5s" id="heroSub">It drafts, schedules and posts for you, straight from your chats</p>
+    <h1 class="hero-h1 pl" style="--d:.35s" id="heroH1" aria-label="Meet Draper, your LinkedIn content strategist."></h1>
+    <p class="hero-sub pl" style="--d:.5s" id="heroSub">Drafts, schedules and posts for you. Nothing that reads like AI</p>
 
     <div class="hero-video pl" style="--d:.6s">
       <video id="heroFilm" autoplay muted loop playsinline preload="auto"></video>
+      <script>
+        /* start the film download during parse, not after page scripts */
+        (function(){
+          var v=document.getElementById('heroFilm');
+          var p=matchMedia('(max-width:640px)').matches;
+          v.poster=p?'assets/hero-demo-poster-portrait.jpg':'assets/hero-demo-poster.jpg';
+          v.src=p?'assets/hero-demo-portrait.mp4':'assets/hero-demo.mp4';
+        })();
+      </script>
     </div>
 
     <a class="btn-dark hero-cta pl" style="--d:.75s" href="#waitlist">Join the Waitlist</a>
@@ -422,7 +433,7 @@ footer{position:relative;padding:40px 20px 0}
     <div class="footnote" data-reveal style="--d:.1s">
       <div class="footnote-inner">
         <span class="num">(1)</span>
-        <p>Draper joins your meetings, reads your notes and knows your calendar (<span class="dim">Granola, Notion, Google Calendar</span>), then turns what you already say into posts for LinkedIn and X.</p>
+        <p>Draper joins your meetings, reads your notes and knows your calendar (<span class="dim">Granola, Notion, Google Calendar</span>), then turns what you actually said into LinkedIn posts. <span class="dim">No prompts, no slop.</span></p>
       </div>
     </div>
   </section>
@@ -444,13 +455,13 @@ footer{position:relative;padding:40px 20px 0}
           <div class="rfoot"><span class="by"><img src="assets/app-icon.jpg" alt="">Draper</span><span>Running</span></div>
         </div>
         <div class="recipe-card">
-          <div class="rlogo"><img src="assets/icons/notion_so.png" alt=""></div>
+          <div class="rlogo"><img src="assets/icons/github_com.png" alt=""></div>
           <h4>Builder Arc</h4>
           <p>The work. What you are building, why it is hard, who it is for</p>
           <div class="rfoot"><span class="by"><img src="assets/app-icon.jpg" alt="">Draper</span><span>Running</span></div>
         </div>
         <div class="recipe-card">
-          <div class="rlogo"><img src="assets/icons/x_com.png" alt=""></div>
+          <div class="rlogo"><img src="assets/icons/granola_ai.png" alt=""></div>
           <h4>Pulse Arc</h4>
           <p>The market. What changed this week, and what you saw first</p>
           <div class="rfoot"><span class="by"><img src="assets/app-icon.jpg" alt="">Draper</span><span>Running</span></div>
@@ -600,7 +611,7 @@ footer{position:relative;padding:40px 20px 0}
       </div>
       <div class="fcol">
         <h5>Resources</h5>
-        <a href="#">FAQs</a><a href="#">WhatsApp</a><a href="#">X</a>
+        <a href="#">FAQs</a><a href="#">WhatsApp</a>
       </div>
       <div class="fcol">
         <h5>Company</h5>
@@ -631,8 +642,8 @@ new IntersectionObserver((e)=>{if(e[0].isIntersecting)document.getElementById('s
   .observe(document.getElementById('sunsetZone'));
 
 /* ============ hero headline letter cycle ============ */
-const H1S=['Meet Draper,\nyour content strategist','Meet Draper,\nnow on WhatsApp'];
-const SUBS=['It drafts, schedules and posts for you, straight from your chats','Voice note in the cab. Post live before you land'];
+const H1S=['Meet Draper, your\nLinkedIn content strategist','Meet Draper,\nnow on WhatsApp'];
+const SUBS=['Drafts, schedules and posts for you. Nothing that reads like AI','Voice note in the cab. Post live before you land'];
 const h1=document.getElementById('heroH1'),sub=document.getElementById('heroSub');
 let hIdx=0,hChars=[];
 function setH1(text){
@@ -667,13 +678,17 @@ setInterval(()=>{
   });
 },7000);
 
-/* ============ hero ambient film (format-aware) ============ */
+/* ============ hero ambient film ============ */
 const heroFilm=document.getElementById('heroFilm');
-const portraitFilm=matchMedia('(max-width:640px)').matches;
-heroFilm.poster=portraitFilm?'assets/hero-demo-poster-portrait.jpg':'assets/hero-demo-poster.jpg';
-heroFilm.src=portraitFilm?'assets/hero-demo-portrait.mp4':'assets/hero-demo.mp4';
-if(matchMedia('(prefers-reduced-motion: reduce)').matches){
+const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+if(reducedMotion){
   heroFilm.removeAttribute('autoplay');heroFilm.pause();
+}else{
+  /* ambient film has no controls, so always keep it rolling */
+  const keepRolling=()=>heroFilm.play().catch(()=>{});
+  heroFilm.addEventListener('pause',keepRolling);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)keepRolling()});
+  keepRolling();
 }
 
 /* ============ floating icon field ============ */
@@ -681,7 +696,7 @@ const ICONS=[
   ['linkedin_com',64,'12%','16%',-6],['whatsapp_com',58,'30%','6%',5],['notion_so',56,'46%','20%',-4],
   ['mail_google_com',60,'22%','34%',7],['calendar_google_com',54,'8%','52%',-8],['slack_com',62,'38%','58%',4],
   ['granola_ai',56,'18%','72%',-5],['typefully_com',52,'44%','80%',6],['figma_com',50,'6%','86%',-3],
-  ['stripe_com',58,'56%','44%',8],['x_com',54,'62%','68%',-7],['github_com',60,'70%','26%',3],
+  ['stripe_com',58,'56%','44%',8],['github_com',60,'70%','26%',3],
   ['loom_com',52,'78%','54%',-4],['descript_com',56,'86%','18%',6]
 ];
 const field=document.getElementById('iconField');
