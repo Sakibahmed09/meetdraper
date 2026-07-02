@@ -294,13 +294,34 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;color:var(--black)}
 .waitlist.done .wform{opacity:0;transform:scale(.97);pointer-events:none;position:absolute;left:-9999px}
 .waitlist.done .wdone{display:flex;opacity:1;transform:none}
 
+/* ============ proof layer ============ */
+.logo-strip{margin-top:46px;display:flex;flex-direction:column;align-items:center;gap:15px;position:relative;z-index:2}
+.logo-strip .ls-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(20,22,28,.38)}
+.logo-strip .ls-row{display:flex;align-items:center;gap:36px;flex-wrap:wrap;justify-content:center;padding:0 20px}
+.logo-strip img{height:23px;width:auto;filter:grayscale(1);opacity:.5;transition:opacity .3s}
+.logo-strip img:hover{opacity:.85}
+.stats-row{margin:36px auto 6px;display:flex;justify-content:center;gap:clamp(30px,6vw,88px);flex-wrap:wrap}
+.stat .sv{font-family:var(--serif);font-weight:600;font-size:clamp(36px,4vw,54px);letter-spacing:-.03em;color:#111;font-variant-numeric:tabular-nums;line-height:1.1}
+.stat .sl{margin-top:2px;font-size:13px;font-weight:500;color:var(--muted)}
+.post-shot{width:280px;flex:none;border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 1px 4px rgba(30,30,25,.06),0 12px 30px rgba(30,30,25,.10)}
+.post-shot img{display:block;width:100%;height:340px;object-fit:cover;object-position:top}
+.proof-grid{max-width:1160px;margin:42px auto 0;padding:0 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;text-align:left}
+.tcard{background:#fff;border-radius:22px;padding:26px;box-shadow:0 1px 4px rgba(30,30,25,.05),0 12px 30px rgba(30,30,25,.07)}
+.tcard .twho{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.tcard .twho img{width:44px;height:44px;border-radius:50%;object-fit:cover}
+.tcard .tn{font-size:14.5px;font-weight:600;color:#16181c}
+.tcard .tr{font-size:12.5px;font-weight:500;color:var(--muted)}
+.tcard .tstat{font-family:var(--serif);font-weight:600;font-size:27px;letter-spacing:-.02em;color:#111;line-height:1.1}
+.tcard .tsl{font-size:12.5px;font-weight:500;color:var(--muted);margin-bottom:14px}
+.tcard .tq{font-size:14px;font-weight:500;color:#1c1f26;line-height:1.55}
+
 /* ============ community ============ */
 .community{padding:110px 0 40px;text-align:center}
 .community h2{font-size:clamp(36px,3.6vw,48px);letter-spacing:-.03em}
 .marquee{margin-top:44px;overflow:hidden;position:relative;
   -webkit-mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent);
   mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent)}
-.mtrack{display:flex;gap:18px;width:max-content;padding:8px 0;animation:marq 80s linear infinite}
+.mtrack{display:flex;align-items:flex-start;gap:18px;width:max-content;padding:8px 0;animation:marq 80s linear infinite}
 .marquee:hover .mtrack{animation-play-state:paused}
 @keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .tweet{
@@ -355,6 +376,7 @@ footer{position:relative;padding:40px 20px 0}
   .feature{grid-template-columns:1fr;gap:36px;padding:72px 20px}
   .feature .vis-first{order:-1}
   .fgrid{grid-template-columns:1fr 1fr;gap:36px 20px}
+  .proof-grid{grid-template-columns:1fr;max-width:460px}
   .icon-field{height:330px}
   .footnote-inner{margin-left:0}
   .visual{height:380px}
@@ -372,6 +394,10 @@ footer{position:relative;padding:40px 20px 0}
   .hero{padding-top:104px}
   .hero-h1{font-size:34px}
   .hero-video{width:calc(100% + 40px);max-width:none;margin:-56px -20px 0}
+  .hero-video video{
+    -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 7%,#000 93%,transparent 100%);
+    mask-image:linear-gradient(to bottom,transparent 0,#000 7%,#000 93%,transparent 100%);
+  }
   .closing{padding:110px 20px 90px}
   .waitlist{padding-top:100px}
   .wform{flex-direction:column;padding:0 8px}
@@ -379,6 +405,10 @@ footer{position:relative;padding:40px 20px 0}
   .community{padding-top:84px}
   .tweet{width:250px}
   .fbottom{flex-direction:column;align-items:flex-start}
+  .post-shot{width:236px}
+  .post-shot img{height:290px}
+  .logo-strip .ls-row{gap:24px}
+  .logo-strip img{height:19px}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
@@ -438,6 +468,17 @@ footer{position:relative;padding:40px 20px 0}
     <a class="hero-signup pl" style="--d:.85s" href="#fits">Curious? See how it works
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
+
+    <div class="logo-strip pl" style="--d:.95s">
+      <span class="ls-label">Trusted by founders backed by</span>
+      <div class="ls-row">
+        <img src="assets/proof/logo-yc.png" alt="Y Combinator" loading="lazy">
+        <img src="assets/proof/logo-a16z.png" alt="a16z" loading="lazy">
+        <img src="assets/proof/logo-lightspeed.png" alt="Lightspeed" loading="lazy">
+        <img src="assets/proof/logo-eqt.png" alt="EQT Ventures" loading="lazy">
+        <img src="assets/proof/logo-tg.png" alt="The Generalist" loading="lazy">
+      </div>
+    </div>
   </header>
 
   <!-- section 1 -->
@@ -593,10 +634,32 @@ footer{position:relative;padding:40px 20px 0}
   <!-- community -->
   <section class="community" id="community">
     <h2 class="serif-h" data-reveal>Community</h2>
+    <div class="stats-row" data-reveal style="--d:.06s" id="statsRow">
+      <div class="stat"><div class="sv" data-prefix="£" data-target="20" data-suffix="M+">£0M+</div><div class="sl">attributed revenue</div></div>
+      <div class="stat"><div class="sv" data-target="350" data-suffix="M+">0M+</div><div class="sl">views</div></div>
+      <div class="stat"><div class="sv" data-target="50" data-suffix="+">0+</div><div class="sl">founders</div></div>
+    </div>
     <div class="marquee" data-reveal style="--d:.1s">
       <div class="mtrack" id="mtrack"></div>
     </div>
-    <a class="stories-link" href="https://www.linkedin.com/company/draperhq/" target="_blank" rel="noopener" data-reveal style="--d:.15s">Explore user stories
+    <div class="proof-grid" data-reveal style="--d:.12s">
+      <div class="tcard">
+        <div class="twho"><img src="assets/proof/head-ibrahim.jpg" alt="" loading="lazy"><div><div class="tn">Ibrahim Khan</div><div class="tr">Cur8 Capital · VC</div></div></div>
+        <div class="tstat">$5M+</div><div class="tsl">leads generated</div>
+        <p class="tq">"Draper is quietly becoming indispensable. That's the best compliment I can give."</p>
+      </div>
+      <div class="tcard">
+        <div class="twho"><img src="assets/proof/head-ammar.jpg" alt="" loading="lazy"><div><div class="tn">Ammar Khan</div><div class="tr">Sahl AI · HealthTech</div></div></div>
+        <div class="tstat">$1.3M</div><div class="tsl">contract closed</div>
+        <p class="tq">"Traced enterprise contracts directly to Draper, plus top talent reaching out to Sahl AI."</p>
+      </div>
+      <div class="tcard">
+        <div class="twho"><img src="assets/proof/head-daniel.jpg" alt="" loading="lazy"><div><div class="tn">Daniel Fraai</div><div class="tr">YLookup · EQT Ventures</div></div></div>
+        <div class="tstat">400K+</div><div class="tsl">impressions</div>
+        <p class="tq">"Something is working. You guys really tickled the algorithm there."</p>
+      </div>
+    </div>
+    <a class="stories-link" href="https://draperhq.com" target="_blank" rel="noopener" data-reveal style="--d:.15s">See the full case studies
       <svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
   </section>
@@ -719,8 +782,20 @@ ICONS.forEach(([name,sz,x,y,rot],i)=>{
 });
 
 /* ============ scroll reveal ============ */
-const ro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');ro.unobserve(e.target)}}),{threshold:.18});
-document.querySelectorAll('[data-reveal]').forEach(el=>ro.observe(el));
+/* IO alone misses elements that fly past the viewport during fast flick-scrolls
+   (no threshold crossing ever fires), so a scroll-driven sweep backs it up. */
+const revealEls=new Set(document.querySelectorAll('[data-reveal]'));
+function revealNow(el){el.classList.add('in');revealEls.delete(el);ro.unobserve(el)}
+const ro=new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting||e.boundingClientRect.top<0)revealNow(e.target);
+}),{threshold:.12});
+revealEls.forEach(el=>ro.observe(el));
+let sweepQueued=false;
+function revealSweep(){
+  sweepQueued=false;
+  revealEls.forEach(el=>{if(el.getBoundingClientRect().top<innerHeight*.96)revealNow(el)});
+}
+addEventListener('scroll',()=>{if(!sweepQueued&&revealEls.size){sweepQueued=true;requestAnimationFrame(revealSweep)}},{passive:true});
 
 /* ============ (2) arc fan cycle ============ */
 const fan=document.getElementById('fan');
@@ -821,32 +896,34 @@ wform.addEventListener('submit',e=>{
 });
 try{if(localStorage.getItem('draper-waitlist'))wsection.classList.add('done')}catch(_){}
 
-/* ============ community marquee ============ */
-const TWEETS=[
-  {n:'Amara Okafor',h:'@amaraships',a:'av2',t:'it texted me a question about my own board meeting, then drafted the post before i finished replying. <span class="m">@draperhq</span>'},
-  {n:'Theo Lindqvist',h:'@theobuilds',a:'av3',t:'voice note from the back of a cab. post live before my flight boarded. <span class="m">@draperhq</span> is different'},
-  {n:'Priya Nair',h:'@priyaclimate',a:'av4',t:'my cofounder asked who i hired. i showed him the whatsapp thread. <span class="m">@draperhq</span>'},
-  {n:'Dan Mercer',h:'@danmercer',a:'av5',t:'week one it asked before every post. week six it just sends me the link. <span class="m">@draperhq</span> earned it'},
-  {n:'Lena Fischer',h:'@lenawrites',a:'av6',t:'customers started quoting my posts back to me in sales calls. stopped questioning the invoice after that'},
-  {n:'Marcus Cole',h:'@marcusinfra',a:'av7',t:'it caught a line i said at minute 40 and made it thursday’s post. 400k impressions later. <span class="m">@draperhq</span>'},
-  {n:'Sofia Reyes',h:'@sofiahealth',a:'av9',t:'i talk for thirty minutes on a monday and look prolific by friday. <span class="m">@draperhq</span>'},
-  {n:'Yusuf Rahman',h:'@yusufbuilds',a:'av8',t:'openclaw runs my terminal, <span class="m">@draperhq</span> runs my linkedin. we live in the future'},
-  {n:'Grace Park',h:'@graceships',a:'av1',t:'told <span class="m">@draperhq</span> to keep my tuesday post spiky. it argued back. it was right'}
-];
-const bird='<svg class="bird" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23 4.9c-.8.4-1.7.6-2.6.8a4.5 4.5 0 0 0 2-2.5c-.9.5-1.9.9-2.9 1.1a4.5 4.5 0 0 0-7.7 4.1A12.8 12.8 0 0 1 2.5 3.7a4.5 4.5 0 0 0 1.4 6A4.4 4.4 0 0 1 1.8 9v.1a4.5 4.5 0 0 0 3.6 4.4 4.5 4.5 0 0 1-2 .1 4.5 4.5 0 0 0 4.2 3.1A9 9 0 0 1 1 18.6a12.7 12.7 0 0 0 6.9 2c8.3 0 12.8-6.9 12.8-12.8v-.6c.9-.6 1.6-1.4 2.3-2.3z"/></svg>';
-const check='<svg width="14" height="14" viewBox="0 0 22 22" fill="none" style="flex:none"><path d="M11 1.5l2.2 1.9 2.9-.4 1 2.7 2.7 1-.4 2.9 1.9 2.2-1.9 2.2.4 2.9-2.7 1-1 2.7-2.9-.4L11 22l-2.2-1.9-2.9.4-1-2.7-2.7-1 .4-2.9L.7 11.7 2.6 9.5l-.4-2.9 2.7-1 1-2.7 2.9.4L11 1.5z" fill="#3E9FF2"/><path d="M7.5 11.2l2.3 2.3 4.7-4.7" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+/* ============ community marquee: real client posts ============ */
+const POSTS=['ibrahim-origin','matthew-ylookup','kes-bcg','mohsin-dubai','ammar-saudi','umair-sahl','daniel-eqt','ammar-vulnerability'];
 const mtrack=document.getElementById('mtrack');
-function tweetCard(tw){
-  return `<div class="tweet">
-    <div class="thead">
-      <div class="tav"><img src="assets/${tw.a}.jpg" alt="" loading="lazy"></div>
-      <div class="tinfo"><div class="tname">${tw.n} ${check}</div><div class="thandle">${tw.h}</div></div>
-      ${bird}
-    </div>
-    <div class="tbody">${tw.t}</div>
-  </div>`;
+const shot=n=>`<div class="post-shot"><img src="assets/proof/post-${n}.jpg" alt="Client LinkedIn post" loading="lazy"></div>`;
+mtrack.innerHTML=POSTS.map(shot).join('')+POSTS.map(shot).join('');
+
+/* ============ stat counters ============ */
+const statsRow=document.getElementById('statsRow');
+let statsDone=false;
+function runCounters(){
+  if(statsDone)return;statsDone=true;
+  document.querySelectorAll('.sv').forEach(el=>{
+    const target=parseInt(el.dataset.target,10);
+    const pre=el.dataset.prefix||'';
+    const suf=el.dataset.suffix||'';
+    const t0=performance.now();
+    const dur=1400;
+    (function tick(now){
+      const p=Math.min(1,(now-t0)/dur);
+      const eased=1-Math.pow(1-p,3);
+      el.textContent=pre+Math.round(target*eased)+suf;
+      if(p<1)requestAnimationFrame(tick);
+    })(t0);
+  });
 }
-mtrack.innerHTML=TWEETS.map(tweetCard).join('')+TWEETS.map(tweetCard).join('');
+new IntersectionObserver((es,o)=>{es.forEach(e=>{if(e.isIntersecting){runCounters();o.disconnect()}})},{threshold:.3}).observe(statsRow);
+/* fast-scroll fallback: fire when revealed by the sweep too */
+new MutationObserver(()=>{if(statsRow.classList.contains('in'))runCounters()}).observe(statsRow,{attributes:true,attributeFilter:['class']});
 </script>
 </body>
 </html>

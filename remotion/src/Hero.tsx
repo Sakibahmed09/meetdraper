@@ -13,7 +13,7 @@ import {loadFont} from '@remotion/google-fonts/DMSans';
 
 const {fontFamily: DM} = loadFont();
 
-export const HERO_DURATION = 1200; /* 40s @ 30fps */
+export const HERO_DURATION = 2400; /* 40s @ 60fps */
 
 /* ---------- palette ---------- */
 const BG = '#FCFBF9';
@@ -26,37 +26,37 @@ const MUTED = 'rgba(20,22,28,0.45)';
 
 /* ---------- timeline (frames @30fps) ---------- */
 const T = {
-  pushStart: 105,
-  pushEnd: 162,
-  swapStart: 118,
-  swapEnd: 150,
-  typing1: [172, 202] as const,
-  m1: 205,
-  memo: 268,
-  memoPlayEnd: 330,
-  typing2: [328, 352] as const,
-  post: 355,
-  kbUp: 400,
-  typeStart: 424,
-  typeEnd: 478,
-  send: 488,
-  kbDown: 495,
-  typing3: [535, 558] as const,
-  m5: 561,
-  chips: 610,
-  pick: 672,
-  sep: 725,
-  typing4: [745, 768] as const,
-  m8: 771,
-  results: 820,
-  countStart: 832,
-  countEnd: 950,
-  typing5: [938, 962] as const,
-  m10: 965,
-  pullStart: 1060,
-  pullEnd: 1150,
-  swapBackStart: 1075,
-  swapBackEnd: 1115,
+  pushStart: 210,
+  pushEnd: 324,
+  swapStart: 236,
+  swapEnd: 300,
+  typing1: [344, 404] as const,
+  m1: 410,
+  memo: 536,
+  memoPlayEnd: 660,
+  typing2: [656, 704] as const,
+  post: 710,
+  kbUp: 800,
+  typeStart: 848,
+  typeEnd: 956,
+  send: 976,
+  kbDown: 990,
+  typing3: [1070, 1116] as const,
+  m5: 1122,
+  chips: 1220,
+  pick: 1344,
+  sep: 1450,
+  typing4: [1490, 1536] as const,
+  m8: 1542,
+  results: 1640,
+  countStart: 1664,
+  countEnd: 1900,
+  typing5: [1876, 1924] as const,
+  m10: 1930,
+  pullStart: 2120,
+  pullEnd: 2300,
+  swapBackStart: 2150,
+  swapBackEnd: 2230,
 };
 
 const easePage = Easing.bezier(0.22, 1, 0.36, 1);
@@ -202,7 +202,7 @@ const TypingDots: React.FC<{frame: number; range: readonly [number, number]; bot
             height: 11,
             borderRadius: '50%',
             background: 'rgba(20,22,28,0.4)',
-            opacity: 0.4 + 0.6 * Math.abs(Math.sin(frame * 0.28 - i * 0.9)),
+            opacity: 0.4 + 0.6 * Math.abs(Math.sin(frame * 0.14 - i * 0.9)),
           }}
         />
       ))}
@@ -241,7 +241,7 @@ const VoiceMemo: React.FC<{frame: number; anim: React.CSSProperties; bottom: num
             key={i}
             style={{
               width: 3.5,
-              height: h * (playing ? 0.55 + 0.45 * Math.abs(Math.sin(frame * 0.35 + i * 0.55)) : 1),
+              height: h * (playing ? 0.55 + 0.45 * Math.abs(Math.sin(frame * 0.175 + i * 0.55)) : 1),
               borderRadius: 2,
               background: RED,
             }}
@@ -385,7 +385,7 @@ const ResultsCard: React.FC<{frame: number; anim: React.CSSProperties; bottom: n
             color: '#3E8E4F',
           }}
         >
-          <span style={{width: 9, height: 9, borderRadius: '50%', background: '#3E8E4F', opacity: 0.5 + 0.5 * Math.abs(Math.sin(frame * 0.12))}} />
+          <span style={{width: 9, height: 9, borderRadius: '50%', background: '#3E8E4F', opacity: 0.5 + 0.5 * Math.abs(Math.sin(frame * 0.06))}} />
           LIVE
         </span>
       </div>
@@ -494,6 +494,7 @@ const ContactFace: React.FC<{opacity: number; scale: number}> = ({opacity, scale
       paddingTop: 96,
       opacity,
       transform: `scale(${scale})`,
+      filter: opacity < 0.99 ? `blur(${(1 - opacity) * 3}px)` : undefined,
     }}
   >
     <div style={{width: 160, height: 160, borderRadius: 40, overflow: 'hidden', boxShadow: '0 12px 34px rgba(20,20,40,0.24)'}}>
@@ -546,14 +547,14 @@ export const Hero: React.FC = () => {
   const cardH = 586;
   const cardX = (W - cardW) / 2;
   const cardY = isPortrait ? (H - cardH) / 2 - 70 : 252;
-  const zoomTarget = isPortrait ? (W * 1.05) / cardW : 1.78;
+  const zoomTarget = isPortrait ? (W * 0.97) / cardW : 1.78;
   const originX = W / 2;
   const originY = cardY + cardH / 2;
 
   /* ambient drift — periods divide duration so frame 0 == frame 1200 */
-  const drift = Math.sin((frame / 600) * Math.PI * 2);
+  const drift = Math.sin((frame / 1200) * Math.PI * 2);
   const driftY = drift * 5;
-  const driftX = Math.sin((frame / 400) * Math.PI * 2) * 3;
+  const driftX = Math.sin((frame / 800) * Math.PI * 2) * 3;
 
   /* camera — scale expressed as a pure function of frame so we can
      derive per-frame velocity for a filmic motion-blur pass */
@@ -562,12 +563,14 @@ export const Hero: React.FC = () => {
     const pullOut = interpolate(f, [T.pullStart, T.pullEnd], [0, 1], {...clamp, easing: easePage});
     const creep = interpolate(f, [T.pushEnd, T.pullStart], [0, 0.05], clamp);
     const zoomed = 1 + pushIn * (zoomTarget - 1) - creep * pushIn;
-    const d = Math.sin((f / 600) * Math.PI * 2);
+    const d = Math.sin((f / 1200) * Math.PI * 2);
     return (zoomed + (1 - zoomed) * pullOut) * (1 + 0.004 * d);
   };
   const cam = camOf(frame);
   const camVel = Math.abs(camOf(frame) - camOf(frame - 1));
-  const motionBlur = Math.min(2.4, camVel * 90);
+  const pushProgress = Math.max(0, Math.min(1, (cam - 1) / (zoomTarget - 1)));
+  const camY = -12 * pushProgress;
+  const motionBlur = Math.min(2.4, camVel * 180);
 
   /* face crossfades */
   const toChat = interpolate(frame, [T.swapStart, T.swapEnd], [0, 1], {...clamp, easing: easePage});
@@ -577,7 +580,7 @@ export const Hero: React.FC = () => {
 
   /* keyboard — dismisses shortly after send, soft weighty slide */
   const kbUp = frame < T.kbUp ? 0 : spring({frame: frame - T.kbUp, fps, config: {damping: 18, stiffness: 110}});
-  const kbDismiss = T.send + 12;
+  const kbDismiss = T.send + 24;
   const kbDown = frame < kbDismiss ? 0 : spring({frame: frame - kbDismiss, fps, config: {damping: 18, stiffness: 110}});
   const kb = Math.max(0, kbUp - kbDown);
 
@@ -585,7 +588,7 @@ export const Hero: React.FC = () => {
   const TYPED = 'go monday instead';
   const nChars = Math.floor(interpolate(frame, [T.typeStart, T.typeEnd], [0, TYPED.length], clamp));
   const typedText = frame >= T.send ? '' : TYPED.slice(0, nChars);
-  const caretOn = frame >= T.typeStart - 12 && frame < T.send && Math.floor(frame / 9) % 2 === 0;
+  const caretOn = frame >= T.typeStart - 12 && frame < T.send && Math.floor(frame / 18) % 2 === 0;
   const placeholderVisible = !(frame >= T.typeStart - 12 && frame < T.send) && !typedText;
 
   /* message stack — bottom-anchored, springs push older messages up */
@@ -617,7 +620,7 @@ export const Hero: React.FC = () => {
     <AbsoluteFill style={{background: BG, fontFamily: DM}}>
       <AbsoluteFill
         style={{
-          transform: `scale(${cam}) translate(${driftX}px, ${driftY}px)`,
+          transform: `scale(${cam}) translate(${driftX}px, ${driftY + camY}px)`,
           transformOrigin: `${originX}px ${originY}px`,
           filter: motionBlur > 0.08 ? `blur(${motionBlur.toFixed(2)}px)` : undefined,
         }}
@@ -649,6 +652,7 @@ export const Hero: React.FC = () => {
               inset: 0,
               opacity: chatOp,
               transform: `scale(${0.985 + 0.015 * chatOp}) translateY(${8 * (1 - chatOp)}px)`,
+              filter: chatOp < 0.99 && chatOp > 0 ? `blur(${(1 - chatOp) * 3}px)` : undefined,
             }}
           >
             {/* header */}

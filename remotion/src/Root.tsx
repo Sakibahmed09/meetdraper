@@ -10,7 +10,7 @@ export const Root: React.FC = () => {
         id="DraperHero"
         component={Hero}
         durationInFrames={HERO_DURATION}
-        fps={30}
+        fps={60}
         width={1440}
         height={1080}
       />
@@ -18,7 +18,7 @@ export const Root: React.FC = () => {
         id="DraperHeroPortrait"
         component={Hero}
         durationInFrames={HERO_DURATION}
-        fps={30}
+        fps={60}
         width={1080}
         height={1350}
       />
