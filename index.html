@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover">
 <title>Draper – Your LinkedIn content strategist</title>
 <meta name="description" content="Draper is your LinkedIn content strategist. It drafts, schedules and posts for you, in your voice, and texts you first when your meetings are hiding a good post.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sakibahmed09.github.io/meetdraper/">
+<meta property="og:title" content="Draper – Your LinkedIn content strategist">
+<meta property="og:description" content="Drafts, schedules and posts for you. Nothing that reads like AI.">
+<meta property="og:image" content="https://sakibahmed09.github.io/meetdraper/assets/social-card.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Draper – Your LinkedIn content strategist">
+<meta name="twitter:description" content="Drafts, schedules and posts for you. Nothing that reads like AI.">
+<meta name="twitter:image" content="https://sakibahmed09.github.io/meetdraper/assets/social-card.jpg">
 <link rel="preload" as="image" href="assets/hero-demo-poster.jpg" media="(min-width: 641px)">
 <link rel="preload" as="image" href="assets/hero-demo-poster-portrait.jpg" media="(max-width: 640px)">
 <link rel="preload" as="image" href="assets/hero-coast.jpg">
@@ -259,19 +270,19 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;color:var(--black)}
 .waitlist h2{font-size:clamp(34px,3.4vw,46px);letter-spacing:-.03em}
 .waitlist .wsub{margin:16px auto 0;font-size:15px;font-weight:500;color:var(--muted-2);max-width:380px;line-height:1.45}
 .wform{
-  margin:32px auto 0;display:flex;gap:10px;max-width:440px;
+  margin:32px auto 0;display:flex;gap:10px;max-width:540px;
   transition:opacity .4s var(--easeout),transform .4s var(--easeout);
 }
 .wform input{
-  flex:1;height:48px;border-radius:16px;border:1px solid rgba(20,22,28,.14);
-  background:rgba(255,255,255,.85);padding:0 18px;font-family:var(--sans);
-  font-size:15px;font-weight:500;color:var(--ink);outline:none;min-width:0;
+  flex:1;height:52px;border-radius:16px;border:1px solid rgba(20,22,28,.14);
+  background:rgba(255,255,255,.85);padding:0 20px;font-family:var(--sans);
+  font-size:15.5px;font-weight:500;color:var(--ink);outline:none;min-width:200px;
   box-shadow:inset 0 1px 2px rgba(0,0,0,.03);
   transition:border-color .25s,box-shadow .25s;
 }
 .wform input::placeholder{color:var(--muted)}
 .wform input:focus{border-color:rgba(20,22,28,.32);box-shadow:0 0 0 3px rgba(20,22,28,.05)}
-.wform .btn-dark{padding:0 26px;flex:none}
+.wform .btn-dark{padding:0 26px;flex:none;height:52px}
 .wdone{
   margin:32px auto 0;max-width:440px;display:none;align-items:center;justify-content:center;gap:10px;
   height:48px;border-radius:16px;background:rgba(255,255,255,.75);
@@ -318,7 +329,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;color:var(--black)}
 .closing h2{font-size:clamp(42px,4.6vw,62px);letter-spacing:-.035em;line-height:1.06;color:#191a17}
 .closing .cta-row{margin-top:34px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 footer{position:relative;padding:40px 20px 0}
-.fgrid{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:left}
+.fgrid{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;text-align:left}
 .fcol h5{font-size:13px;font-weight:500;color:var(--muted);margin-bottom:16px}
 .fcol a{display:block;font-size:14px;font-weight:500;color:rgba(26,31,43,.88);text-decoration:none;margin-bottom:12px}
 .fcol a:hover{opacity:.55}
@@ -364,6 +375,7 @@ footer{position:relative;padding:40px 20px 0}
   .closing{padding:110px 20px 90px}
   .waitlist{padding-top:100px}
   .wform{flex-direction:column;padding:0 8px}
+  .wform input{flex:none;width:100%}
   .community{padding-top:84px}
   .tweet{width:250px}
   .fbottom{flex-direction:column;align-items:flex-start}
@@ -386,7 +398,6 @@ footer{position:relative;padding:40px 20px 0}
     <a href="#footer">Company</a>
   </div>
   <div class="nav-right">
-    <a class="login" href="#">Log in</a>
     <a class="btn-dark sm" href="#waitlist">Join Waitlist</a>
   </div>
 </nav>
@@ -475,7 +486,7 @@ footer{position:relative;padding:40px 20px 0}
       <span class="num">(2)</span>
       <h3 class="serif-h">Learns your voice with Draper Arcs</h3>
       <p>Three arcs run your story: the person, the work, the market. Every draft fits one, so your feed adds up to something</p>
-      <a class="learn" href="#">Learn more
+      <a class="learn" href="#waitlist">Learn more
         <svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
@@ -548,7 +559,7 @@ footer{position:relative;padding:40px 20px 0}
       <span class="num">(5)</span>
       <h3 class="serif-h">Earns the keys as you go</h3>
       <p>Draper starts by asking. Approve a few drafts and it starts scheduling. Keep approving and it posts on its own, still sounding exactly like you</p>
-      <a class="learn" href="#">Learn more
+      <a class="learn" href="#waitlist">Learn more
         <svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
@@ -585,7 +596,7 @@ footer{position:relative;padding:40px 20px 0}
     <div class="marquee" data-reveal style="--d:.1s">
       <div class="mtrack" id="mtrack"></div>
     </div>
-    <a class="stories-link" href="#" data-reveal style="--d:.15s">Explore user stories
+    <a class="stories-link" href="https://www.linkedin.com/company/draperhq/" target="_blank" rel="noopener" data-reveal style="--d:.15s">Explore user stories
       <svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
   </section>
@@ -613,16 +624,12 @@ footer{position:relative;padding:40px 20px 0}
         <a href="#fits">How it works</a><a href="#arcs">Arcs</a><a href="#waitlist">Waitlist</a><a href="#community">Community</a>
       </div>
       <div class="fcol">
-        <h5>Resources</h5>
-        <a href="#">FAQs</a><a href="#">WhatsApp</a>
-      </div>
-      <div class="fcol">
         <h5>Company</h5>
-        <a href="#">About</a><a href="#">Careers</a><a href="#">LinkedIn</a>
+        <a href="https://www.linkedin.com/company/draperhq/" target="_blank" rel="noopener">LinkedIn</a><a href="mailto:sakib@withsignal.io?subject=Draper%20careers">Careers</a><a href="mailto:sakib@withsignal.io?subject=Draper">Contact</a>
       </div>
       <div class="fcol">
         <h5>Legal</h5>
-        <a href="#">Cookies</a><a href="#">Privacy</a><a href="#">Terms</a>
+        <a href="privacy.html">Privacy</a><a href="terms.html">Terms</a>
       </div>
     </div>
     <div class="fbottom" data-reveal style="--d:.08s">

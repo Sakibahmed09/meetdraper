@@ -1,6 +1,7 @@
 import React from 'react';
-import {Composition} from 'remotion';
+import {Composition, Still} from 'remotion';
 import {Hero, HERO_DURATION} from './Hero';
+import {SocialCard} from './SocialCard';
 
 export const Root: React.FC = () => {
   return (
@@ -21,6 +22,7 @@ export const Root: React.FC = () => {
         width={1080}
         height={1350}
       />
+      <Still id="SocialCard" component={SocialCard} width={1200} height={630} />
     </>
   );
 };
