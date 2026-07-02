@@ -9,7 +9,7 @@ import {
   useVideoConfig,
   Easing,
 } from 'remotion';
-import {loadFont} from '@remotion/google-fonts/DMSans';
+import {loadFont} from '@remotion/google-fonts/SchibstedGrotesk';
 
 const {fontFamily: DM} = loadFont();
 
@@ -57,6 +57,42 @@ const T = {
   pullEnd: 2300,
   swapBackStart: 2150,
   swapBackEnd: 2230,
+};
+
+
+/* 15s mobile cut: settle, push, mined quote, memo, drafted card, pull. */
+const T_MOBILE: typeof T = {
+  pushStart: 120,
+  pushEnd: 230,
+  swapStart: 136,
+  swapEnd: 210,
+  typing1: [240, 288] as const,
+  m1: 292,
+  memo: 420,
+  memoPlayEnd: 520,
+  typing2: [522, 560] as const,
+  post: 565,
+  kbUp: 99999,
+  typeStart: 99999,
+  typeEnd: 100000,
+  send: 99999,
+  kbDown: 99999,
+  typing3: [99999, 99999] as const,
+  m5: 99999,
+  chips: 99999,
+  pick: 99999,
+  sep: 99999,
+  typing4: [99999, 99999] as const,
+  m8: 99999,
+  results: 99999,
+  countStart: 99999,
+  countEnd: 100000,
+  typing5: [99999, 99999] as const,
+  m10: 99999,
+  pullStart: 720,
+  pullEnd: 860,
+  swapBackStart: 745,
+  swapBackEnd: 820,
 };
 
 const easePage = Easing.bezier(0.22, 1, 0.36, 1);
@@ -211,8 +247,8 @@ const TypingDots: React.FC<{frame: number; range: readonly [number, number]; bot
 };
 
 /* ---------- rich pieces ---------- */
-const VoiceMemo: React.FC<{frame: number; anim: React.CSSProperties; bottom: number}> = ({frame, anim, bottom}) => {
-  const playing = frame >= T.memo && frame <= T.memoPlayEnd;
+const VoiceMemo: React.FC<{frame: number; anim: React.CSSProperties; bottom: number; playFrom: number; playTo: number}> = ({frame, anim, bottom, playFrom, playTo}) => {
+  const playing = frame >= playFrom && frame <= playTo;
   const bars = Array.from({length: 26}, (_, i) => 8 + Math.abs(Math.sin(i * 1.37)) * 20);
   return (
     <div
@@ -537,7 +573,8 @@ const SideCard: React.FC<{x: number; y: number; w: number; img: string; name: st
 );
 
 /* ================= the film ================= */
-export const Hero: React.FC = () => {
+export const Hero: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
+  const TL = mobile ? T_MOBILE : T;
   const frame = useCurrentFrame();
   const {fps, width: W, height: H} = useVideoConfig();
   const isPortrait = H > W;
@@ -552,18 +589,19 @@ export const Hero: React.FC = () => {
   const originY = cardY + cardH / 2;
 
   /* ambient drift — periods divide duration so frame 0 == frame 1200 */
-  const drift = Math.sin((frame / 1200) * Math.PI * 2);
+  const driftPeriod = mobile ? 450 : 1200;
+  const drift = Math.sin((frame / driftPeriod) * Math.PI * 2);
   const driftY = drift * 5;
-  const driftX = Math.sin((frame / 800) * Math.PI * 2) * 3;
+  const driftX = Math.sin((frame / (mobile ? 300 : 800)) * Math.PI * 2) * 3;
 
   /* camera — scale expressed as a pure function of frame so we can
      derive per-frame velocity for a filmic motion-blur pass */
   const camOf = (f: number) => {
-    const pushIn = interpolate(f, [T.pushStart, T.pushEnd], [0, 1], {...clamp, easing: easePage});
-    const pullOut = interpolate(f, [T.pullStart, T.pullEnd], [0, 1], {...clamp, easing: easePage});
-    const creep = interpolate(f, [T.pushEnd, T.pullStart], [0, 0.05], clamp);
+    const pushIn = interpolate(f, [TL.pushStart, TL.pushEnd], [0, 1], {...clamp, easing: easePage});
+    const pullOut = interpolate(f, [TL.pullStart, TL.pullEnd], [0, 1], {...clamp, easing: easePage});
+    const creep = interpolate(f, [TL.pushEnd, TL.pullStart], [0, 0.05], clamp);
     const zoomed = 1 + pushIn * (zoomTarget - 1) - creep * pushIn;
-    const d = Math.sin((f / 1200) * Math.PI * 2);
+    const d = Math.sin((f / driftPeriod) * Math.PI * 2);
     return (zoomed + (1 - zoomed) * pullOut) * (1 + 0.004 * d);
   };
   const cam = camOf(frame);
@@ -573,37 +611,37 @@ export const Hero: React.FC = () => {
   const motionBlur = Math.min(2.4, camVel * 180);
 
   /* face crossfades */
-  const toChat = interpolate(frame, [T.swapStart, T.swapEnd], [0, 1], {...clamp, easing: easePage});
-  const toContact = interpolate(frame, [T.swapBackStart, T.swapBackEnd], [0, 1], {...clamp, easing: easePage});
+  const toChat = interpolate(frame, [TL.swapStart, TL.swapEnd], [0, 1], {...clamp, easing: easePage});
+  const toContact = interpolate(frame, [TL.swapBackStart, TL.swapBackEnd], [0, 1], {...clamp, easing: easePage});
   const chatOp = toChat * (1 - toContact);
   const contactOp = 1 - chatOp;
 
   /* keyboard — dismisses shortly after send, soft weighty slide */
-  const kbUp = frame < T.kbUp ? 0 : spring({frame: frame - T.kbUp, fps, config: {damping: 18, stiffness: 110}});
-  const kbDismiss = T.send + 24;
+  const kbUp = frame < TL.kbUp ? 0 : spring({frame: frame - TL.kbUp, fps, config: {damping: 18, stiffness: 110}});
+  const kbDismiss = TL.send + 24;
   const kbDown = frame < kbDismiss ? 0 : spring({frame: frame - kbDismiss, fps, config: {damping: 18, stiffness: 110}});
   const kb = Math.max(0, kbUp - kbDown);
 
   /* compose typing */
   const TYPED = 'go monday instead';
-  const nChars = Math.floor(interpolate(frame, [T.typeStart, T.typeEnd], [0, TYPED.length], clamp));
-  const typedText = frame >= T.send ? '' : TYPED.slice(0, nChars);
-  const caretOn = frame >= T.typeStart - 12 && frame < T.send && Math.floor(frame / 18) % 2 === 0;
-  const placeholderVisible = !(frame >= T.typeStart - 12 && frame < T.send) && !typedText;
+  const nChars = Math.floor(interpolate(frame, [TL.typeStart, TL.typeEnd], [0, TYPED.length], clamp));
+  const typedText = frame >= TL.send ? '' : TYPED.slice(0, nChars);
+  const caretOn = frame >= TL.typeStart - 12 && frame < TL.send && Math.floor(frame / 18) % 2 === 0;
+  const placeholderVisible = !(frame >= TL.typeStart - 12 && frame < TL.send) && !typedText;
 
   /* message stack — bottom-anchored, springs push older messages up */
   const GAP = 14;
   const STACK: Array<{key: string; at: number; h: number}> = [
-    {key: 'm1', at: T.m1, h: 130},
-    {key: 'memo', at: T.memo, h: 66},
-    {key: 'post', at: T.post, h: 236},
-    {key: 'm4', at: T.send, h: 60},
-    {key: 'm5', at: T.m5, h: 96},
-    {key: 'chips', at: T.chips, h: 226},
-    {key: 'sep', at: T.sep, h: 46},
-    {key: 'm8', at: T.m8, h: 56},
-    {key: 'results', at: T.results, h: 262},
-    {key: 'm10', at: T.m10, h: 96},
+    {key: 'm1', at: TL.m1, h: 130},
+    {key: 'memo', at: TL.memo, h: 66},
+    {key: 'post', at: TL.post, h: 236},
+    {key: 'm4', at: TL.send, h: 60},
+    {key: 'm5', at: TL.m5, h: 96},
+    {key: 'chips', at: TL.chips, h: 226},
+    {key: 'sep', at: TL.sep, h: 46},
+    {key: 'm8', at: TL.m8, h: 56},
+    {key: 'results', at: TL.results, h: 262},
+    {key: 'm10', at: TL.m10, h: 96},
   ];
   const kbLift = kb * KB_H;
   const base = 108 + kbLift;
@@ -683,33 +721,33 @@ export const Hero: React.FC = () => {
 
             {/* thread */}
             <div style={{position: 'absolute', top: 92, left: 26, right: 26, bottom: 0, overflow: 'hidden'}}>
-              <Bubble side="in" bottom={bottoms.m1} anim={pop(frame, T.m1, fps)} style={{width: 560}}>
+              <Bubble side="in" bottom={bottoms.m1} anim={pop(frame, TL.m1, fps)} style={{width: 560}}>
                 caught something in your 2pm. you said{' '}
                 <span style={{borderBottom: '2.5px solid rgba(17,17,17,0.5)', paddingBottom: 1}}>
                   &ldquo;we hire slow on purpose, speed is a tax&rdquo;
                 </span>
                 . that is a post
               </Bubble>
-              <TypingDots frame={frame} range={T.typing1} bottom={base} fps={fps} />
-              <VoiceMemo frame={frame} anim={pop(frame, T.memo, fps)} bottom={bottoms.memo} />
-              <TypingDots frame={frame} range={T.typing2} bottom={base} fps={fps} />
-              <DraftCard anim={pop(frame, T.post, fps)} bottom={bottoms.post} />
-              <Bubble side="out" bottom={bottoms.m4} anim={pop(frame, T.send, fps)}>
+              <TypingDots frame={frame} range={TL.typing1} bottom={base} fps={fps} />
+              <VoiceMemo frame={frame} anim={pop(frame, TL.memo, fps)} bottom={bottoms.memo} playFrom={TL.memo} playTo={TL.memoPlayEnd} />
+              <TypingDots frame={frame} range={TL.typing2} bottom={base} fps={fps} />
+              <DraftCard anim={pop(frame, TL.post, fps)} bottom={bottoms.post} />
+              <Bubble side="out" bottom={bottoms.m4} anim={pop(frame, TL.send, fps)}>
                 go monday instead
               </Bubble>
-              <TypingDots frame={frame} range={T.typing3} bottom={base} fps={fps} />
-              <Bubble side="in" bottom={bottoms.m5} anim={pop(frame, T.m5, fps)} style={{width: 500}}>
+              <TypingDots frame={frame} range={TL.typing3} bottom={base} fps={fps} />
+              <Bubble side="in" bottom={bottoms.m5} anim={pop(frame, TL.m5, fps)} style={{width: 500}}>
                 done. monday, 8am. spiky cut or the safe one?
               </Bubble>
-              <ChoiceCard frame={frame} anim={pop(frame, T.chips, fps)} bottom={bottoms.chips} fps={fps} />
+              <ChoiceCard frame={frame} anim={pop(frame, TL.chips, fps)} bottom={bottoms.chips} fps={fps} />
               <DaySep frame={frame} bottom={bottoms.sep} />
-              <TypingDots frame={frame} range={T.typing4} bottom={base} fps={fps} />
-              <Bubble side="in" bottom={bottoms.m8} anim={pop(frame, T.m8, fps)}>
+              <TypingDots frame={frame} range={TL.typing4} bottom={base} fps={fps} />
+              <Bubble side="in" bottom={bottoms.m8} anim={pop(frame, TL.m8, fps)}>
                 it&rsquo;s live.
               </Bubble>
-              <ResultsCard frame={frame} anim={pop(frame, T.results, fps)} bottom={bottoms.results} />
-              <TypingDots frame={frame} range={T.typing5} bottom={base} fps={fps} />
-              <Bubble side="in" bottom={bottoms.m10} anim={pop(frame, T.m10, fps)} style={{width: 520}}>
+              <ResultsCard frame={frame} anim={pop(frame, TL.results, fps)} bottom={bottoms.results} />
+              <TypingDots frame={frame} range={TL.typing5} bottom={base} fps={fps} />
+              <Bubble side="in" bottom={bottoms.m10} anim={pop(frame, TL.m10, fps)} style={{width: 520}}>
                 three investors in your DMs. want intros drafted?
               </Bubble>
             </div>

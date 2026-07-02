@@ -1,6 +1,6 @@
 import React from 'react';
 import {AbsoluteFill, Img, staticFile} from 'remotion';
-import {loadFont as loadDM} from '@remotion/google-fonts/DMSans';
+import {loadFont as loadDM} from '@remotion/google-fonts/SchibstedGrotesk';
 import {loadFont as loadFraunces} from '@remotion/google-fonts/Fraunces';
 import {loadFont as loadPlayfair} from '@remotion/google-fonts/PlayfairDisplay';
 

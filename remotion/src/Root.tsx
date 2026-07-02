@@ -22,6 +22,15 @@ export const Root: React.FC = () => {
         width={1080}
         height={1350}
       />
+      <Composition
+        id="DraperHeroMobile"
+        component={Hero}
+        defaultProps={{mobile: true}}
+        durationInFrames={900}
+        fps={60}
+        width={1080}
+        height={1350}
+      />
       <Still id="SocialCard" component={SocialCard} width={1200} height={630} />
     </>
   );

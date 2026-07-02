@@ -17,12 +17,12 @@
 <meta name="twitter:description" content="Drafts, schedules and posts for you. Nothing that reads like AI.">
 <meta name="twitter:image" content="https://sakibahmed09.github.io/meetdraper/assets/social-card.jpg">
 <link rel="preload" as="image" href="assets/hero-demo-poster.jpg" media="(min-width: 641px)">
-<link rel="preload" as="image" href="assets/hero-demo-poster-portrait.jpg" media="(max-width: 640px)">
+<link rel="preload" as="image" href="assets/hero-demo-poster-mobile.jpg" media="(max-width: 640px)">
 <link rel="preload" as="image" href="assets/hero-coast.jpg">
 <link rel="icon" href="assets/app-icon.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=DM+Sans:opsz,wght@9..40,400..700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,0..100&family=Schibsted+Grotesk:wght@400..700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <style>
 /* ============ tokens ============ */
 :root{
@@ -35,7 +35,7 @@
   --blue-link:#5C82C9;
   --imsg-blue:#0A84FF;
   --imsg-grey:#E9E9EB;
-  --sans:'DM Sans',Inter,Helvetica,system-ui,sans-serif;
+  --sans:'Schibsted Grotesk',Inter,Helvetica,system-ui,sans-serif;
   --serif:'Fraunces',Georgia,'Times New Roman',serif;
   --wordmark:'Playfair Display',Georgia,'Times New Roman',serif;
   --spring:cubic-bezier(.34,1.45,.64,1);
@@ -54,6 +54,7 @@ body{
 ::selection{background:rgba(26,31,43,.9);color:#EEEBE6}
 img{user-select:none}
 h1,h2,h3{font-family:var(--serif);font-weight:600;color:var(--black)}
+h1,h2{font-variation-settings:'SOFT' 42}
 
 /* ============ shared bits ============ */
 .serif-h{letter-spacing:-.028em;line-height:1.15}
@@ -458,8 +459,8 @@ footer{position:relative;padding:40px 20px 0}
           var v=document.getElementById('heroFilm');
           var p=matchMedia('(max-width:640px)').matches;
           v.style.aspectRatio=p?'4 / 5':'4 / 3';
-          v.poster=p?'assets/hero-demo-poster-portrait.jpg':'assets/hero-demo-poster.jpg';
-          v.src=p?'assets/hero-demo-portrait.mp4':'assets/hero-demo.mp4';
+          v.poster=p?'assets/hero-demo-poster-mobile.jpg':'assets/hero-demo-poster.jpg';
+          v.src=p?'assets/hero-demo-mobile.mp4':'assets/hero-demo.mp4';
         })();
       </script>
     </div>
