@@ -9,111 +9,165 @@ import {
   useVideoConfig,
   Easing,
 } from 'remotion';
+import {noise2D} from '@remotion/noise';
 import {loadFont} from '@remotion/google-fonts/SchibstedGrotesk';
 
-const {fontFamily: DM} = loadFont();
+const {fontFamily: SANS} = loadFont();
 
-export const HERO_DURATION = 2400; /* 40s @ 60fps */
+/* ============================================================
+   A WEEK WITH DRAPER — five chapters, one looping week.
+   Mon: the ear · Mon: the craft · Tue: the outcome ·
+   Wed: the veto · Fri: the relay. The loop is the promise.
+   ============================================================ */
+
+export const HERO_DURATION = 2880; /* 48s @ 60fps */
+export const MOBILE_DURATION = 900; /* 15s @ 60fps */
 
 /* ---------- palette ---------- */
 const BG = '#FCFBF9';
-const INK = '#1A1F2B';
 const GREY = '#E9E9EB';
 const BLUE = '#0A84FF';
-const RED = '#E23D3D';
 const LI_BLUE = '#3E7BC6';
 const MUTED = 'rgba(20,22,28,0.45)';
-
-/* ---------- timeline (frames @30fps) ---------- */
-const T = {
-  pushStart: 210,
-  pushEnd: 324,
-  swapStart: 236,
-  swapEnd: 300,
-  typing1: [344, 404] as const,
-  m1: 410,
-  memo: 536,
-  memoPlayEnd: 660,
-  typing2: [656, 704] as const,
-  post: 710,
-  kbUp: 800,
-  typeStart: 848,
-  typeEnd: 956,
-  send: 976,
-  kbDown: 990,
-  typing3: [1070, 1116] as const,
-  m5: 1122,
-  chips: 1220,
-  pick: 1344,
-  sep: 1450,
-  typing4: [1490, 1536] as const,
-  m8: 1542,
-  results: 1640,
-  countStart: 1664,
-  countEnd: 1900,
-  typing5: [1876, 1924] as const,
-  m10: 1930,
-  pullStart: 2120,
-  pullEnd: 2300,
-  swapBackStart: 2150,
-  swapBackEnd: 2230,
-};
-
-
-/* 15s mobile cut: settle, push, mined quote, memo, drafted card, pull. */
-const T_MOBILE: typeof T = {
-  pushStart: 120,
-  pushEnd: 230,
-  swapStart: 136,
-  swapEnd: 210,
-  typing1: [240, 288] as const,
-  m1: 292,
-  memo: 420,
-  memoPlayEnd: 520,
-  typing2: [522, 560] as const,
-  post: 565,
-  kbUp: 99999,
-  typeStart: 99999,
-  typeEnd: 100000,
-  send: 99999,
-  kbDown: 99999,
-  typing3: [99999, 99999] as const,
-  m5: 99999,
-  chips: 99999,
-  pick: 99999,
-  sep: 99999,
-  typing4: [99999, 99999] as const,
-  m8: 99999,
-  results: 99999,
-  countStart: 99999,
-  countEnd: 100000,
-  typing5: [99999, 99999] as const,
-  m10: 99999,
-  pullStart: 720,
-  pullEnd: 860,
-  swapBackStart: 745,
-  swapBackEnd: 820,
-};
 
 const easePage = Easing.bezier(0.22, 1, 0.36, 1);
 const clamp = {extrapolateLeft: 'clamp' as const, extrapolateRight: 'clamp' as const};
 
-/* ---------- helpers ---------- */
-const pop = (frame: number, at: number, fps: number): React.CSSProperties =>
+/* ============================================================
+   SCRIPT — every Draper line at doc-register: lowercase,
+   fragments, one thought per bubble, numbers as compliments.
+   ============================================================ */
+type Msg =
+  | {kind: 'in'; at: number; text: React.ReactNode; w?: number; typingFor?: number}
+  | {kind: 'out'; at: number; text: string; big?: boolean}
+  | {kind: 'draft'; at: number; revAt?: number};
+
+type Scene = {stamp: string; enter: number; msgs: Msg[]};
+
+const SCENES_FULL: Scene[] = [
+  {
+    stamp: 'Monday 14:47',
+    enter: 268,
+    msgs: [
+      {
+        kind: 'in',
+        at: 330,
+        typingFor: 38,
+        w: 540,
+        text: (
+          <>
+            heard on your 2pm: <U>&ldquo;we hire slow on purpose&rdquo;</U>
+          </>
+        ),
+      },
+      {kind: 'in', at: 432, typingFor: 34, w: 520, text: <>founder arc. contrarian, costs you something to say</>},
+      {kind: 'in', at: 508, typingFor: 24, text: <>draft it?</>},
+      {kind: 'out', at: 578, text: 'go'},
+    ],
+  },
+  {
+    stamp: 'Monday 15:12',
+    enter: 648,
+    msgs: [
+      {kind: 'draft', at: 718, revAt: 940},
+      {kind: 'out', at: 858, text: 'spikier'},
+      {kind: 'in', at: 1040, typingFor: 32, text: <>queued. tuesday 9am, best slot left this week</>},
+    ],
+  },
+  {
+    stamp: 'Tuesday 12:40',
+    enter: 1172,
+    msgs: [
+      {kind: 'in', at: 1238, typingFor: 36, w: 520, text: <>live. 40 comments before lunch, three from investors</>},
+      {
+        kind: 'in',
+        at: 1345,
+        typingFor: 38,
+        w: 545,
+        text: <>sandra from meridian commented. second touch this month. worth a dm while it&rsquo;s warm?</>,
+      },
+      {kind: 'out', at: 1452, text: 'draft it'},
+      {kind: 'in', at: 1512, typingFor: 26, text: <>done, it&rsquo;s in your drafts</>},
+    ],
+  },
+  {
+    stamp: 'Wednesday 17:20',
+    enter: 1612,
+    msgs: [
+      {kind: 'in', at: 1678, typingFor: 30, text: <>heads up. skipping tomorrow&rsquo;s slot</>},
+      {kind: 'in', at: 1784, typingFor: 36, w: 520, text: <>nothing in the backlog earns it. fine doesn&rsquo;t get posted</>},
+      {kind: 'out', at: 1918, text: 'ok fair'},
+    ],
+  },
+  {
+    stamp: 'Friday 09:30',
+    enter: 2002,
+    msgs: [
+      {kind: 'in', at: 2068, typingFor: 30, text: <>you&rsquo;ve been quiet since tuesday</>},
+      {
+        kind: 'in',
+        at: 2170,
+        typingFor: 38,
+        w: 545,
+        text: <>i&rsquo;d run your take on ai pricing. sharpest thing you said all week and nobody&rsquo;s heard it</>,
+      },
+      {kind: 'in', at: 2275, typingFor: 34, w: 510, text: <>monday 9am, approving unless you say otherwise</>},
+      {kind: 'out', at: 2364, text: '👍', big: true},
+    ],
+  },
+];
+
+const SCENES_MOBILE: Scene[] = [
+  {
+    stamp: 'Monday 14:47',
+    enter: 200,
+    msgs: [
+      {
+        kind: 'in',
+        at: 252,
+        typingFor: 30,
+        w: 540,
+        text: (
+          <>
+            heard on your 2pm: <U>&ldquo;we hire slow on purpose&rdquo;</U>
+          </>
+        ),
+      },
+      {kind: 'in', at: 352, typingFor: 22, text: <>draft it?</>},
+      {kind: 'out', at: 415, text: 'go'},
+    ],
+  },
+  {
+    stamp: 'Tuesday',
+    enter: 480,
+    msgs: [
+      {kind: 'draft', at: 545},
+      {kind: 'in', at: 688, typingFor: 28, w: 500, text: <>live. 40 comments, three from investors</>},
+    ],
+  },
+];
+
+/* underline data-detector */
+function U({children}: {children: React.ReactNode}) {
+  return <span style={{borderBottom: '2.5px solid rgba(17,17,17,0.5)', paddingBottom: 1}}>{children}</span>;
+}
+
+/* ---------- physics ---------- */
+const pop = (frame: number, at: number, fps: number, mass = 0.9, damping = 14): React.CSSProperties =>
   frame < at
-    ? {opacity: 0, transform: 'scale(0.7) translateY(12px)'}
+    ? {opacity: 0, transform: 'scale(0.72) translateY(13px)'}
     : (() => {
-        const s = spring({frame: frame - at, fps, config: {damping: 15, stiffness: 130, mass: 0.9}});
+        const s = spring({frame: frame - at, fps, config: {damping, stiffness: 130, mass}});
         return {
-          opacity: Math.min(1, s * 1.4),
-          transform: `scale(${0.7 + 0.3 * s}) translateY(${12 * (1 - s)}px)`,
+          opacity: Math.min(1, s * 1.45),
+          transform: `scale(${0.72 + 0.28 * s}) translateY(${13 * (1 - s)}px)`,
         };
       })();
 
 const rise = (frame: number, at: number, fps: number) =>
-  frame < at ? 0 : spring({frame: frame - at, fps, config: {damping: 16, stiffness: 150, mass: 0.9}});
+  frame < at ? 0 : spring({frame: frame - at, fps, config: {damping: 17, stiffness: 140, mass: 0.95}});
 
-/* ---------- svg bits ---------- */
+/* ---------- svg ---------- */
 const Verified: React.FC<{size?: number}> = ({size = 30}) => (
   <svg width={size} height={size} viewBox="0 0 22 22" fill="none" style={{flex: 'none'}}>
     <path
@@ -138,78 +192,47 @@ const Mic: React.FC = () => (
   </svg>
 );
 
-const Check: React.FC<{color?: string; size?: number}> = ({color = '#fff', size = 14}) => (
-  <svg width={size} height={size} viewBox="0 0 12 12" fill="none">
-    <path d="M2 6.5L4.8 9L10 3.5" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
-
-/* ---------- chat message shells ---------- */
+/* ---------- chat pieces ---------- */
 const Bubble: React.FC<{
   side: 'in' | 'out';
   bottom: number;
   anim: React.CSSProperties;
-  style?: React.CSSProperties;
+  w?: number;
+  big?: boolean;
   children: React.ReactNode;
-}> = ({side, bottom, style, anim, children}) => (
+}> = ({side, bottom, anim, w, big, children}) => (
   <div
     style={{
       position: 'absolute',
       bottom,
       [side === 'in' ? 'left' : 'right']: 0,
-      maxWidth: 560,
-      padding: '16px 22px',
+      maxWidth: w ?? 560,
+      padding: big ? '10px 16px' : '16px 22px',
       borderRadius: 30,
       [side === 'in' ? 'borderBottomLeftRadius' : 'borderBottomRightRadius']: 8,
-      background: side === 'in' ? GREY : BLUE,
+      background: big ? 'transparent' : side === 'in' ? GREY : BLUE,
       color: side === 'in' ? '#111' : '#fff',
-      fontSize: 24,
-      lineHeight: 1.35,
+      fontSize: big ? 54 : 24,
+      lineHeight: big ? 1.1 : 1.35,
       fontWeight: 500,
       transformOrigin: side === 'in' ? 'bottom left' : 'bottom right',
       ...anim,
-      ...style,
     }}
   >
     {children}
   </div>
 );
 
-const Card: React.FC<{
-  bottom: number;
-  anim: React.CSSProperties;
-  width?: number;
-  children: React.ReactNode;
-}> = ({bottom, anim, width = 430, children}) => (
-  <div
-    style={{
-      position: 'absolute',
-      bottom,
-      left: 0,
-      width,
-      background: '#fff',
-      borderRadius: 24,
-      borderBottomLeftRadius: 8,
-      padding: '20px 22px',
-      boxShadow: '0 4px 14px rgba(0,0,0,0.09), 0 14px 34px rgba(0,0,0,0.07)',
-      transformOrigin: 'bottom left',
-      ...anim,
-    }}
-  >
-    {children}
-  </div>
-);
-
-const TypingDots: React.FC<{frame: number; range: readonly [number, number]; bottom: number; fps: number}> = ({
+const TypingDots: React.FC<{frame: number; from: number; until: number; bottom: number; fps: number}> = ({
   frame,
-  range,
+  from,
+  until,
   bottom,
   fps,
 }) => {
-  const [a, b] = range;
-  if (frame < a || frame > b + 4) return null;
-  const s = spring({frame: frame - a, fps, config: {damping: 14, stiffness: 160}});
-  const fadeOut = interpolate(frame, [b, b + 4], [1, 0], clamp);
+  if (frame < from || frame > until + 5) return null;
+  const s = spring({frame: frame - from, fps, config: {damping: 14, stiffness: 160}});
+  const fadeOut = interpolate(frame, [until, until + 5], [1, 0], clamp);
   return (
     <div
       style={{
@@ -226,7 +249,7 @@ const TypingDots: React.FC<{frame: number; range: readonly [number, number]; bot
         justifyContent: 'center',
         gap: 8,
         opacity: Math.min(s, fadeOut),
-        transform: `scale(${0.7 + 0.3 * s})`,
+        transform: `scale(${0.72 + 0.28 * s})`,
         transformOrigin: 'bottom left',
       }}
     >
@@ -246,274 +269,98 @@ const TypingDots: React.FC<{frame: number; range: readonly [number, number]; bot
   );
 };
 
-/* ---------- rich pieces ---------- */
-const VoiceMemo: React.FC<{frame: number; anim: React.CSSProperties; bottom: number; playFrom: number; playTo: number}> = ({frame, anim, bottom, playFrom, playTo}) => {
-  const playing = frame >= playFrom && frame <= playTo;
-  const bars = Array.from({length: 26}, (_, i) => 8 + Math.abs(Math.sin(i * 1.37)) * 20);
+/* the draft card: real copy, morphs to the spikier cut in place */
+const DraftCard: React.FC<{frame: number; at: number; revAt?: number; bottom: number; fps: number}> = ({
+  frame,
+  at,
+  revAt,
+  bottom,
+  fps,
+}) => {
+  const entry = pop(frame, at, fps, 1.05, 16);
+  const rev = revAt && frame >= revAt ? spring({frame: frame - revAt, fps, config: {damping: 13, stiffness: 150}}) : revAt ? 0 : 1;
+  /* squeeze reaction on revision */
+  const squeeze = revAt && frame >= revAt ? 1 - 0.03 * Math.sin(Math.min(1, (frame - revAt) / 18) * Math.PI) : 1;
+  const v1o = 1 - rev;
+  const Line: React.FC<{s: React.CSSProperties; children: React.ReactNode}> = ({s, children}) => (
+    <div style={{position: 'absolute', left: 0, right: 0, ...s}}>{children}</div>
+  );
   return (
     <div
       style={{
         position: 'absolute',
         bottom,
-        right: 0,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 14,
+        left: 0,
+        width: 470,
         background: '#fff',
-        borderRadius: 30,
-        borderBottomRightRadius: 8,
-        padding: '16px 22px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-        transformOrigin: 'bottom right',
-        ...anim,
+        borderRadius: 24,
+        borderBottomLeftRadius: 8,
+        padding: '20px 22px 18px',
+        boxShadow: '0 4px 14px rgba(0,0,0,0.09), 0 16px 38px rgba(0,0,0,0.08)',
+        transformOrigin: 'bottom left',
+        ...entry,
+        transform: `${(entry.transform as string) || ''} scale(${squeeze})`,
       }}
     >
-      <div style={{width: 30, height: 30, borderRadius: '50%', background: RED, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-        <div style={{width: 11, height: 11, background: '#fff', borderRadius: 3}} />
-      </div>
-      <div style={{display: 'flex', alignItems: 'center', gap: 3, height: 30}}>
-        {bars.map((h, i) => (
-          <div
-            key={i}
-            style={{
-              width: 3.5,
-              height: h * (playing ? 0.55 + 0.45 * Math.abs(Math.sin(frame * 0.175 + i * 0.55)) : 1),
-              borderRadius: 2,
-              background: RED,
-            }}
-          />
-        ))}
-      </div>
-      <div style={{fontSize: 20, fontWeight: 600, color: RED}}>0:41</div>
-    </div>
-  );
-};
-
-const SkeletonLines: React.FC<{widths: number[]}> = ({widths}) => (
-  <>
-    {widths.map((w, i) => (
-      <div key={i} style={{height: 13, width: `${w * 100}%`, borderRadius: 7, background: 'rgba(20,22,28,0.08)', marginBottom: 10}} />
-    ))}
-  </>
-);
-
-const DraftCard: React.FC<{anim: React.CSSProperties; bottom: number}> = ({anim, bottom}) => (
-  <Card bottom={bottom} anim={anim}>
-    <div style={{display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14}}>
-      <Img src={staticFile('linkedin_com.png')} style={{width: 34, height: 34, borderRadius: 8}} />
-      <span style={{fontSize: 18, fontWeight: 600, color: 'rgba(20,22,28,0.6)'}}>Drafted in your voice</span>
-    </div>
-    <SkeletonLines widths={[1, 0.94, 0.6]} />
-    <div
-      style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 8,
-        marginTop: 6,
-        fontSize: 17,
-        fontWeight: 600,
-        color: LI_BLUE,
-        background: 'rgba(62,123,198,0.1)',
-        borderRadius: 999,
-        padding: '7px 16px',
-      }}
-    >
-      <Check color={LI_BLUE} />
-      queued · tuesday 8am
-    </div>
-  </Card>
-);
-
-/* rich action: pick-the-cut choice chips */
-const ChoiceCard: React.FC<{frame: number; anim: React.CSSProperties; bottom: number; fps: number}> = ({frame, anim, bottom, fps}) => {
-  const picked = frame >= T.pick;
-  const pickS = picked ? spring({frame: frame - T.pick, fps, config: {damping: 12, stiffness: 180}}) : 0;
-  const Row: React.FC<{label: string; desc: string; selected: boolean}> = ({label, desc, selected}) => (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: 14,
-        padding: '12px 14px',
-        borderRadius: 14,
-        background: selected && picked ? 'rgba(10,132,255,0.08)' : 'transparent',
-        opacity: !selected && picked ? 0.45 : 1,
-      }}
-    >
-      <div
-        style={{
-          width: 28,
-          height: 28,
-          borderRadius: '50%',
-          border: `2px solid ${selected && picked ? BLUE : 'rgba(20,22,28,0.25)'}`,
-          background: selected && picked ? BLUE : 'transparent',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          transform: selected && picked ? `scale(${0.8 + 0.2 * pickS})` : 'scale(1)',
-          flex: 'none',
-        }}
-      >
-        {selected && picked && <Check size={15} />}
-      </div>
-      <div>
-        <div style={{fontSize: 21, fontWeight: 600, color: '#20242c'}}>{label}</div>
-        <div style={{fontSize: 17, fontWeight: 500, color: MUTED}}>{desc}</div>
-      </div>
-    </div>
-  );
-  return (
-    <Card bottom={bottom} anim={anim} width={440}>
-      <div style={{fontSize: 18, fontWeight: 600, color: 'rgba(20,22,28,0.6)', marginBottom: 10, padding: '0 4px'}}>Which cut?</div>
-      <Row label="the spiky one" desc="sharper opener, picks a fight" selected />
-      <Row label="the safe one" desc="softer landing, same story" selected={false} />
-    </Card>
-  );
-};
-
-/* day separator */
-const DaySep: React.FC<{frame: number; bottom: number}> = ({frame, bottom}) => {
-  const op = interpolate(frame, [T.sep, T.sep + 16], [0, 1], clamp);
-  const y = interpolate(frame, [T.sep, T.sep + 16], [8, 0], {...clamp, easing: easePage});
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        bottom,
-        left: 0,
-        right: 0,
-        textAlign: 'center',
-        fontSize: 17,
-        fontWeight: 600,
-        color: 'rgba(20,22,28,0.35)',
-        opacity: op,
-        transform: `translateY(${y}px)`,
-      }}
-    >
-      Monday 8:02
-    </div>
-  );
-};
-
-/* live results with ticking counters */
-const ResultsCard: React.FC<{frame: number; anim: React.CSSProperties; bottom: number}> = ({frame, anim, bottom}) => {
-  const n = (to: number) =>
-    Math.floor(interpolate(frame, [T.countStart, T.countEnd], [0, to], {...clamp, easing: Easing.out(Easing.cubic)}));
-  const Stat: React.FC<{v: number; label: string}> = ({v, label}) => (
-    <div style={{display: 'flex', alignItems: 'baseline', gap: 7}}>
-      <span style={{fontSize: 26, fontWeight: 700, color: INK, fontVariantNumeric: 'tabular-nums'}}>{v}</span>
-      <span style={{fontSize: 16, fontWeight: 500, color: MUTED}}>{label}</span>
-    </div>
-  );
-  return (
-    <Card bottom={bottom} anim={anim} width={450}>
-      <div style={{display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14}}>
-        <Img src={staticFile('linkedin_com.png')} style={{width: 34, height: 34, borderRadius: 8}} />
-        <span style={{fontSize: 18, fontWeight: 600, color: 'rgba(20,22,28,0.6)'}}>Live on LinkedIn</span>
-        <span
-          style={{
-            marginLeft: 'auto',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 7,
-            fontSize: 15,
-            fontWeight: 700,
-            color: '#3E8E4F',
-          }}
-        >
-          <span style={{width: 9, height: 9, borderRadius: '50%', background: '#3E8E4F', opacity: 0.5 + 0.5 * Math.abs(Math.sin(frame * 0.06))}} />
-          LIVE
-        </span>
-      </div>
-      <SkeletonLines widths={[1, 0.7]} />
-      <div style={{display: 'flex', gap: 26, marginTop: 14, paddingTop: 14, borderTop: '1px solid rgba(20,22,28,0.07)'}}>
-        <Stat v={n(214)} label="reactions" />
-        <Stat v={n(41)} label="comments" />
-        <Stat v={n(9)} label="reposts" />
-      </div>
-    </Card>
-  );
-};
-
-/* ---------- iOS keyboard with suggestion strip (total height = KB_H, flush under compose) ---------- */
-export const KB_H = 290;
-const KEY_ROWS = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
-const Keyboard: React.FC<{progress: number; width: number}> = ({progress, width}) => {
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 0,
-        height: KB_H,
-        background: '#D6D9DE',
-        transform: `translateY(${(1 - progress) * (KB_H + 30)}px)`,
-        padding: '6px 10px 0',
-        borderBottomLeftRadius: 44,
-        borderBottomRightRadius: 44,
-      }}
-    >
-      <div style={{display: 'flex', alignItems: 'stretch', height: 42, marginBottom: 8}}>
-        {['"instead"', 'monday', 'tuesday'].map((s, i) => (
-          <div
-            key={s}
-            style={{
-              flex: 1,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: 18,
-              fontWeight: i === 1 ? 600 : 400,
-              color: '#1b1b1d',
-              borderRight: i < 2 ? '1px solid rgba(0,0,0,0.12)' : 'none',
-            }}
-          >
-            {s}
-          </div>
-        ))}
-      </div>
-      {KEY_ROWS.map((row, ri) => (
-        <div key={ri} style={{display: 'flex', justifyContent: 'center', gap: 9, marginBottom: 9}}>
-          {row.split('').map((k) => (
-            <div
-              key={k}
-              style={{
-                width: (width - 20 - 9 * 9) / 10,
-                height: 46,
-                background: '#FEFEFE',
-                borderRadius: 7,
-                boxShadow: '0 1px 0 rgba(0,0,0,0.28)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: 22,
-                color: '#1b1b1d',
-              }}
-            >
-              {k}
-            </div>
-          ))}
-        </div>
-      ))}
-      <div style={{display: 'flex', justifyContent: 'center'}}>
+      <div style={{display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12}}>
         <div
           style={{
-            width: width * 0.5,
-            height: 46,
-            background: '#FEFEFE',
-            borderRadius: 7,
-            boxShadow: '0 1px 0 rgba(0,0,0,0.28)',
+            width: 22,
+            height: 22,
+            borderRadius: 5,
+            background: LI_BLUE,
+            color: '#fff',
+            fontSize: 12,
+            fontWeight: 700,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: 16,
-            color: 'rgba(27,27,29,0.55)',
           }}
         >
-          space
+          in
         </div>
+        <span style={{fontSize: 15, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED}}>
+          founder arc · draft
+        </span>
+        {revAt ? (
+          <span
+            style={{
+              marginLeft: 'auto',
+              fontSize: 13,
+              fontWeight: 600,
+              color: LI_BLUE,
+              opacity: rev,
+              transform: `translateY(${4 * (1 - rev)}px)`,
+            }}
+          >
+            v2
+          </span>
+        ) : null}
       </div>
+      <div style={{position: 'relative', height: 96, fontSize: 20.5, lineHeight: 1.42, color: '#26262a', fontWeight: 500}}>
+        <Line s={{opacity: v1o, transform: `translateY(${-5 * rev}px)`}}>
+          We fired our fastest hire and promoted our slowest one.
+          <span style={{color: 'rgba(38,38,42,0.4)'}}> Eighteen months ago I made the hire everyone told me to…</span>
+        </Line>
+        <Line s={{opacity: rev, transform: `translateY(${5 * (1 - rev)}px)`}}>
+          The best hire I ever made looked like the worst one on paper.
+          <span style={{color: 'rgba(38,38,42,0.4)'}}> And the worst one looked perfect…</span>
+        </Line>
+      </div>
+    </div>
+  );
+};
+
+/* chapter mark: day stamp with an expanding hairline */
+const Stamp: React.FC<{frame: number; at: number; text: string; fps: number}> = ({frame, at, text, fps}) => {
+  const s = frame < at ? 0 : spring({frame: frame - at, fps, config: {damping: 16, stiffness: 120}});
+  return (
+    <div style={{position: 'absolute', top: 14, left: 0, right: 0, display: 'flex', alignItems: 'center', gap: 16, opacity: s}}>
+      <div style={{flex: 1, height: 1, background: 'rgba(20,22,28,0.10)', transform: `scaleX(${s})`, transformOrigin: 'right'}} />
+      <span style={{fontSize: 17, fontWeight: 600, color: 'rgba(20,22,28,0.38)', letterSpacing: '0.04em', whiteSpace: 'nowrap'}}>
+        {text}
+      </span>
+      <div style={{flex: 1, height: 1, background: 'rgba(20,22,28,0.10)', transform: `scaleX(${s})`, transformOrigin: 'left'}} />
     </div>
   );
 };
@@ -536,7 +383,7 @@ const ContactFace: React.FC<{opacity: number; scale: number}> = ({opacity, scale
     <div style={{width: 160, height: 160, borderRadius: 40, overflow: 'hidden', boxShadow: '0 12px 34px rgba(20,20,40,0.24)'}}>
       <Img src={staticFile('app-icon.jpg')} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
     </div>
-    <div style={{marginTop: 26, display: 'flex', alignItems: 'center', gap: 12, fontSize: 40, fontWeight: 600, color: '#26262a', letterSpacing: '-0.01em'}}>
+    <div style={{marginTop: 26, display: 'flex', alignItems: 'center', gap: 12, fontSize: 40, fontWeight: 600, color: '#26262a'}}>
       Draper <Verified size={34} />
     </div>
     <div style={{marginTop: 40, display: 'flex', flexDirection: 'column', gap: 16, width: '64%'}}>
@@ -546,7 +393,15 @@ const ContactFace: React.FC<{opacity: number; scale: number}> = ({opacity, scale
   </div>
 );
 
-const SideCard: React.FC<{x: number; y: number; w: number; img: string; name: string; drift: number}> = ({x, y, w, img, name, drift}) => (
+const SideCard: React.FC<{x: number; y: number; w: number; img: string; name: string; drift: number; blur: number}> = ({
+  x,
+  y,
+  w,
+  img,
+  name,
+  drift,
+  blur,
+}) => (
   <div
     style={{
       position: 'absolute',
@@ -557,7 +412,7 @@ const SideCard: React.FC<{x: number; y: number; w: number; img: string; name: st
       borderRadius: 48,
       background: 'linear-gradient(180deg,#ffffff 0%,#f7f6f3 100%)',
       boxShadow: '0 24px 70px rgba(30,30,25,0.12)',
-      filter: 'blur(6px)',
+      filter: `blur(${blur}px)`,
       opacity: 0.55,
       display: 'flex',
       flexDirection: 'column',
@@ -572,98 +427,173 @@ const SideCard: React.FC<{x: number; y: number; w: number; img: string; name: st
   </div>
 );
 
-/* ================= the film ================= */
+/* ============================================================
+   camera rig: keyframed scale/y track, evaluated per frame
+   ============================================================ */
+type CamKey = {f: number; s: number; y: number};
+const camAt = (keys: CamKey[], f: number) => {
+  if (f <= keys[0].f) return {s: keys[0].s, y: keys[0].y};
+  for (let i = 0; i < keys.length - 1; i++) {
+    const a = keys[i];
+    const b = keys[i + 1];
+    if (f >= a.f && f <= b.f) {
+      const p = easePage((f - a.f) / Math.max(1, b.f - a.f));
+      return {s: a.s + (b.s - a.s) * p, y: a.y + (b.y - a.y) * p};
+    }
+  }
+  const last = keys[keys.length - 1];
+  return {s: last.s, y: last.y};
+};
+
+/* ============================================================
+   THE FILM
+   ============================================================ */
 export const Hero: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
-  const TL = mobile ? T_MOBILE : T;
   const frame = useCurrentFrame();
   const {fps, width: W, height: H} = useVideoConfig();
-  /* format-aware layout: mobile is a tight square cut */
+  const DUR = mobile ? MOBILE_DURATION : HERO_DURATION;
+  const SCENES = mobile ? SCENES_MOBILE : SCENES_FULL;
+
+  /* layout */
   const cardW = mobile ? 900 : 780;
   const cardH = 586;
   const cardX = (W - cardW) / 2;
   const cardY = mobile ? (H - cardH) / 2 - 16 : 252;
-  const zoomTarget = mobile ? (W * 0.97) / cardW : 1.78;
+  const zoomT = mobile ? (W * 0.97) / cardW : 1.78;
   const originX = W / 2;
   const originY = cardY + cardH / 2;
 
-  /* ambient drift — periods divide duration so frame 0 == frame 1200 */
-  const driftPeriod = mobile ? 450 : 1200;
-  const drift = Math.sin((frame / driftPeriod) * Math.PI * 2);
-  const driftY = drift * 5;
-  const driftX = Math.sin((frame / (mobile ? 300 : 800)) * Math.PI * 2) * 3;
-
-  /* camera — scale expressed as a pure function of frame so we can
-     derive per-frame velocity for a filmic motion-blur pass */
-  const camOf = (f: number) => {
-    const pushIn = interpolate(f, [TL.pushStart, TL.pushEnd], [0, 1], {...clamp, easing: easePage});
-    const pullOut = interpolate(f, [TL.pullStart, TL.pullEnd], [0, 1], {...clamp, easing: easePage});
-    const creep = interpolate(f, [TL.pushEnd, TL.pullStart], [0, 0.05], clamp);
-    const zoomed = 1 + pushIn * (zoomTarget - 1) - creep * pushIn;
-    const d = Math.sin((f / driftPeriod) * Math.PI * 2);
-    return (zoomed + (1 - zoomed) * pullOut) * (1 + 0.004 * d);
+  /* organic drift: seeded noise, loop-blended over the final 150 frames */
+  const driftOf = (f: number) => ({
+    x: noise2D('draper-x', f * 0.0021, 0) * 4,
+    y: noise2D('draper-y', 0, f * 0.0017) * 5,
+  });
+  const blendW = interpolate(frame, [DUR - 150, DUR], [0, 1], clamp);
+  const dNow = driftOf(frame);
+  const dLoop = driftOf(frame - DUR);
+  const drift = {
+    x: dNow.x * (1 - blendW) + dLoop.x * blendW,
+    y: dNow.y * (1 - blendW) + dLoop.y * blendW,
   };
-  const cam = camOf(frame);
-  const camVel = Math.abs(camOf(frame) - camOf(frame - 1));
-  const pushProgress = Math.max(0, Math.min(1, (cam - 1) / (zoomTarget - 1)));
-  const camY = -12 * pushProgress;
-  const motionBlur = Math.min(2.4, camVel * 180);
 
-  /* face crossfades */
-  const toChat = interpolate(frame, [TL.swapStart, TL.swapEnd], [0, 1], {...clamp, easing: easePage});
-  const toContact = interpolate(frame, [TL.swapBackStart, TL.swapBackEnd], [0, 1], {...clamp, easing: easePage});
+  /* camera track: a micro-reframe per chapter, tightest on the veto */
+  const CAM: CamKey[] = mobile
+    ? [
+        {f: 0, s: 1, y: 0},
+        {f: 100, s: 1, y: 0},
+        {f: 190, s: zoomT, y: -8},
+        {f: 470, s: zoomT * 0.99, y: -8},
+        {f: 510, s: zoomT * 1.005, y: -12},
+        {f: 740, s: zoomT * 0.995, y: -10},
+        {f: 860, s: 1, y: 0},
+        {f: 900, s: 1, y: 0},
+      ]
+    : [
+        {f: 0, s: 1, y: 0},
+        {f: 150, s: 1, y: 0},
+        {f: 258, s: 1.78, y: -12},
+        {f: 620, s: 1.745, y: -12},
+        {f: 662, s: 1.7, y: -8},
+        {f: 1130, s: 1.735, y: -10},
+        {f: 1176, s: 1.76, y: -16},
+        {f: 1570, s: 1.72, y: -10},
+        {f: 1616, s: 1.82, y: -18},
+        {f: 1960, s: 1.78, y: -16},
+        {f: 2006, s: 1.71, y: -10},
+        {f: 2430, s: 1.71, y: -10},
+        {f: 2620, s: 1, y: 0},
+        {f: 2880, s: 1, y: 0},
+      ];
+  const cam = camAt(CAM, frame);
+  const camPrev = camAt(CAM, frame - 1);
+  const camVel = Math.abs(cam.s - camPrev.s) + Math.abs(cam.y - camPrev.y) / 400;
+  const motionBlur = Math.min(2.4, camVel * 180);
+  const zoomP = (cam.s - 1) / (zoomT - 1); /* 0 wide … 1 tight */
+
+  /* contact <-> chat crossfade */
+  const swap = mobile ? {in: [112, 178] as const, out: [750, 838] as const} : {in: [166, 246] as const, out: [2450, 2560] as const};
+  const toChat = interpolate(frame, [...swap.in], [0, 1], {...clamp, easing: easePage});
+  const toContact = interpolate(frame, [...swap.out], [0, 1], {...clamp, easing: easePage});
   const chatOp = toChat * (1 - toContact);
   const contactOp = 1 - chatOp;
 
-  /* keyboard — dismisses shortly after send, soft weighty slide */
-  const kbUp = frame < TL.kbUp ? 0 : spring({frame: frame - TL.kbUp, fps, config: {damping: 18, stiffness: 110}});
-  const kbDismiss = TL.send + 24;
-  const kbDown = frame < kbDismiss ? 0 : spring({frame: frame - kbDismiss, fps, config: {damping: 18, stiffness: 110}});
-  const kb = Math.max(0, kbUp - kbDown);
+  /* scene machinery: active scene + scroll-wipe of the previous one */
+  const WIPE = 46;
+  let sceneIdx = 0;
+  for (let i = 0; i < SCENES.length; i++) if (frame >= SCENES[i].enter) sceneIdx = i;
+  const scene = SCENES[sceneIdx];
+  const prev = sceneIdx > 0 ? SCENES[sceneIdx - 1] : null;
+  const wipeP = prev ? interpolate(frame, [scene.enter, scene.enter + WIPE], [0, 1], {...clamp, easing: easePage}) : 1;
 
-  /* compose typing */
-  const TYPED = 'go monday instead';
-  const nChars = Math.floor(interpolate(frame, [TL.typeStart, TL.typeEnd], [0, TYPED.length], clamp));
-  const typedText = frame >= TL.send ? '' : TYPED.slice(0, nChars);
-  const caretOn = frame >= TL.typeStart - 12 && frame < TL.send && Math.floor(frame / 18) % 2 === 0;
-  const placeholderVisible = !(frame >= TL.typeStart - 12 && frame < TL.send) && !typedText;
-
-  /* message stack — bottom-anchored, springs push older messages up */
+  /* bottom-anchored stack inside a scene */
+  const heightOf = (m: Msg) => (m.kind === 'draft' ? 172 : m.kind === 'out' ? (m.big ? 78 : 60) : 64 + (m.w && m.w > 500 ? 34 : 0));
   const GAP = 14;
-  const STACK: Array<{key: string; at: number; h: number}> = [
-    {key: 'm1', at: TL.m1, h: 130},
-    {key: 'memo', at: TL.memo, h: 66},
-    {key: 'post', at: TL.post, h: 236},
-    {key: 'm4', at: TL.send, h: 60},
-    {key: 'm5', at: TL.m5, h: 96},
-    {key: 'chips', at: TL.chips, h: 226},
-    {key: 'sep', at: TL.sep, h: 46},
-    {key: 'm8', at: TL.m8, h: 56},
-    {key: 'results', at: TL.results, h: 262},
-    {key: 'm10', at: TL.m10, h: 96},
-  ];
-  const kbLift = kb * KB_H;
-  const base = 108 + kbLift;
-  const bottoms: Record<string, number> = {};
-  STACK.forEach((m, i) => {
-    let b = base;
-    for (let j = i + 1; j < STACK.length; j++) {
-      b += rise(frame, STACK[j].at, fps) * (STACK[j].h + GAP);
-    }
-    bottoms[m.key] = b;
-  });
+  const base = 112;
+  const riseAt = (m: Msg) => (m.kind === 'in' && m.typingFor ? m.at - m.typingFor : m.at);
+  const bottoms = (msgs: Msg[]) =>
+    msgs.map((_, i) => {
+      let b = base;
+      for (let j = i + 1; j < msgs.length; j++) b += rise(frame, riseAt(msgs[j]), fps) * (heightOf(msgs[j]) + GAP);
+      return b;
+    });
+
+  const renderScene = (sc: Scene, style: React.CSSProperties) => {
+    const bs = bottoms(sc.msgs);
+    return (
+      <div style={{position: 'absolute', inset: 0, ...style}}>
+        <Stamp frame={frame} at={sc.enter + (sc === SCENES[0] ? 0 : 14)} text={sc.stamp} fps={fps} />
+        {sc.msgs.map((m, i) => {
+          if (m.kind === 'draft') {
+            return <DraftCard key={i} frame={frame} at={m.at} revAt={m.revAt} bottom={bs[i]} fps={fps} />;
+          }
+          if (m.kind === 'out') {
+            return (
+              <Bubble key={i} side="out" bottom={bs[i]} big={m.big} anim={pop(frame, m.at, fps, 0.8, 13)}>
+                {m.text}
+              </Bubble>
+            );
+          }
+          return (
+            <React.Fragment key={i}>
+              {m.typingFor ? <TypingDots frame={frame} from={m.at - m.typingFor} until={m.at - 3} bottom={bs[i]} fps={fps} /> : null}
+              <Bubble side="in" bottom={bs[i]} w={m.w} anim={pop(frame, m.at, fps)}>
+                {m.text}
+              </Bubble>
+            </React.Fragment>
+          );
+        })}
+      </div>
+    );
+  };
 
   return (
-    <AbsoluteFill style={{background: BG, fontFamily: DM}}>
+    <AbsoluteFill style={{background: BG, fontFamily: SANS}}>
       <AbsoluteFill
         style={{
-          transform: `scale(${cam}) translate(${driftX}px, ${driftY + camY}px)`,
+          transform: `scale(${cam.s}) translate(${drift.x}px, ${drift.y + cam.y}px)`,
           transformOrigin: `${originX}px ${originY}px`,
           filter: motionBlur > 0.08 ? `blur(${motionBlur.toFixed(2)}px)` : undefined,
         }}
       >
-        {/* side contacts */}
-        <SideCard x={cardX - cardW - 120} y={cardY + 10} w={cardW} img={staticFile('memoji-man.jpg')} name="Mustafa" drift={drift * 8} />
-        <SideCard x={cardX + cardW + 120} y={cardY + 10} w={cardW} img={staticFile('memoji-woman.jpg')} name="Maryam" drift={drift * -8} />
+        {/* side contacts: depth-of-field deepens as the camera closes */}
+        <SideCard
+          x={cardX - cardW - 120}
+          y={cardY + 10}
+          w={cardW}
+          img={staticFile('memoji-man.jpg')}
+          name="Mustafa"
+          drift={drift.y * 1.6}
+          blur={6 + zoomP * 5}
+        />
+        <SideCard
+          x={cardX + cardW + 120}
+          y={cardY + 10}
+          w={cardW}
+          img={staticFile('memoji-woman.jpg')}
+          name="Maryam"
+          drift={drift.y * -1.6}
+          blur={6 + zoomP * 5}
+        />
 
         {/* center card */}
         <div
@@ -717,37 +647,16 @@ export const Hero: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
               </div>
             </div>
 
-            {/* thread */}
+            {/* thread: current scene, with the previous one archiving upward */}
             <div style={{position: 'absolute', top: 92, left: 26, right: 26, bottom: 0, overflow: 'hidden'}}>
-              <Bubble side="in" bottom={bottoms.m1} anim={pop(frame, TL.m1, fps)} style={{width: 560}}>
-                caught something in your 2pm. you said{' '}
-                <span style={{borderBottom: '2.5px solid rgba(17,17,17,0.5)', paddingBottom: 1}}>
-                  &ldquo;we hire slow on purpose, speed is a tax&rdquo;
-                </span>
-                . that is a post
-              </Bubble>
-              <TypingDots frame={frame} range={TL.typing1} bottom={base} fps={fps} />
-              <VoiceMemo frame={frame} anim={pop(frame, TL.memo, fps)} bottom={bottoms.memo} playFrom={TL.memo} playTo={TL.memoPlayEnd} />
-              <TypingDots frame={frame} range={TL.typing2} bottom={base} fps={fps} />
-              <DraftCard anim={pop(frame, TL.post, fps)} bottom={bottoms.post} />
-              <Bubble side="out" bottom={bottoms.m4} anim={pop(frame, TL.send, fps)}>
-                go monday instead
-              </Bubble>
-              <TypingDots frame={frame} range={TL.typing3} bottom={base} fps={fps} />
-              <Bubble side="in" bottom={bottoms.m5} anim={pop(frame, TL.m5, fps)} style={{width: 500}}>
-                done. monday, 8am. spiky cut or the safe one?
-              </Bubble>
-              <ChoiceCard frame={frame} anim={pop(frame, TL.chips, fps)} bottom={bottoms.chips} fps={fps} />
-              <DaySep frame={frame} bottom={bottoms.sep} />
-              <TypingDots frame={frame} range={TL.typing4} bottom={base} fps={fps} />
-              <Bubble side="in" bottom={bottoms.m8} anim={pop(frame, TL.m8, fps)}>
-                it&rsquo;s live.
-              </Bubble>
-              <ResultsCard frame={frame} anim={pop(frame, TL.results, fps)} bottom={bottoms.results} />
-              <TypingDots frame={frame} range={TL.typing5} bottom={base} fps={fps} />
-              <Bubble side="in" bottom={bottoms.m10} anim={pop(frame, TL.m10, fps)} style={{width: 520}}>
-                three investors in your DMs. want intros drafted?
-              </Bubble>
+              {prev && wipeP < 1
+                ? renderScene(prev, {
+                    transform: `translateY(${-460 * wipeP}px)`,
+                    opacity: 1 - wipeP,
+                    filter: `blur(${wipeP * 5}px)`,
+                  })
+                : null}
+              {renderScene(scene, prev ? {transform: `translateY(${34 * (1 - wipeP)}px)`, opacity: wipeP} : {})}
             </div>
 
             {/* compose bar */}
@@ -756,7 +665,7 @@ export const Hero: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
                 position: 'absolute',
                 left: 0,
                 right: 0,
-                bottom: kb * KB_H,
+                bottom: 0,
                 height: 96,
                 display: 'flex',
                 alignItems: 'center',
@@ -794,21 +703,13 @@ export const Hero: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
                   padding: '0 20px',
                   fontSize: 21,
                   fontWeight: 500,
-                  color: typedText ? INK : MUTED,
+                  color: MUTED,
                 }}
               >
-                <span>
-                  {typedText || (placeholderVisible ? 'Message Draper' : '')}
-                  {caretOn && (
-                    <span style={{display: 'inline-block', width: 2.5, height: 26, background: BLUE, verticalAlign: -4, marginLeft: 2}} />
-                  )}
-                </span>
+                <span>Message Draper</span>
                 <Mic />
               </div>
             </div>
-
-            {/* keyboard */}
-            <Keyboard progress={kb} width={cardW} />
           </div>
         </div>
       </AbsoluteFill>
