@@ -20,8 +20,8 @@ const {fontFamily: SANS} = loadFont();
    Wed: the veto · Fri: the relay. The loop is the promise.
    ============================================================ */
 
-export const HERO_DURATION = 2880; /* 48s @ 60fps */
-export const MOBILE_DURATION = 900; /* 15s @ 60fps */
+export const HERO_DURATION = 3300; /* 55s @ 60fps */
+export const MOBILE_DURATION = 960; /* 16s @ 60fps */
 
 /* ---------- palette ---------- */
 const BG = '#FCFBF9';
@@ -40,109 +40,92 @@ const clamp = {extrapolateLeft: 'clamp' as const, extrapolateRight: 'clamp' as c
 type Msg =
   | {kind: 'in'; at: number; text: React.ReactNode; w?: number; typingFor?: number}
   | {kind: 'out'; at: number; text: string; big?: boolean}
-  | {kind: 'draft'; at: number; revAt?: number};
+  | {kind: 'draft'; at: number; revAt?: number}
+  | {kind: 'vn'; at: number; dur: string; transcript: string; playFrom: number; playTo: number; w?: number};
 
 type Scene = {stamp: string; enter: number; msgs: Msg[]};
 
 const SCENES_FULL: Scene[] = [
   {
     stamp: 'Monday 14:47',
-    enter: 268,
+    enter: 260,
     msgs: [
-      {
-        kind: 'in',
-        at: 330,
-        typingFor: 38,
-        w: 540,
-        text: (
-          <>
-            heard on your 2pm: <U>&ldquo;we hire slow on purpose&rdquo;</U>
-          </>
-        ),
-      },
-      {kind: 'in', at: 432, typingFor: 34, w: 520, text: <>founder arc. contrarian, costs you something to say</>},
-      {kind: 'in', at: 508, typingFor: 24, text: <>draft it?</>},
-      {kind: 'out', at: 578, text: 'go'},
+      {kind: 'in', at: 322, typingFor: 36, w: 540, text: (<>heard on your 2pm: <U>&ldquo;we hire slow on purpose&rdquo;</U></>)},
+      {kind: 'in', at: 420, typingFor: 32, w: 520, text: <>founder arc. contrarian, costs you something to say</>},
+      {kind: 'in', at: 496, typingFor: 22, text: <>draft it?</>},
+      {kind: 'out', at: 562, text: 'go'},
     ],
   },
   {
     stamp: 'Monday 15:12',
-    enter: 648,
+    enter: 630,
     msgs: [
-      {kind: 'draft', at: 718, revAt: 940},
-      {kind: 'out', at: 858, text: 'spikier'},
-      {kind: 'in', at: 1040, typingFor: 32, text: <>queued. tuesday 9am, best slot left this week</>},
+      {kind: 'draft', at: 700, revAt: 912},
+      {kind: 'out', at: 838, text: 'spikier'},
+      {kind: 'in', at: 1012, typingFor: 30, text: <>queued. tuesday 9am, best slot left this week</>},
     ],
   },
   {
     stamp: 'Tuesday 12:40',
-    enter: 1172,
+    enter: 1100,
     msgs: [
-      {kind: 'in', at: 1238, typingFor: 36, w: 520, text: <>live. 40 comments before lunch, three from investors</>},
-      {
-        kind: 'in',
-        at: 1345,
-        typingFor: 38,
-        w: 545,
-        text: <>sandra from meridian commented. second touch this month. worth a dm while it&rsquo;s warm?</>,
-      },
-      {kind: 'out', at: 1452, text: 'draft it'},
-      {kind: 'in', at: 1512, typingFor: 26, text: <>done, it&rsquo;s in your drafts</>},
+      {kind: 'in', at: 1164, typingFor: 34, w: 520, text: <>live. 40 comments before lunch, three from investors</>},
+      {kind: 'in', at: 1268, typingFor: 40, w: 545, text: <>sandra from meridian commented. second touch this month. worth a dm while it&rsquo;s warm?</>},
+      {kind: 'out', at: 1380, text: 'draft it'},
+      {kind: 'in', at: 1440, typingFor: 24, text: <>done, it&rsquo;s in your drafts</>},
     ],
   },
   {
-    stamp: 'Wednesday 17:20',
-    enter: 1612,
+    stamp: 'Wednesday 09:15',
+    enter: 1510,
     msgs: [
-      {kind: 'in', at: 1678, typingFor: 30, text: <>heads up. skipping tomorrow&rsquo;s slot</>},
-      {kind: 'in', at: 1784, typingFor: 36, w: 520, text: <>nothing in the backlog earns it. fine doesn&rsquo;t get posted</>},
-      {kind: 'out', at: 1918, text: 'ok fair'},
+      {kind: 'in', at: 1574, typingFor: 34, w: 500, text: <>quiet calendar this week, backlog&rsquo;s thin. founder arc needs one</>},
+      {kind: 'in', at: 1678, typingFor: 44, w: 555, text: <>so i&rsquo;ll pull one out of you. what did you believe about hiring when you started that you don&rsquo;t now?</>},
+      {kind: 'vn', at: 1808, dur: '0:52', playFrom: 1808, playTo: 1910, transcript: 'we thought speed was everything. rushed one and it nearly took the wheels off'},
+      {kind: 'in', at: 1948, typingFor: 38, w: 520, text: <>there it is. what did rushing that hire cost you, a number or a story</>},
+      {kind: 'vn', at: 2072, dur: '0:38', playFrom: 2072, playTo: 2166, transcript: 'three months of runway. mustafa spent six weeks cleaning it up'},
+      {kind: 'in', at: 2206, typingFor: 32, w: 500, text: <>that&rsquo;s the post. belief, the cost, what changed. done asking</>},
+    ],
+  },
+  {
+    stamp: 'Thursday 17:20',
+    enter: 2300,
+    msgs: [
+      {kind: 'in', at: 2366, typingFor: 28, text: <>heads up. skipping tomorrow&rsquo;s slot</>},
+      {kind: 'in', at: 2470, typingFor: 36, w: 520, text: <>nothing in the backlog earns it. fine doesn&rsquo;t get posted</>},
+      {kind: 'out', at: 2600, text: 'ok fair'},
     ],
   },
   {
     stamp: 'Friday 09:30',
-    enter: 2002,
+    enter: 2680,
     msgs: [
-      {kind: 'in', at: 2068, typingFor: 30, text: <>you&rsquo;ve been quiet since tuesday</>},
-      {
-        kind: 'in',
-        at: 2170,
-        typingFor: 38,
-        w: 545,
-        text: <>i&rsquo;d run your take on ai pricing. sharpest thing you said all week and nobody&rsquo;s heard it</>,
-      },
-      {kind: 'in', at: 2275, typingFor: 34, w: 510, text: <>monday 9am, approving unless you say otherwise</>},
-      {kind: 'out', at: 2364, text: '👍', big: true},
+      {kind: 'in', at: 2744, typingFor: 28, text: <>builder arc&rsquo;s gone quiet this week</>},
+      {kind: 'in', at: 2846, typingFor: 42, w: 545, text: <>i&rsquo;d run your take on ai pricing. sharpest thing you said all week and nobody&rsquo;s heard it</>},
+      {kind: 'in', at: 2950, typingFor: 32, w: 510, text: <>monday 9am, approving unless you say otherwise</>},
+      {kind: 'out', at: 3040, text: '👍', big: true},
     ],
   },
 ];
 
+
 const SCENES_MOBILE: Scene[] = [
   {
     stamp: 'Monday 14:47',
-    enter: 200,
+    enter: 190,
     msgs: [
-      {
-        kind: 'in',
-        at: 252,
-        typingFor: 30,
-        w: 540,
-        text: (
-          <>
-            heard on your 2pm: <U>&ldquo;we hire slow on purpose&rdquo;</U>
-          </>
-        ),
-      },
-      {kind: 'in', at: 352, typingFor: 22, text: <>draft it?</>},
-      {kind: 'out', at: 415, text: 'go'},
+      {kind: 'in', at: 242, typingFor: 28, w: 540, text: (<>heard on your 2pm: <U>&ldquo;we hire slow on purpose&rdquo;</U></>)},
+      {kind: 'in', at: 342, typingFor: 20, text: <>draft it?</>},
+      {kind: 'out', at: 402, text: 'go'},
     ],
   },
   {
-    stamp: 'Tuesday',
-    enter: 480,
+    stamp: 'Wednesday',
+    enter: 470,
     msgs: [
-      {kind: 'draft', at: 545},
-      {kind: 'in', at: 688, typingFor: 28, w: 500, text: <>live. 40 comments, three from investors</>},
+      {kind: 'in', at: 528, typingFor: 28, w: 500, text: <>quiet week. i&rsquo;ll pull one out of you</>},
+      {kind: 'vn', at: 636, dur: '0:41', playFrom: 636, playTo: 742, transcript: 'we thought speed was everything, then we rushed a hire and it nearly cost us'},
+      {kind: 'in', at: 788, typingFor: 28, text: <>that&rsquo;s the post. done asking</>},
     ],
   },
 ];
@@ -351,6 +334,42 @@ const DraftCard: React.FC<{frame: number; at: number; revAt?: number; bottom: nu
   );
 };
 
+/* founder voice note: waveform fills as it plays, transcript fades in under it */
+const VoiceNote: React.FC<{
+  frame: number;
+  at: number;
+  dur: string;
+  transcript: string;
+  playFrom: number;
+  playTo: number;
+  bottom: number;
+  w: number;
+  fps: number;
+}> = ({frame, at, dur, transcript, playFrom, playTo, bottom, w, fps}) => {
+  const entry = pop(frame, at, fps, 0.85, 13);
+  const prog = frame < playFrom ? 0 : frame > playTo ? 1 : (frame - playFrom) / (playTo - playFrom);
+  const N = 30;
+  const bars = Array.from({length: N}, (_, i) => 5 + Math.abs(Math.sin(i * 1.27)) * 15);
+  return (
+    <div style={{position: 'absolute', bottom, right: 0, width: w, transformOrigin: 'bottom right', ...entry}}>
+      <div style={{display: 'flex', alignItems: 'center', gap: 12, background: BLUE, borderRadius: 30, borderBottomRightRadius: 8, padding: '14px 18px'}}>
+        <div style={{width: 30, height: 30, borderRadius: '50%', background: 'rgba(255,255,255,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none'}}>
+          <div style={{width: 0, height: 0, marginLeft: 3, borderLeft: '9px solid #fff', borderTop: '6px solid transparent', borderBottom: '6px solid transparent'}} />
+        </div>
+        <div style={{display: 'flex', alignItems: 'center', gap: 2.5, flex: 1, height: 26}}>
+          {bars.map((h, i) => (
+            <div key={i} style={{flex: 1, height: h, borderRadius: 2, background: i / N <= prog ? '#fff' : 'rgba(255,255,255,0.42)'}} />
+          ))}
+        </div>
+        <span style={{fontSize: 15, fontWeight: 600, color: 'rgba(255,255,255,0.9)'}}>{dur}</span>
+      </div>
+      <div style={{marginTop: 8, fontSize: 16, fontStyle: 'italic', color: MUTED, textAlign: 'right', lineHeight: 1.4, opacity: interpolate(frame, [at + 10, at + 30], [0, 1], clamp)}}>
+        &ldquo;{transcript}&rdquo;
+      </div>
+    </div>
+  );
+};
+
 /* chapter mark: day stamp with an expanding hairline */
 const Stamp: React.FC<{frame: number; at: number; text: string; fps: number}> = ({frame, at, text, fps}) => {
   const s = frame < at ? 0 : spring({frame: frame - at, fps, config: {damping: 16, stiffness: 120}});
@@ -480,29 +499,31 @@ export const Hero: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
   const CAM: CamKey[] = mobile
     ? [
         {f: 0, s: 1, y: 0},
-        {f: 100, s: 1, y: 0},
-        {f: 190, s: zoomT, y: -8},
-        {f: 470, s: zoomT * 0.99, y: -8},
-        {f: 510, s: zoomT * 1.005, y: -12},
-        {f: 740, s: zoomT * 0.995, y: -10},
-        {f: 860, s: 1, y: 0},
+        {f: 90, s: 1, y: 0},
+        {f: 180, s: zoomT, y: -8},
+        {f: 450, s: zoomT * 0.99, y: -8},
+        {f: 470, s: zoomT * 1.006, y: -11},
+        {f: 800, s: zoomT * 0.99, y: -8},
         {f: 900, s: 1, y: 0},
+        {f: 960, s: 1, y: 0},
       ]
     : [
         {f: 0, s: 1, y: 0},
         {f: 150, s: 1, y: 0},
-        {f: 258, s: 1.78, y: -12},
-        {f: 620, s: 1.745, y: -12},
-        {f: 662, s: 1.7, y: -8},
-        {f: 1130, s: 1.735, y: -10},
-        {f: 1176, s: 1.76, y: -16},
-        {f: 1570, s: 1.72, y: -10},
-        {f: 1616, s: 1.82, y: -18},
-        {f: 1960, s: 1.78, y: -16},
-        {f: 2006, s: 1.71, y: -10},
-        {f: 2430, s: 1.71, y: -10},
-        {f: 2620, s: 1, y: 0},
-        {f: 2880, s: 1, y: 0},
+        {f: 250, s: 1.78, y: -12},
+        {f: 600, s: 1.745, y: -12},
+        {f: 640, s: 1.7, y: -8},
+        {f: 1080, s: 1.735, y: -10},
+        {f: 1120, s: 1.71, y: -12},
+        {f: 1490, s: 1.7, y: -8},
+        {f: 1540, s: 1.665, y: -6},
+        {f: 2280, s: 1.72, y: -10},
+        {f: 2340, s: 1.84, y: -20},
+        {f: 2650, s: 1.8, y: -16},
+        {f: 2710, s: 1.72, y: -10},
+        {f: 3050, s: 1.72, y: -10},
+        {f: 3230, s: 1, y: 0},
+        {f: 3300, s: 1, y: 0},
       ];
   const cam = camAt(CAM, frame);
   const camPrev = camAt(CAM, frame - 1);
@@ -511,7 +532,7 @@ export const Hero: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
   const zoomP = (cam.s - 1) / (zoomT - 1); /* 0 wide … 1 tight */
 
   /* contact <-> chat crossfade */
-  const swap = mobile ? {in: [112, 178] as const, out: [750, 838] as const} : {in: [166, 246] as const, out: [2450, 2560] as const};
+  const swap = mobile ? {in: [108, 174] as const, out: [812, 894] as const} : {in: [166, 246] as const, out: [3120, 3210] as const};
   const toChat = interpolate(frame, [...swap.in], [0, 1], {...clamp, easing: easePage});
   const toContact = interpolate(frame, [...swap.out], [0, 1], {...clamp, easing: easePage});
   const chatOp = toChat * (1 - toContact);
@@ -526,7 +547,8 @@ export const Hero: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
   const wipeP = prev ? interpolate(frame, [scene.enter, scene.enter + WIPE], [0, 1], {...clamp, easing: easePage}) : 1;
 
   /* bottom-anchored stack inside a scene */
-  const heightOf = (m: Msg) => (m.kind === 'draft' ? 172 : m.kind === 'out' ? (m.big ? 78 : 60) : 64 + (m.w && m.w > 500 ? 34 : 0));
+  const heightOf = (m: Msg) =>
+    m.kind === 'draft' ? 172 : m.kind === 'vn' ? 132 : m.kind === 'out' ? (m.big ? 78 : 60) : 64 + (m.w && m.w > 500 ? 34 : 0);
   const GAP = 14;
   const base = 112;
   const riseAt = (m: Msg) => (m.kind === 'in' && m.typingFor ? m.at - m.typingFor : m.at);
@@ -543,6 +565,11 @@ export const Hero: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
       <div style={{position: 'absolute', inset: 0, ...style}}>
         <Stamp frame={frame} at={sc.enter + (sc === SCENES[0] ? 0 : 14)} text={sc.stamp} fps={fps} />
         {sc.msgs.map((m, i) => {
+          if (m.kind === 'vn') {
+            return (
+              <VoiceNote key={i} frame={frame} at={m.at} dur={m.dur} transcript={m.transcript} playFrom={m.playFrom} playTo={m.playTo} bottom={bs[i]} w={m.w ?? 384} fps={fps} />
+            );
+          }
           if (m.kind === 'draft') {
             return <DraftCard key={i} frame={frame} at={m.at} revAt={m.revAt} bottom={bs[i]} fps={fps} />;
           }

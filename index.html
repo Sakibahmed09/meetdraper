@@ -312,7 +312,9 @@ h1,h2{font-variation-settings:'SOFT' 42}
 .logo-strip .ls-row{display:flex;align-items:center;gap:36px;flex-wrap:wrap;justify-content:center;padding:0 20px}
 .logo-strip img{height:23px;width:auto;filter:grayscale(1);opacity:.5;transition:opacity .3s}
 .logo-strip img:hover{opacity:.85}
-.stats-row{margin:36px auto 6px;display:flex;justify-content:center;gap:clamp(30px,6vw,88px);flex-wrap:wrap}
+.community .ceyebrow{display:block;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+.community .cintro{max-width:540px;margin:16px auto 0;font-size:15.5px;font-weight:500;color:var(--muted-2);line-height:1.55}
+.stats-row{margin:34px auto 6px;display:flex;justify-content:center;gap:clamp(30px,6vw,88px);flex-wrap:wrap}
 .stat .sv{font-family:var(--serif);font-weight:600;font-size:clamp(36px,4vw,54px);letter-spacing:-.03em;color:#111;font-variant-numeric:tabular-nums;line-height:1.1}
 .stat .sl{margin-top:2px;font-size:13px;font-weight:500;color:var(--muted)}
 .post-shot{width:280px;flex:none;border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 1px 4px rgba(30,30,25,.06),0 12px 30px rgba(30,30,25,.10)}
@@ -355,9 +357,9 @@ h1,h2{font-variation-settings:'SOFT' 42}
 /* ============ sunset zone: closing + footer ============ */
 .sunset-zone{position:relative;overflow:hidden;margin-top:60px}
 .sunset-bg{position:absolute;inset:0;pointer-events:none}
-.sunset-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:0;transition:opacity 3s ease}
+.sunset-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 34%;opacity:0;transition:opacity 3s ease}
 .sunset-bg img.on{opacity:.85}
-.sunset-bg .fade{position:absolute;inset:0;background:linear-gradient(to bottom,var(--cream) 0%,rgba(238,235,230,.72) 22%,rgba(238,235,230,.25) 48%,rgba(238,235,230,.05) 72%,rgba(238,235,230,.3) 100%)}
+.sunset-bg .fade{position:absolute;inset:0;background:linear-gradient(to bottom,var(--cream) 0%,rgba(238,235,230,.7) 20%,rgba(238,235,230,.26) 42%,rgba(238,235,230,.08) 58%,rgba(238,235,230,.5) 82%,var(--cream) 95%)}
 .closing{position:relative;text-align:center;padding:150px 20px 130px}
 .closing h2{font-size:clamp(42px,4.6vw,62px);letter-spacing:-.035em;line-height:1.06;color:#191a17}
 .closing .cta-row{margin-top:34px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
@@ -377,9 +379,9 @@ footer{position:relative;padding:40px 20px 0}
 .giant span{
   font-family:var(--wordmark);font-weight:700;letter-spacing:-.05em;line-height:.72;
   font-size:clamp(88px,26vw,400px);
-  background:linear-gradient(to bottom,rgba(26,31,43,.34) 0%,rgba(26,31,43,.08) 62%,rgba(26,31,43,0) 95%);
+  background:linear-gradient(to bottom,rgba(26,31,43,.42) 0%,rgba(26,31,43,.16) 58%,rgba(26,31,43,.04) 92%);
   -webkit-background-clip:text;background-clip:text;color:transparent;
-  transform:translateY(6%);
+  transform:translateY(4%);
 }
 
 /* ============ responsive ============ */
@@ -436,7 +438,7 @@ footer{position:relative;padding:40px 20px 0}
   <div class="nav-center">
     <a href="#fits">Product <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     <a href="#arcs">Arcs</a>
-    <a href="#community">Community</a>
+    <a href="#community">Proof</a>
     <a href="#footer">Company</a>
   </div>
   <div class="nav-right">
@@ -614,7 +616,7 @@ footer{position:relative;padding:40px 20px 0}
     <div class="txt" data-reveal>
       <span class="num">(5)</span>
       <h3 class="serif-h">Earns the keys as you go</h3>
-      <p>Draper starts by asking. Approve a few drafts and it starts scheduling. Keep approving and it posts on its own, still sounding exactly like you</p>
+      <p>Timing is Draper&rsquo;s from day one. The words are yours: approve every draft, then just a veto window, then it posts on its own, still sounding exactly like you</p>
       <a class="learn" href="#waitlist">Learn more
         <svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
@@ -648,8 +650,10 @@ footer{position:relative;padding:40px 20px 0}
 
   <!-- community -->
   <section class="community" id="community">
-    <h2 class="serif-h" data-reveal>Community</h2>
-    <div class="stats-row" data-reveal style="--d:.06s" id="statsRow">
+    <span class="ceyebrow" data-reveal>The proof</span>
+    <h2 class="serif-h" data-reveal>The team that&rsquo;s already done this</h2>
+    <p class="cintro" data-reveal style="--d:.05s">Before Draper was an agent, it was us, posting for founders by hand. The numbers are theirs. The craft is what Draper runs now.</p>
+    <div class="stats-row" data-reveal style="--d:.08s" id="statsRow">
       <div class="stat"><div class="sv" data-prefix="£" data-target="20" data-suffix="M+">£0M+</div><div class="sl">attributed revenue</div></div>
       <div class="stat"><div class="sv" data-target="350" data-suffix="M+">0M+</div><div class="sl">views</div></div>
       <div class="stat"><div class="sv" data-target="50" data-suffix="+">0+</div><div class="sl">founders</div></div>
@@ -699,7 +703,7 @@ footer{position:relative;padding:40px 20px 0}
     <div class="fgrid" data-reveal>
       <div class="fcol">
         <h5>Product</h5>
-        <a href="#fits">How it works</a><a href="#arcs">Arcs</a><a href="#waitlist">Waitlist</a><a href="#community">Community</a>
+        <a href="#fits">How it works</a><a href="#arcs">Arcs</a><a href="#waitlist">Waitlist</a><a href="#community">Proof</a>
       </div>
       <div class="fcol">
         <h5>Company</h5>
