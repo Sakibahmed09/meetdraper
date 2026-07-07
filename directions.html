@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Draper — hero directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,0..100&family=Schibsted+Grotesk:wght@400..700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#EEEBE6; --ink:#1A1F2B; --black:#111110;
+  --muted:rgba(20,22,28,.46); --muted-2:rgba(20,22,28,.62);
+  --sans:'Schibsted Grotesk',Inter,system-ui,sans-serif;
+  --serif:'Fraunces',Georgia,serif;
+  --wordmark:'Playfair Display',Georgia,serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#e4e0d9;font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased}
+.top{max-width:1080px;margin:0 auto;padding:48px 32px 8px}
+.top h1{font-family:var(--serif);font-weight:600;font-variation-settings:'SOFT' 30;font-size:34px;letter-spacing:-.02em;margin-bottom:8px}
+.top p{color:var(--muted-2);font-size:15.5px;max-width:640px;line-height:1.5}
+.dir{
+  max-width:1080px;margin:26px auto;background:var(--cream);border-radius:28px;overflow:hidden;
+  box-shadow:0 2px 8px rgba(30,30,25,.05),0 24px 60px rgba(30,30,25,.09);
+}
+.hero{padding:74px 64px 40px;text-align:center;position:relative}
+.tag{position:absolute;top:22px;left:28px;display:flex;align-items:center;gap:10px}
+.tag .letter{width:30px;height:30px;border-radius:9px;background:var(--ink);color:var(--cream);font-family:var(--serif);font-weight:600;font-size:16px;display:flex;align-items:center;justify-content:center}
+.tag .kind{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.eyebrow{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.wordmark{font-family:var(--wordmark);font-weight:700;font-size:26px;letter-spacing:-.05em;color:var(--black);margin-bottom:30px}
+.h1{font-family:var(--serif);font-weight:600;font-variation-settings:'SOFT' 42;letter-spacing:-.035em;line-height:1.03;color:#0e0e0c;font-size:clamp(38px,4.6vw,62px);max-width:16ch;margin:0 auto}
+.sub{margin:22px auto 0;font-size:18px;font-weight:500;color:var(--muted-2);line-height:1.45;max-width:52ch}
+.cta{
+  margin-top:34px;display:inline-flex;align-items:center;height:52px;padding:0 34px;border-radius:16px;
+  font-size:16px;font-weight:500;color:#fff;
+  background:linear-gradient(#3A3A3A 0%,#3A3A3A 52%,#2C2C2C 80%,#1F1F1F 100%);
+  box-shadow:0 1px 3px rgba(0,0,0,.1),0 6px 16px rgba(0,0,0,.1),inset 0 0 0 1.25px #353535,inset 0 0 12px rgba(255,255,255,.1);
+}
+.lower .h1,.lower .sub{text-transform:lowercase}
+.lower .h1{max-width:20ch}
+.note{
+  background:#f6f4f0;border-top:1px solid rgba(20,20,15,.07);
+  padding:18px 32px;display:flex;gap:28px;flex-wrap:wrap;font-size:13.5px;line-height:1.5
+}
+.note div{flex:1;min-width:220px}
+.note b{display:block;font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.note span{color:var(--ink);font-weight:500}
+@media(max-width:640px){.hero{padding:66px 24px 36px}.note{gap:16px}}
+</style>
+</head>
+<body>
+<div class="top">
+  <h1>Draper, five hero directions</h1>
+  <p>Same product, five different things to lead with: the mechanism, the pain, the status, the taste, or the personality. Each is a real positioning choice. Pick one, or a hero from one and a spine from another.</p>
+</div>
+
+<!-- A -->
+<div class="dir">
+  <div class="hero">
+    <div class="tag"><span class="letter">A</span><span class="kind">Mechanism · clarity-first</span></div>
+    <span class="eyebrow">The meetings wedge</span>
+    <div class="wordmark">Draper</div>
+    <div class="h1">Your LinkedIn, written from the meetings you&rsquo;re already in.</div>
+    <p class="sub">A content strategist that turns what you say in your calls into posts in your voice. You just approve.</p>
+    <div class="cta">Join the waitlist</div>
+  </div>
+  <div class="note">
+    <div><b>Leads with</b><span>The one mechanic no competitor can copy: it starts from your meetings, not a blank box.</span></div>
+    <div><b>Best when</b><span>You want the plainest possible first read. Nobody leaves confused about what it is.</span></div>
+    <div><b>vs Stanley</b><span>Stanley learns from your old posts. This inverts that on the first line.</span></div>
+  </div>
+</div>
+
+<!-- B -->
+<div class="dir">
+  <div class="hero">
+    <div class="tag"><span class="letter">B</span><span class="kind">The pain · the wedge</span></div>
+    <span class="eyebrow">For the founder who doesn&rsquo;t post</span>
+    <div class="wordmark">Draper</div>
+    <div class="h1">Brilliant in the room. Invisible on LinkedIn.</div>
+    <p class="sub">Draper turns your meetings into a presence, so you get the authority without ever becoming a poster.</p>
+    <div class="cta">Join the waitlist</div>
+  </div>
+  <div class="note">
+    <div><b>Leads with</b><span>The pain, named. Targets the founder who posts nothing because it&rsquo;s all locked in their calls.</span></div>
+    <div><b>Best when</b><span>You want the biggest, most underserved market and the sharpest emotional hook.</span></div>
+    <div><b>vs Stanley</b><span>Stanley needs your posting history and punishes low-history users. This owns the people it can&rsquo;t serve.</span></div>
+  </div>
+</div>
+
+<!-- C -->
+<div class="dir">
+  <div class="hero">
+    <div class="tag"><span class="letter">C</span><span class="kind">The hire · status</span></div>
+    <span class="eyebrow">Not a tool. A hire.</span>
+    <div class="wordmark">Draper</div>
+    <div class="h1">The content hire you can&rsquo;t afford. Turns out you can.</div>
+    <p class="sub">Sits in on your calls, writes in your voice, and tells you when it&rsquo;s not good enough. Half creative director, half chief of staff.</p>
+    <div class="cta">Join the waitlist</div>
+  </div>
+  <div class="note">
+    <div><b>Leads with</b><span>Status and the org-chart framing. Draper is a person you hire, not software you operate.</span></div>
+    <div><b>Best when</b><span>You want to justify a premium price and speak to founders who&rsquo;d hire a strategist if they could.</span></div>
+    <div><b>vs Stanley</b><span>Takes Stanley&rsquo;s &ldquo;Head of Content&rdquo; ground, but with taste and meetings they don&rsquo;t have.</span></div>
+  </div>
+</div>
+
+<!-- D -->
+<div class="dir">
+  <div class="hero">
+    <div class="tag"><span class="letter">D</span><span class="kind">The taste · contrarian</span></div>
+    <span class="eyebrow">Taste over volume</span>
+    <div class="wordmark">Draper</div>
+    <div class="h1">The only content tool that tells you no.</div>
+    <p class="sub">Draper drafts from your meetings, in your voice, and bins anything that reads like AI. Fewer posts. Sharper ones. Your name protected.</p>
+    <div class="cta">Join the waitlist</div>
+  </div>
+  <div class="note">
+    <div><b>Leads with</b><span>The veto. The anti-slop, taste-with-a-spine angle that reads as higher-status than &ldquo;post more&rdquo;.</span></div>
+    <div><b>Best when</b><span>You want to feel premium and protective of the founder&rsquo;s reputation, not another posting treadmill.</span></div>
+    <div><b>vs Stanley</b><span>&ldquo;No slop&rdquo; is Stanley&rsquo;s slogan but not its behaviour. This makes it Draper&rsquo;s behaviour.</span></div>
+  </div>
+</div>
+
+<!-- E -->
+<div class="dir lower">
+  <div class="hero">
+    <div class="tag"><span class="letter">E</span><span class="kind">The personality · Draper speaks</span></div>
+    <div class="wordmark" style="text-transform:none">Draper</div>
+    <div class="h1">you talk. i&rsquo;ll handle linkedin.</div>
+    <p class="sub">i sit in on your calls, write your posts in your voice, and won&rsquo;t ship anything that sounds like a bot. you just say yes.</p>
+    <div class="cta" style="text-transform:none">Join the waitlist</div>
+  </div>
+  <div class="note">
+    <div><b>Leads with</b><span>Personality. The product talks, in its own dry lowercase voice. The boldest answer to &ldquo;feel like a person&rdquo;.</span></div>
+    <div><b>Best when</b><span>You want maximum character and memorability, and you&rsquo;re willing to trade a little instant clarity for it.</span></div>
+    <div><b>vs Stanley</b><span>Stanley&rsquo;s persona is a polished mascot. This is a sharp colleague with an opinion.</span></div>
+  </div>
+</div>
+
+<div class="top" style="padding-top:8px;padding-bottom:64px">
+  <p style="font-size:13.5px;color:var(--muted)">All five keep the same waitlist CTA, the film, and the proof. The choice is only what the first three seconds say.</p>
+</div>
+</body>
+</html>
