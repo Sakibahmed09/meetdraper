@@ -5,3 +5,6 @@ remotion/node_modules/
 remotion/out/
 assets/*.png
 assets/*_thumb.jpeg
+!assets/favicon-32.png
+!assets/app-icon.png
+!assets/apple-touch-icon.png
