@@ -24,7 +24,9 @@
 <link rel="preload" as="image" href="assets/hero-demo-poster.jpg" media="(min-width: 641px)">
 <link rel="preload" as="image" href="assets/hero-demo-poster-mobile.jpg" media="(max-width: 640px)">
 <link rel="preload" as="image" href="assets/hero-coast.jpg">
-<link rel="icon" href="assets/app-icon.jpg">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/app-icon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,0..100&family=Schibsted+Grotesk:wght@400..700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
@@ -766,14 +768,19 @@ function inH1(){hChars.forEach((s,i)=>setTimeout(()=>s.classList.remove('out'),1
 function outH1(cb){hChars.forEach((s,i)=>setTimeout(()=>s.classList.add('out'),9*i));setTimeout(cb,9*hChars.length+430)}
 setH1(H1S[0]);setTimeout(inH1,650);
 setInterval(()=>{
+  if(document.hidden)return; /* don't swap while backgrounded */
   sub.classList.add('out');
   outH1(()=>{
     hIdx=(hIdx+1)%H1S.length;
     setH1(H1S[hIdx]);
     sub.textContent=SUBS[hIdx];sub.classList.remove('out');
-    requestAnimationFrame(()=>requestAnimationFrame(inH1));
+    setTimeout(inH1,50); /* setTimeout fires even when rAF is suspended */
   });
 },7000);
+/* safety net: if we ever return to a stuck-out headline, force it visible */
+document.addEventListener('visibilitychange',()=>{
+  if(!document.hidden&&h1.querySelectorAll('.ch.out').length===hChars.length&&hChars.length)inH1();
+});
 
 /* ============ hero ambient film ============ */
 const heroFilm=document.getElementById('heroFilm');
