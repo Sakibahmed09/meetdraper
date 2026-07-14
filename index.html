@@ -520,9 +520,10 @@ footer{position:relative;padding:40px 20px 0}
           var v=document.getElementById('heroFilm');
           var g=document.getElementById('heroGlow');
           var p=matchMedia('(max-width:640px)').matches;
+          var ver='?v=3'; /* bump to bust caches when the film changes */
           v.style.aspectRatio=p?'1 / 1':'4 / 3';
-          v.poster=p?'assets/hero-demo-poster-mobile.jpg':'assets/hero-demo-poster.jpg';
-          v.src=p?'assets/hero-demo-mobile.mp4':'assets/hero-demo.mp4';
+          v.poster=(p?'assets/hero-demo-poster-mobile.jpg':'assets/hero-demo-poster.jpg')+ver;
+          v.src=(p?'assets/hero-demo-mobile.mp4':'assets/hero-demo.mp4')+ver;
           g.src=v.src;
         })();
       </script>
@@ -854,13 +855,17 @@ if(reducedMotion){
   keepRolling();
   setTimeout(()=>{if(heroFilm.paused)filmPlay.classList.add('show')},1600);
   filmPlay.addEventListener('click',()=>{filmPlay.classList.remove('show');heroFilm.play().catch(()=>filmPlay.classList.add('show'))});
-  /* glow rides the film: self-healing sync (restarts a stalled glow, corrects drift) */
-  heroGlow.addEventListener('canplay',()=>{if(!heroFilm.paused){heroGlow.currentTime=heroFilm.currentTime;heroGlow.play().catch(()=>{})}},{once:true});
+  /* glow rides the film: self-healing sync (restarts a stalled glow, corrects drift).
+     decorative layer, so if the server can't keep it in step (no range support),
+     it softens out rather than glowing out of sync */
+  heroGlow.addEventListener('canplay',()=>{if(!heroFilm.paused){try{heroGlow.currentTime=heroFilm.currentTime}catch(_){}heroGlow.play().catch(()=>{})}},{once:true});
   setInterval(()=>{
     if(heroFilm.paused)return;
+    var d=Math.abs(heroGlow.currentTime-heroFilm.currentTime);
     /* order matters: a seek interrupts a pending play(), so correct time first */
-    if(Math.abs(heroGlow.currentTime-heroFilm.currentTime)>0.25)heroGlow.currentTime=heroFilm.currentTime;
+    if(d>0.25){try{heroGlow.currentTime=heroFilm.currentTime}catch(_){}}
     if(heroGlow.paused)heroGlow.play().catch(()=>{});
+    heroGlow.classList.toggle('on', d<1.5);
   },4000);
 }
 
