@@ -1,6 +1,6 @@
 import React from 'react';
 import {Composition, Still} from 'remotion';
-import {Hero, HERO_DURATION} from './Hero';
+import {Hero, HERO_DURATION, MOBILE_DURATION} from './Hero';
 import {SocialCard} from './SocialCard';
 
 export const Root: React.FC = () => {
@@ -26,7 +26,7 @@ export const Root: React.FC = () => {
         id="DraperHeroMobile"
         component={Hero}
         defaultProps={{mobile: true}}
-        durationInFrames={900}
+        durationInFrames={MOBILE_DURATION}
         fps={60}
         width={1080}
         height={1080}
