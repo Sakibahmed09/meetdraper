@@ -82,23 +82,25 @@ export const SocialCard: React.FC = () => {
       </div>
 
       {/* left: wordmark, headline, sub */}
-      <div style={{position: 'absolute', left: 84, top: 96, width: 660}}>
+      <div style={{position: 'absolute', left: 84, top: 92, width: 690}}>
         <div style={{fontFamily: PLAYFAIR, fontWeight: 700, fontSize: 54, letterSpacing: '-0.05em', color: '#111110'}}>Draper</div>
         <div
           style={{
-            marginTop: 44,
+            marginTop: 40,
             fontFamily: FRAUNCES,
             fontWeight: 600,
-            fontSize: 74,
-            lineHeight: 1.04,
+            fontSize: 66,
+            lineHeight: 1.08,
             letterSpacing: '-0.035em',
             color: '#0e0e0c',
           }}
         >
-          Your LinkedIn content strategist
+          You do the talking.
+          <br />
+          Draper does LinkedIn.
         </div>
-        <div style={{marginTop: 30, fontSize: 27, fontWeight: 500, color: 'rgba(20,22,28,0.55)', lineHeight: 1.4, width: 600}}>
-          Drafts, schedules and posts for you. Nothing that reads like AI
+        <div style={{marginTop: 28, fontSize: 26, fontWeight: 500, color: 'rgba(20,22,28,0.55)', lineHeight: 1.4, width: 600}}>
+          It joins your calls, writes the way you talk, and won&rsquo;t post anything that reads like AI
         </div>
         <div
           style={{

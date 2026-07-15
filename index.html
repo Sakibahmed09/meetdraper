@@ -10,8 +10,8 @@
 <meta property="og:url" content="https://sakibahmed09.github.io/meetdraper/">
 <meta property="og:title" content="Draper – Your LinkedIn content strategist">
 <meta property="og:description" content="Drafts, schedules and posts for you. Nothing that reads like AI.">
-<meta property="og:image" content="https://sakibahmed09.github.io/meetdraper/social-card.jpg">
-<meta property="og:image:secure_url" content="https://sakibahmed09.github.io/meetdraper/social-card.jpg">
+<meta property="og:image" content="https://sakibahmed09.github.io/meetdraper/social-card-v2.jpg">
+<meta property="og:image:secure_url" content="https://sakibahmed09.github.io/meetdraper/social-card-v2.jpg">
 <meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -19,7 +19,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Draper – Your LinkedIn content strategist">
 <meta name="twitter:description" content="Drafts, schedules and posts for you. Nothing that reads like AI.">
-<meta name="twitter:image" content="https://sakibahmed09.github.io/meetdraper/social-card.jpg">
+<meta name="twitter:image" content="https://sakibahmed09.github.io/meetdraper/social-card-v2.jpg">
 <meta name="twitter:image:alt" content="Draper, your LinkedIn content strategist">
 <link rel="preload" as="image" href="assets/hero-demo-poster.jpg" media="(min-width: 641px)">
 <link rel="preload" as="image" href="assets/hero-demo-poster-mobile.jpg" media="(max-width: 640px)">
@@ -278,16 +278,30 @@ h1,h2{font-variation-settings:'SOFT' 42}
   border-radius:24px;padding:30px 24px;display:grid;grid-template-columns:1fr 1fr;gap:26px 12px;
   box-shadow:0 1px 2px rgba(30,30,25,.04),0 3px 8px rgba(30,30,25,.04),0 8px 28px rgba(30,30,25,.06);position:relative;
 }
-.cperson{display:flex;flex-direction:column;align-items:center;gap:8px}
+.cperson{display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;transform:scale(.82) translateY(10px)}
+.cgrid.live .cperson{animation:popIn .55s var(--spring) forwards}
+.cgrid.live .cperson:nth-child(1){animation-delay:.05s}
+.cgrid.live .cperson:nth-child(2){animation-delay:.13s}
+.cgrid.live .cperson:nth-child(3){animation-delay:.21s}
+.cgrid.live .cperson:nth-child(4){animation-delay:.29s}
 .cperson .pav{width:66px;height:66px;border-radius:50%;overflow:hidden;box-shadow:0 3px 10px rgba(30,30,25,.18)}
 .cperson .pav.sq{border-radius:17px}
 .cperson .pav img{width:100%;height:100%;object-fit:cover}
 .cperson .pname{font-size:12px;font-weight:500;color:rgba(26,31,43,.75);display:inline-flex;align-items:center;gap:4px}
+/* Draper is in the room, listening: a soft ring breathes off its tile */
+.cperson .pav.sq{position:relative;overflow:visible}
+.cperson .pav.sq img{border-radius:17px}
+.cgrid.live .pav.sq::after{
+  content:"";position:absolute;inset:-2px;border-radius:19px;pointer-events:none;
+  border:2px solid rgba(52,120,246,.55);opacity:0;
+  animation:listen 2.6s var(--easeout) 1s infinite;
+}
+@keyframes listen{0%{opacity:.75;transform:scale(1)}60%{opacity:0;transform:scale(1.22)}100%{opacity:0;transform:scale(1.22)}}
 .notif{
-  position:absolute;top:44%;left:50%;transform:translate(-50%,-50%) scale(.6);
+  position:absolute;top:44%;left:50%;transform:translate(-50%,calc(-50% - 14px)) scale(.6);
   background:#F1F1F0;border-radius:14px;padding:8px 12px;font-size:11px;font-weight:500;color:#3a3d44;
   max-width:200px;text-align:center;line-height:1.35;box-shadow:0 1px 2px rgba(30,30,25,.06),0 4px 12px rgba(30,30,25,.08),0 8px 24px rgba(30,30,25,.10);
-  opacity:0;z-index:3;transition:opacity .4s var(--spring),transform .4s var(--spring);
+  opacity:0;z-index:3;transition:opacity .45s var(--spring),transform .45s var(--spring);
 }
 .notif.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
 
@@ -394,6 +408,8 @@ h1,h2{font-variation-settings:'SOFT' 42}
   mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent)}
 .mtrack{display:flex;align-items:flex-start;gap:18px;width:max-content;padding:8px 0;animation:marq 180s linear infinite}
 @media(hover:hover) and (pointer:fine){.marquee:hover .mtrack{animation-play-state:paused}}
+.marquee.swipe{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;overscroll-behavior-x:contain}
+.marquee.swipe::-webkit-scrollbar{display:none}
 @keyframes marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .tweet{
   width:284px;flex:none;background:#fff;border-radius:20px;padding:18px;text-align:left;
@@ -849,11 +865,10 @@ if(beach.complete)beach.classList.add('loaded');else beach.onload=()=>beach.clas
 new IntersectionObserver((e)=>{if(e[0].isIntersecting)document.getElementById('sunsetImg').classList.add('on')},{threshold:.05})
   .observe(document.getElementById('sunsetZone'));
 
-/* ============ hero headline letter cycle ============ */
-const H1S=['You do the talking.\nDraper does LinkedIn.','You’re brilliant in meetings.\nDraper turns them into posts.'];
-const SUBS=['It joins your calls, writes the way you talk, and won’t post anything that reads like AI.','A voice note between meetings is enough. It drafts, schedules and shows you first.'];
-const h1=document.getElementById('heroH1'),sub=document.getElementById('heroSub');
-let hIdx=0,hChars=[];
+/* ============ hero headline: one static line, letter-blur entrance ============ */
+/* the film below is the moving thing; the headline holds still so nothing jumps */
+const h1=document.getElementById('heroH1');
+let hChars=[];
 function setH1(text){
   h1.innerHTML='';hChars=[];
   text.split('\n').forEach((line,li)=>{
@@ -873,23 +888,8 @@ function setH1(text){
     });
   });
 }
-function inH1(){hChars.forEach((s,i)=>setTimeout(()=>s.classList.remove('out'),16*i))}
-function outH1(cb){hChars.forEach((s,i)=>setTimeout(()=>s.classList.add('out'),9*i));setTimeout(cb,9*hChars.length+430)}
-setH1(H1S[0]);setTimeout(inH1,650);
-setInterval(()=>{
-  if(document.hidden)return; /* don't swap while backgrounded */
-  sub.classList.add('out');
-  outH1(()=>{
-    hIdx=(hIdx+1)%H1S.length;
-    setH1(H1S[hIdx]);
-    sub.textContent=SUBS[hIdx];sub.classList.remove('out');
-    setTimeout(inH1,50); /* setTimeout fires even when rAF is suspended */
-  });
-},7000);
-/* safety net: if we ever return to a stuck-out headline, force it visible */
-document.addEventListener('visibilitychange',()=>{
-  if(!document.hidden&&h1.querySelectorAll('.ch.out').length===hChars.length&&hChars.length)inH1();
-});
+setH1('You do the talking.\nDraper does LinkedIn.');
+setTimeout(()=>hChars.forEach((s,i)=>setTimeout(()=>s.classList.remove('out'),16*i)),650);
 
 /* ============ hero ambient film ============ */
 const heroFilm=document.getElementById('heroFilm');
@@ -952,7 +952,13 @@ ICONS.forEach(([name,sz,x,y,rot],i)=>{
 /* IO alone misses elements that fly past the viewport during fast flick-scrolls
    (no threshold crossing ever fires), so a scroll-driven sweep backs it up. */
 const revealEls=new Set(document.querySelectorAll('[data-reveal]'));
-function revealNow(el){el.classList.add('in');revealEls.delete(el);ro.unobserve(el)}
+function revealNow(el){
+  el.classList.add('in');revealEls.delete(el);ro.unobserve(el);
+  /* demos that wake on first sight ride the reveal too, so a fast flick
+     that outruns their own observers still starts them */
+  const cg=el.querySelector&&el.querySelector('.cgrid');
+  if(cg)cg.classList.add('live');
+}
 const ro=new IntersectionObserver(es=>es.forEach(e=>{
   if(e.isIntersecting||e.boundingClientRect.top<0)revealNow(e.target);
 }),{threshold:.12});
@@ -1048,6 +1054,9 @@ new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){playExchange();o.discon
 
 /* ============ (4) meeting-mining notifications ============ */
 const notif=document.getElementById('notif');
+/* wake the room: contacts pop in and Draper starts listening on first sight */
+const cgridEl=document.querySelector('.cgrid');
+new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){cgridEl.classList.add('live');o.disconnect()}},{threshold:.4}).observe(cgridEl);
 const NOTES=[
   'heard on your 2pm: "we hire slow on purpose". post?',
   'your standup had a story in it. want the draft?',
@@ -1115,6 +1124,30 @@ const POSTS=['ibrahim-origin','matthew-ylookup','kes-bcg','mohsin-dubai','ammar-
 const mtrack=document.getElementById('mtrack');
 const shot=n=>`<div class="post-shot"><img src="assets/proof/post-${n}.jpg" alt="Client LinkedIn post" loading="lazy"></div>`;
 mtrack.innerHTML=POSTS.map(shot).join('')+POSTS.map(shot).join('');
+
+/* touch devices: the marquee is also swipeable. native momentum scroll,
+   auto-drift when idle, seamless wrap at the halfway copy */
+if(matchMedia('(pointer:coarse)').matches){
+  const mq=document.querySelector('.marquee');
+  mtrack.style.animation='none';
+  mq.classList.add('swipe');
+  const mqPaused=gateLoop(mq);
+  let touching=false,idleUntil=0,acc=0;
+  mq.addEventListener('touchstart',()=>{touching=true},{passive:true});
+  mq.addEventListener('touchend',()=>{touching=false;idleUntil=performance.now()+2500},{passive:true});
+  mq.addEventListener('scroll',()=>{
+    const half=mtrack.scrollWidth/2;
+    if(mq.scrollLeft>=half)mq.scrollLeft-=half;
+    else if(mq.scrollLeft<=0)mq.scrollLeft+=half;
+  },{passive:true});
+  (function drift(){
+    if(!touching&&performance.now()>idleUntil&&!mqPaused()){
+      acc+=0.55;
+      if(acc>=1){mq.scrollLeft+=Math.floor(acc);acc-=Math.floor(acc)}
+    }
+    requestAnimationFrame(drift);
+  })();
+}
 
 /* ============ stat counters ============ */
 const statsRow=document.getElementById('statsRow');
