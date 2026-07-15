@@ -29,7 +29,7 @@ export const Root: React.FC = () => {
         durationInFrames={MOBILE_DURATION}
         fps={60}
         width={1080}
-        height={1080}
+        height={1440}
       />
       <Still id="SocialCard" component={SocialCard} width={1200} height={630} />
     </>

@@ -12,9 +12,9 @@ import {
 import {noise2D} from '@remotion/noise';
 import {measureText} from '@remotion/layout-utils';
 import {CameraMotionBlur} from '@remotion/motion-blur';
-import {loadFont} from '@remotion/google-fonts/SchibstedGrotesk';
-
-const {fontFamily: SANS} = loadFont();
+/* Apple system stack: the chat and feed are native UI, so they render in the
+   platform's own face (SF Pro on the Mac that renders this comp), not our web font */
+const SANS = "-apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', sans-serif";
 
 /* ============================================================
    A WEEK WITH DRAPER — five chapters, one looping week.
@@ -23,7 +23,7 @@ const {fontFamily: SANS} = loadFont();
    ============================================================ */
 
 export const HERO_DURATION = 3300; /* 55s @ 60fps */
-export const MOBILE_DURATION = 960; /* 16s @ 60fps */
+export const MOBILE_DURATION = 1680; /* 28s @ 60fps, portrait cut */
 
 /* ---------- palette ---------- */
 const BG = '#FCFBF9';
@@ -111,22 +111,42 @@ const SCENES_FULL: Scene[] = [
 
 
 const SCENES_MOBILE: Scene[] = [
+  /* the desktop week, cut for the hand: hear → craft → extract → veto.
+     same beats, half the dwell */
   {
     stamp: 'Monday 14:47',
-    enter: 190,
+    enter: 230,
     msgs: [
-      {kind: 'in', at: 242, typingFor: 28, w: 540, plain: 'heard on your 2pm: "we hire slow on purpose"', text: (<>heard on your 2pm: <U>&ldquo;we hire slow on purpose&rdquo;</U></>)},
-      {kind: 'in', at: 342, typingFor: 20, text: <>draft it?</>},
-      {kind: 'out', at: 402, text: 'go'},
+      {kind: 'in', at: 282, typingFor: 28, w: 540, plain: 'heard on your 2pm: "we hire slow on purpose"', text: (<>heard on your 2pm: <U>&ldquo;we hire slow on purpose&rdquo;</U></>)},
+      {kind: 'in', at: 384, typingFor: 20, text: <>draft it?</>},
+      {kind: 'out', at: 448, text: 'go'},
     ],
   },
   {
-    stamp: 'Wednesday',
-    enter: 470,
+    stamp: 'Monday 15:12',
+    enter: 520,
     msgs: [
-      {kind: 'in', at: 528, typingFor: 28, w: 500, text: <>quiet week. i&rsquo;ll pull one out of you</>},
-      {kind: 'vn', at: 636, dur: '0:41', playFrom: 636, playTo: 742, transcript: 'we thought speed was everything, then we rushed a hire and it nearly cost us'},
-      {kind: 'in', at: 788, typingFor: 28, text: <>that&rsquo;s the post. done asking</>},
+      {kind: 'draft', at: 580, revAt: 790},
+      {kind: 'out', at: 706, text: 'make it spikier'},
+      {kind: 'in', at: 878, typingFor: 26, text: <>queued for tuesday 9am</>},
+    ],
+  },
+  {
+    stamp: 'Wednesday 09:15',
+    enter: 960,
+    msgs: [
+      {kind: 'in', at: 1012, typingFor: 28, w: 500, text: <>quiet week. i&rsquo;ll pull one out of you</>},
+      {kind: 'vn', at: 1090, dur: '0:41', playFrom: 1090, playTo: 1206, transcript: 'we thought speed was everything, then we rushed a hire and it nearly cost us'},
+      {kind: 'in', at: 1252, typingFor: 26, text: <>that&rsquo;s the post. done asking</>},
+    ],
+  },
+  {
+    stamp: 'Thursday 17:20',
+    enter: 1330,
+    msgs: [
+      {kind: 'in', at: 1382, typingFor: 26, text: <>heads up. skipping tomorrow&rsquo;s slot</>},
+      {kind: 'in', at: 1458, typingFor: 34, w: 520, text: <>nothing in the backlog earns it. fine doesn&rsquo;t get posted</>},
+      {kind: 'out', at: 1560, text: 'ok fair', reactAt: 1606},
     ],
   },
 ];
@@ -151,7 +171,7 @@ const wordW = (word: string, fontSize: number, fontStyle?: string) => {
     fontFamily: SANS,
     fontSize,
     fontWeight: '500',
-    validateFontIsLoaded: true,
+    validateFontIsLoaded: false,
     additionalStyles: fontStyle ? {fontStyle} : undefined,
   });
   wordMemo.set(key, m.width);
@@ -374,9 +394,7 @@ const DraftCard: React.FC<{frame: number; at: number; revAt?: number; bottom: nu
         >
           in
         </div>
-        <span style={{fontSize: 15, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: MUTED}}>
-          founder arc · draft
-        </span>
+        <span style={{fontSize: 15, fontWeight: 500, color: MUTED}}>Draft</span>
         {revAt ? (
           <span
             style={{
@@ -452,51 +470,6 @@ const Stamp: React.FC<{frame: number; at: number; text: string; fps: number}> = 
         {text}
       </span>
       <div style={{flex: 1, height: 1, background: 'rgba(20,22,28,0.10)', transform: `scaleX(${s})`, transformOrigin: 'left'}} />
-    </div>
-  );
-};
-
-/* ---------- narrative breadcrumb: the arc pill riding under the header ---------- */
-const CRUMBS = [
-  {at: 684, t: 'founder arc · drafting'},
-  {at: 966, t: 'queued · tuesday 9am'},
-  {at: 1100, t: 'live · climbing'},
-  {at: 1985, t: 'founder arc · extracting'},
-  {at: 2480, t: 'this week · nothing earns it'},
-  {at: 3052, t: 'monday 9am · queued'},
-];
-
-const Breadcrumb: React.FC<{frame: number; fps: number; dim: number}> = ({frame, fps, dim}) => {
-  let idx = -1;
-  for (let i = 0; i < CRUMBS.length; i++) if (frame >= CRUMBS[i].at) idx = i;
-  if (idx < 0) return null;
-  const cur = CRUMBS[idx];
-  const p = spring({frame: frame - cur.at, fps, config: {damping: 15, stiffness: 150, mass: 0.8}});
-  const prevC = idx > 0 ? CRUMBS[idx - 1] : null;
-  return (
-    <div style={{position: 'absolute', top: 27, left: 0, right: 0, display: 'flex', justifyContent: 'center', zIndex: 4, opacity: dim, pointerEvents: 'none'}}>
-      <div
-        style={{
-          position: 'relative',
-          background: 'rgba(237,236,233,0.92)',
-          borderRadius: 999,
-          padding: '8px 18px',
-          fontSize: 15.5,
-          fontWeight: 600,
-          letterSpacing: '0.03em',
-          color: 'rgba(20,22,28,0.52)',
-          boxShadow: '0 2px 10px rgba(20,22,28,0.06)',
-          overflow: 'hidden',
-          whiteSpace: 'nowrap',
-        }}
-      >
-        {prevC && p < 1 ? (
-          <span style={{position: 'absolute', left: 0, right: 0, textAlign: 'center', opacity: 1 - Math.min(1, p * 1.4), transform: `translateY(${-9 * p}px)`}}>
-            {prevC.t}
-          </span>
-        ) : null}
-        <span style={{display: 'inline-block', opacity: Math.min(1, p * 1.3), transform: `translateY(${9 * (1 - p)}px)`}}>{cur.t}</span>
-      </div>
     </div>
   );
 };
@@ -578,7 +551,7 @@ const FeedCard: React.FC<{x: number; y: number; w: number; frame: number; fps: n
       <div style={{background: '#fff', border: '1px solid rgba(20,22,28,0.08)', borderRadius: 22, padding: '22px 24px 16px', boxShadow: '0 2px 8px rgba(20,22,28,0.04)'}}>
         <Row>
           <div style={{width: 54, height: 54, borderRadius: '50%', overflow: 'hidden', flex: 'none'}}>
-            <Img src={staticFile('memoji-man.jpg')} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+            <Img src={staticFile('sakib-profile.jpg')} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
           </div>
           <div style={{lineHeight: 1.25}}>
             <div style={{fontSize: 19, fontWeight: 600, color: '#191b20'}}>Sakib Ahmed</div>
@@ -625,15 +598,17 @@ const FeedCard: React.FC<{x: number; y: number; w: number; frame: number; fps: n
         <span style={{fontSize: 15, fontWeight: 600, color: 'rgba(20,22,28,0.6)'}}>
           {impressions.toLocaleString('en-GB')} impressions
         </span>
-        <span style={{fontSize: 13.5, fontWeight: 600, letterSpacing: '0.06em', color: LI_BLUE}}>FOUNDER ARC · LIVE</span>
       </div>
 
       {/* comments */}
       <div style={{marginTop: 14, display: 'flex', flexDirection: 'column', gap: 10}}>
-        <div style={{background: '#fff', borderRadius: 18, padding: '13px 16px', border: '1px solid rgba(20,22,28,0.07)', ...c1}}>
-          <span style={{fontSize: 15, fontWeight: 600, color: '#22242a'}}>Ammar Khan</span>
-          <span style={{fontSize: 13.5, color: MUTED}}> · Sahl AI</span>
-          <div style={{fontSize: 15.5, color: '#33353c', marginTop: 3}}>this one hurt. in a useful way</div>
+        <div style={{background: '#fff', borderRadius: 18, padding: '13px 16px', border: '1px solid rgba(20,22,28,0.07)', display: 'flex', gap: 11, ...c1}}>
+          <div style={{width: 36, height: 36, borderRadius: '50%', flex: 'none', background: '#7A6FA8', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16.5, fontWeight: 600}}>A</div>
+          <div>
+            <span style={{fontSize: 15, fontWeight: 600, color: '#22242a'}}>Ammar Khan</span>
+            <span style={{fontSize: 13.5, color: MUTED}}> · Sahl AI</span>
+            <div style={{fontSize: 15.5, color: '#33353c', marginTop: 3}}>this one hurt. in a useful way</div>
+          </div>
         </div>
         <div
           style={{
@@ -645,9 +620,14 @@ const FeedCard: React.FC<{x: number; y: number; w: number; frame: number; fps: n
             ...c2,
           }}
         >
-          <span style={{fontSize: 15, fontWeight: 600, color: '#22242a'}}>Sandra Whitfield</span>
-          <span style={{fontSize: 13.5, color: MUTED}}> · Partner, Meridian</span>
-          <div style={{fontSize: 15.5, color: '#33353c', marginTop: 3}}>we should talk. DMing you</div>
+          <div style={{display: 'flex', gap: 11}}>
+            <div style={{width: 36, height: 36, borderRadius: '50%', flex: 'none', background: '#B4685A', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16.5, fontWeight: 600}}>S</div>
+            <div>
+              <span style={{fontSize: 15, fontWeight: 600, color: '#22242a'}}>Sandra Whitfield</span>
+              <span style={{fontSize: 13.5, color: MUTED}}> · Partner, Meridian</span>
+              <div style={{fontSize: 15.5, color: '#33353c', marginTop: 3}}>we should talk. DMing you</div>
+            </div>
+          </div>
         </div>
         {/* the thread continues below the fold */}
         <div style={{background: 'rgba(255,255,255,0.6)', borderRadius: 18, padding: '13px 16px', border: '1px solid rgba(20,22,28,0.05)', opacity: 0.55, ...pop(frame, 1470, fps, 0.85, 13)}}>
@@ -737,12 +717,12 @@ const HeroInner: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
   const DUR = mobile ? MOBILE_DURATION : HERO_DURATION;
   const SCENES = mobile ? SCENES_MOBILE : SCENES_FULL;
 
-  /* layout */
-  const cardW = mobile ? 900 : 780;
-  const cardH = 586;
+  /* layout: desktop = landscape card; mobile = phone-proportioned portrait card */
+  const cardW = mobile ? 820 : 780;
+  const cardH = mobile ? 1180 : 586;
   const cardX = (W - cardW) / 2;
-  const cardY = mobile ? (H - cardH) / 2 - 16 : 252;
-  const zoomT = mobile ? (W * 0.97) / cardW : 1.78;
+  const cardY = mobile ? (H - cardH) / 2 - 12 : 252;
+  const zoomT = mobile ? (W * 0.94) / cardW : 1.78;
   const originX = W / 2;
   const originY = cardY + cardH / 2;
 
@@ -765,18 +745,36 @@ const HeroInner: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
      voice notes, and — tightest of the film — the veto. */
   const CAM: CamKey[] = mobile
     ? [
-        {f: 0, s: 1, y: 0},
-        {f: 90, s: 1, y: 0},
-        {f: 180, s: zoomT, y: -8},
-        {f: 440, s: zoomT * 0.99, y: -8},
-        {f: 492, s: zoomT * 0.92, y: -3} /* valley: chapter 2 */,
-        {f: 548, s: zoomT, y: -9},
-        {f: 620, s: zoomT, y: -9},
-        {f: 664, s: zoomT * 1.07, y: -13} /* push: the voice note */,
-        {f: 746, s: zoomT * 1.07, y: -13},
-        {f: 796, s: zoomT * 0.99, y: -8},
-        {f: 900, s: 1, y: 0},
-        {f: 960, s: 1, y: 0},
+        /* portrait cut, same grammar as the film: open on the identity mark,
+           reveal, push per chapter, valley between, tightest on the veto.
+           the portrait card is tall and the thread is bottom-anchored, so
+           tight racks aim DOWN at the live bubbles (~440px below centre) */
+        {f: 0, s: 2.2, y: 414},
+        {f: 50, s: 2.2, y: 414},
+        {f: 160, s: 1, y: 0} /* reveal: the contact card */,
+        {f: 240, s: zoomT, y: -70} /* push in: Monday, the ear */,
+        {f: 420, s: zoomT * 1.01, y: -85},
+        {f: 468, s: zoomT * 1.035, y: -130} /* creep on "go" */,
+        {f: 500, s: zoomT * 1.035, y: -130},
+        {f: 540, s: zoomT * 0.9, y: 0} /* valley: the craft */,
+        {f: 610, s: zoomT * 1.02, y: -95},
+        {f: 756, s: zoomT * 1.02, y: -95},
+        {f: 794, s: zoomT * 1.14, y: -400} /* rack in: draft v2 reveal */,
+        {f: 862, s: zoomT * 1.14, y: -400},
+        {f: 912, s: zoomT * 1.0, y: -70},
+        {f: 972, s: zoomT * 0.88, y: 0} /* valley: the extraction */,
+        {f: 1040, s: zoomT * 1.03, y: -110},
+        {f: 1074, s: zoomT * 1.03, y: -110},
+        {f: 1108, s: zoomT * 1.13, y: -390} /* push: the voice note */,
+        {f: 1210, s: zoomT * 1.13, y: -390},
+        {f: 1262, s: zoomT * 1.0, y: -70},
+        {f: 1300, s: zoomT * 0.86, y: 0} /* deepest valley: before the veto */,
+        {f: 1372, s: zoomT * 1.05, y: -140},
+        {f: 1428, s: zoomT * 1.05, y: -140},
+        {f: 1466, s: zoomT * 1.18, y: -410} /* tightest of the film: the no */,
+        {f: 1556, s: zoomT * 1.18, y: -410},
+        {f: 1600, s: zoomT * 1.02, y: -80} /* ease while the heart lands */,
+        {f: 1680, s: 2.2, y: 414} /* close into the icon; the loop reopens */,
       ]
     : [
         /* the loop passes through the identity mark: open tight on the icon,
@@ -829,7 +827,7 @@ const HeroInner: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
   const visitP = mobile ? 0 : interpolate(frame, [1150, 1215, 1560, 1625], [0, 1, 1, 0], {...clamp, easing: easeCam});
 
   /* contact <-> chat crossfade */
-  const swap = mobile ? {in: [108, 174] as const, out: [812, 894] as const} : {in: [166, 246] as const, out: [3150, 3240] as const};
+  const swap = mobile ? {in: [150, 226] as const, out: [1580, 1656] as const} : {in: [166, 246] as const, out: [3150, 3240] as const};
   const toChat = interpolate(frame, [...swap.in], [0, 1], {...clamp, easing: easePage});
   const toContact = interpolate(frame, [...swap.out], [0, 1], {...clamp, easing: easePage});
   const chatOp = toChat * (1 - toContact);
@@ -1039,9 +1037,6 @@ const HeroInner: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
                 Draper <Verified size={24} />
               </div>
             </div>
-
-            {/* arc pill: continuity across chapters without re-explaining */}
-            {!mobile ? <Breadcrumb frame={frame} fps={fps} dim={chromeDim} /> : null}
 
             {/* thread: current scene, with the previous one archiving upward.
                 top fade mask = edge falloff, so history melts under the header */}
