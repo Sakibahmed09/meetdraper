@@ -467,7 +467,8 @@ footer{position:relative;padding:40px 20px 0}
 @media (max-width:980px){
   .nav-center{display:none}
   .feature{grid-template-columns:1fr;gap:36px;padding:72px 20px}
-  .feature .vis-first{order:-1}
+  /* stacked layout reads the same every time: words first, then the demo */
+  .feature .txt{order:-1}
   .fgrid{grid-template-columns:1fr 1fr;gap:36px 20px}
   .proof-grid{grid-template-columns:1fr;max-width:460px}
   .icon-field{height:330px}
