@@ -303,6 +303,29 @@ h1,h2{font-variation-settings:'SOFT' 42}
 .kpanel .kbd{font-size:11px;font-weight:600;color:var(--muted);border:1px solid rgba(20,22,28,.12);border-radius:6px;padding:3px 7px;background:rgba(20,22,28,.02)}
 .kpanel .create{font-size:12.5px;font-weight:600;color:#fff;background:linear-gradient(#3A3A3A,#1F1F1F);border-radius:9px;padding:6px 13px}
 
+/* ============ (5) extraction exchange ============ */
+.xwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.xpanel{width:82%;display:flex;flex-direction:column;gap:11px}
+.xmsg{opacity:0;transform:scale(.8) translateY(10px)}
+.xmsg.show{animation:popIn .5s var(--spring) forwards}
+.xq,.xr{align-self:flex-start;max-width:88%;background:#fff;color:#26262a;font-size:15px;font-weight:500;line-height:1.4;padding:11px 15px;border-radius:18px;border-bottom-left-radius:6px;box-shadow:0 1px 2px rgba(30,30,25,.05),0 3px 8px rgba(30,30,25,.05)}
+.xmemo{align-self:flex-end;display:flex;flex-direction:column;align-items:flex-end;gap:7px;max-width:88%}
+.xmemo .pill{display:flex;align-items:center;gap:10px;background:var(--imsg-blue);border-radius:22px;border-bottom-right-radius:7px;padding:11px 14px;box-shadow:0 1px 2px rgba(30,30,25,.06),0 3px 8px rgba(30,30,25,.06)}
+.xmemo .xplay{width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.25);flex:none;display:flex;align-items:center;justify-content:center}
+.xmemo .xplay::after{content:"";margin-left:2px;border-left:7px solid #fff;border-top:4.5px solid transparent;border-bottom:4.5px solid transparent}
+.xmemo .xbars{display:flex;align-items:center;gap:1.6px;height:20px}
+.xmemo .xbars i{width:2.2px;border-radius:99px;background:rgba(255,255,255,.45);display:block}
+.xmemo .xbars i.on{background:#fff}
+.xmemo .xdur{font-size:12.5px;font-weight:600;color:rgba(255,255,255,.92)}
+.xmemo .xtrans{font-size:12.5px;font-style:italic;color:var(--muted);text-align:right;line-height:1.4;max-width:300px;opacity:0;transition:opacity .6s var(--easeout)}
+.xmemo .xtrans.show{opacity:1}
+.xdraft{align-self:flex-start;width:88%;background:#fff;border-radius:16px;padding:13px 15px;box-shadow:0 1px 2px rgba(30,30,25,.05),0 3px 8px rgba(30,30,25,.05),0 8px 28px rgba(30,30,25,.06)}
+.xdraft .xdhead{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.xdraft .xin{width:20px;height:20px;border-radius:5px;background:#0A66C2;color:#fff;font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.xdraft .xdl{font-size:12.5px;font-weight:500;color:var(--muted)}
+.xdraft .xdbody{font-size:14.5px;font-weight:600;color:#1c1f26;line-height:1.4}
+.xdraft .xdbody .dim{font-weight:500;color:rgba(38,38,42,.45)}
+
 /* ============ veto: taste with a spine ============ */
 .veto{padding:118px 20px 4px;text-align:center;position:relative}
 .veto h2{font-size:clamp(36px,4.2vw,58px);letter-spacing:-.035em;line-height:1.05;color:#111110;max-width:18ch;margin:0 auto}
@@ -446,17 +469,23 @@ footer{position:relative;padding:40px 20px 0}
   .nav-right .btn-dark.sm{height:44px;padding:0 22px}
   .hero{padding-top:104px}
   .hero-h1{font-size:34px}
-  .hero-video{width:calc(100% + 40px);max-width:none;margin:-10px -20px 0}
+  .hero-video{width:calc(100% + 40px);max-width:none;margin:8px -20px 0}
   .hero-video video{
-    -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 7%,#000 93%,transparent 100%);
-    mask-image:linear-gradient(to bottom,transparent 0,#000 7%,#000 93%,transparent 100%);
+    -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 4%,#000 94%,transparent 100%);
+    mask-image:linear-gradient(to bottom,transparent 0,#000 4%,#000 94%,transparent 100%);
   }
+  .hero-sub{position:relative;z-index:2}
   .closing{padding:110px 20px 90px}
   .waitlist{padding-top:100px}
   .wform{flex-direction:column;padding:0 8px}
   .wform input{flex:none;width:100%}
   .community{padding-top:84px}
   .community h2{font-size:30px}
+  #extraction .visual{height:460px}
+  .xpanel{width:90%;gap:9px}
+  .xq,.xr{font-size:13.5px;padding:9px 13px}
+  .xdraft .xdbody{font-size:13px}
+  .xmemo .xtrans{font-size:11.5px;max-width:250px}
   .tweet{width:250px}
   .fbottom{flex-direction:column;align-items:flex-start}
   .post-shot{width:286px;max-height:340px}
@@ -520,7 +549,7 @@ footer{position:relative;padding:40px 20px 0}
           var v=document.getElementById('heroFilm');
           var g=document.getElementById('heroGlow');
           var p=matchMedia('(max-width:640px)').matches;
-          var ver='?v=4'; /* bump to bust caches when the film changes */
+          var ver='?v=5'; /* bump to bust caches when the film changes */
           v.style.aspectRatio=p?'3 / 4':'4 / 3';
           v.poster=(p?'assets/hero-demo-poster-mobile.jpg':'assets/hero-demo-poster.jpg')+ver;
           v.src=(p?'assets/hero-demo-mobile.mp4':'assets/hero-demo.mp4')+ver;
@@ -659,17 +688,41 @@ footer{position:relative;padding:40px 20px 0}
 
   <hr class="hr">
 
-  <!-- (5) earned autonomy -->
-  <section class="feature" id="autonomy">
+  <!-- (5) extraction: the interview -->
+  <section class="feature" id="extraction">
     <div class="txt" data-reveal>
       <span class="num">(5)</span>
-      <h3 class="serif-h">Earns the keys as you go</h3>
-      <p>Timing is Draper&rsquo;s from day one. The words are yours: approve every draft, then just a veto window, then it posts on its own, still sounding exactly like you</p>
-      <a class="learn" href="#waitlist">Learn more
-        <svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
+      <h3 class="serif-h">Quiet week? It pulls one out of you</h3>
+      <p>Draper opens with one pointed question. You answer by voice note on the walk between meetings, and it finds the post inside the ramble. Your words, minus the waffle</p>
     </div>
     <div class="visual" data-reveal style="--d:.12s">
+      <img class="bgimg" loading="lazy" src="assets/sunset-sky.jpg" alt="" style="opacity:.55">
+      <div class="xwrap">
+        <div class="xpanel" id="xpanel">
+          <div class="xmsg xq">what did you believe about hiring when you started that you don&rsquo;t now?</div>
+          <div class="xmsg xmemo">
+            <div class="pill">
+              <span class="xplay"></span>
+              <span class="xbars" id="xbars"></span>
+              <span class="xdur">0:52</span>
+            </div>
+            <div class="xtrans" id="xtrans">&ldquo;we thought speed was everything. rushed one and it nearly took the wheels off&rdquo;</div>
+          </div>
+          <div class="xmsg xr">there it is. belief, the cost, what changed</div>
+          <div class="xmsg xdraft">
+            <div class="xdhead"><span class="xin">in</span><span class="xdl">Draft</span></div>
+            <div class="xdbody">We fired our fastest hire and promoted our slowest one. <span class="dim">Eighteen months ago I made the hire everyone told me to&hellip;</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="hr">
+
+  <!-- (6) earned autonomy -->
+  <section class="feature" id="autonomy">
+    <div class="visual vis-first" data-reveal>
       <img class="bgimg" loading="lazy" src="assets/sky-card.jpg" alt="">
       <div class="kitchen">
         <div class="kpanel">
@@ -678,6 +731,14 @@ footer{position:relative;padding:40px 20px 0}
           <div class="kfoot"><span class="kbd">⌘ Enter</span><span class="create">Allow</span></div>
         </div>
       </div>
+    </div>
+    <div class="txt" data-reveal style="--d:.12s">
+      <span class="num">(6)</span>
+      <h3 class="serif-h">Earns the keys as you go</h3>
+      <p>Timing is Draper&rsquo;s from day one. The words are yours: approve every draft, then just a veto window, then it posts on its own, still sounding exactly like you</p>
+      <a class="learn" href="#waitlist">Learn more
+        <svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
     </div>
   </section>
 
@@ -951,6 +1012,38 @@ function playThread(){
   setTimeout(playThread,t+4200);
 }
 new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){playThread();o.disconnect()}},{threshold:.4}).observe(thread);
+
+/* ============ (5) extraction exchange loop ============ */
+const xpanel=document.getElementById('xpanel');
+const xbarsEl=document.getElementById('xbars');
+const xtrans=document.getElementById('xtrans');
+/* speech-shaped bars: bursts over a floor, silent gaps read like breathing */
+(function(){
+  let seed=7;
+  const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
+  for(let i=0;i<34;i++){
+    const b=document.createElement('i');
+    const burst=Math.max(0,rnd()-.3)*1.5;
+    b.style.height=(3+14*Math.min(1,rnd()*(0.3+burst)))+'px';
+    xbarsEl.appendChild(b);
+  }
+})();
+const xmsgs=[...xpanel.querySelectorAll('.xmsg')];
+const xPaused=gateLoop(xpanel);
+function playExchange(){
+  if(xPaused()){setTimeout(playExchange,1200);return}
+  xmsgs.forEach(m=>m.classList.remove('show'));
+  xtrans.classList.remove('show');
+  [...xbarsEl.children].forEach(b=>b.classList.remove('on'));
+  const T=[400,1400,4600,5600];               /* q, memo, reply, draft */
+  xmsgs.forEach((m,i)=>setTimeout(()=>m.classList.add('show'),T[i]));
+  /* playback: bars light left to right while the note "plays" */
+  const bars=[...xbarsEl.children];
+  bars.forEach((b,i)=>setTimeout(()=>{if(!xPaused())b.classList.add('on')},2000+i*74));
+  setTimeout(()=>xtrans.classList.add('show'),2600);
+  setTimeout(playExchange,10400);
+}
+new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){playExchange();o.disconnect()}},{threshold:.35}).observe(xpanel);
 
 /* ============ (4) meeting-mining notifications ============ */
 const notif=document.getElementById('notif');

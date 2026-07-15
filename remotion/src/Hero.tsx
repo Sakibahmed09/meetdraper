@@ -438,17 +438,23 @@ const VoiceNote: React.FC<{
 }> = ({frame, at, dur, transcript, playFrom, playTo, bottom, w, fps}) => {
   const entry = pop(frame, at, fps, 0.85, 13);
   const prog = frame < playFrom ? 0 : frame > playTo ? 1 : (frame - playFrom) / (playTo - playFrom);
-  const N = 30;
-  const bars = Array.from({length: N}, (_, i) => 5 + Math.abs(Math.sin(i * 1.27)) * 15);
+  /* speech-shaped waveform: syllable bursts over a noise floor, so tall
+     clusters, short runs and near-silent dots land like a real recording */
+  const N = 46;
+  const bars = Array.from({length: N}, (_, i) => {
+    const fast = Math.abs(noise2D('vn-fast', i * 0.61, 7.3));
+    const burst = Math.max(0, noise2D('vn-burst', i * 0.16, 2.1)) ** 0.7;
+    return 3.5 + 20 * Math.min(1, fast * (0.25 + burst * 1.35));
+  });
   return (
     <div style={{position: 'absolute', bottom, right: 0, width: w, transformOrigin: 'bottom right', ...entry}}>
       <div style={{display: 'flex', alignItems: 'center', gap: 12, background: BLUE, borderRadius: 30, borderBottomRightRadius: 8, padding: '14px 18px'}}>
         <div style={{width: 30, height: 30, borderRadius: '50%', background: 'rgba(255,255,255,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none'}}>
           <div style={{width: 0, height: 0, marginLeft: 3, borderLeft: '9px solid #fff', borderTop: '6px solid transparent', borderBottom: '6px solid transparent'}} />
         </div>
-        <div style={{display: 'flex', alignItems: 'center', gap: 2.5, flex: 1, height: 26}}>
+        <div style={{display: 'flex', alignItems: 'flex-end', gap: 2, flex: 1, height: 26, paddingBottom: 1}}>
           {bars.map((h, i) => (
-            <div key={i} style={{flex: 1, height: h, borderRadius: 2, background: i / N <= prog ? '#fff' : 'rgba(255,255,255,0.42)'}} />
+            <div key={i} style={{flex: 1, height: h, alignSelf: 'center', borderRadius: 99, background: i / N <= prog ? '#fff' : 'rgba(255,255,255,0.42)'}} />
           ))}
         </div>
         <span style={{fontSize: 15, fontWeight: 600, color: 'rgba(255,255,255,0.9)'}}>{dur}</span>
@@ -603,7 +609,9 @@ const FeedCard: React.FC<{x: number; y: number; w: number; frame: number; fps: n
       {/* comments */}
       <div style={{marginTop: 14, display: 'flex', flexDirection: 'column', gap: 10}}>
         <div style={{background: '#fff', borderRadius: 18, padding: '13px 16px', border: '1px solid rgba(20,22,28,0.07)', display: 'flex', gap: 11, ...c1}}>
-          <div style={{width: 36, height: 36, borderRadius: '50%', flex: 'none', background: '#7A6FA8', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16.5, fontWeight: 600}}>A</div>
+          <div style={{width: 36, height: 36, borderRadius: '50%', flex: 'none', overflow: 'hidden'}}>
+            <Img src={staticFile('ammar-avatar.jpg')} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+          </div>
           <div>
             <span style={{fontSize: 15, fontWeight: 600, color: '#22242a'}}>Ammar Khan</span>
             <span style={{fontSize: 13.5, color: MUTED}}> · Sahl AI</span>
@@ -621,7 +629,9 @@ const FeedCard: React.FC<{x: number; y: number; w: number; frame: number; fps: n
           }}
         >
           <div style={{display: 'flex', gap: 11}}>
-            <div style={{width: 36, height: 36, borderRadius: '50%', flex: 'none', background: '#B4685A', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16.5, fontWeight: 600}}>S</div>
+            <div style={{width: 36, height: 36, borderRadius: '50%', flex: 'none', overflow: 'hidden'}}>
+              <Img src={staticFile('sandra-avatar.jpg')} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+            </div>
             <div>
               <span style={{fontSize: 15, fontWeight: 600, color: '#22242a'}}>Sandra Whitfield</span>
               <span style={{fontSize: 13.5, color: MUTED}}> · Partner, Meridian</span>
