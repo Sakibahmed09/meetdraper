@@ -369,8 +369,10 @@ h1,h2{font-variation-settings:'SOFT' 42}
 }
 .wdone .tick{width:20px;height:20px;border-radius:50%;background:#4E9B5C;display:flex;align-items:center;justify-content:center;flex:none}
 .waitlist .wfine{margin-top:16px;font-size:12.5px;font-weight:500;color:var(--muted)}
+.wdemo{display:none;margin:16px auto 0;opacity:0;transform:scale(.95);transition:opacity .5s var(--spring) .15s,transform .5s var(--spring) .15s}
 .waitlist.done .wform{opacity:0;transform:scale(.97);pointer-events:none;position:absolute;left:-9999px}
 .waitlist.done .wdone{display:flex;opacity:1;transform:none}
+.waitlist.done .wdemo{display:inline-flex;opacity:1;transform:none}
 
 /* ============ proof layer ============ */
 .logo-strip{margin-top:46px;display:flex;flex-direction:column;align-items:center;gap:15px;position:relative;z-index:2}
@@ -782,6 +784,7 @@ footer{position:relative;padding:40px 20px 0}
       <span class="tick"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6.5L4.8 9L10 3.5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       You are on the list. Draper will text first, promise.
     </div>
+    <a class="btn-dark wdemo" href="https://calendly.com/d/csmd-g7r-743/catch-up-with-mustafa-sakib" target="_blank" rel="noopener">Get a demo with the founders</a>
     <p class="wfine" data-reveal style="--d:.2s">No spam. One email when your seat opens</p>
   </section>
 
