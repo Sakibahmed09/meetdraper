@@ -307,6 +307,12 @@ h1,h2{font-variation-settings:'SOFT' 42}
 .mnotif b{display:block;font-size:12px;font-weight:600;color:#1a1c22}
 .mnotif span{font-size:12.5px;font-weight:500;color:#3a3d44}
 .mnotif em{font-style:normal;font-size:10.5px;color:rgba(20,22,28,.4);align-self:flex-start}
+.meet .mtiles,.meet .mcap,.meet .mbar{transition:opacity .6s var(--easeout),filter .6s var(--easeout)}
+.meet.ended .mtiles,.meet.ended .mcap,.meet.ended .mbar{opacity:.28;filter:saturate(.4)}
+.mended{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(.9);z-index:2;
+  font-size:13px;font-weight:600;color:rgba(255,255,255,.92);background:rgba(255,255,255,.14);
+  padding:8px 16px;border-radius:999px;opacity:0;transition:opacity .45s var(--easeout),transform .45s var(--spring);pointer-events:none}
+.meet.ended .mended{opacity:1;transform:translate(-50%,-50%) scale(1)}
 
 /* (6) the quiet day: a workday passes, draper runs it, you send one thumbs-up */
 .kitchen{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
@@ -459,7 +465,8 @@ footer{position:relative;padding:40px 20px 0}
 }
 .giant span{
   font-family:var(--wordmark);font-weight:700;letter-spacing:-.05em;line-height:.72;
-  font-size:clamp(88px,26vw,400px);
+  font-size:clamp(88px,24.5vw,380px);
+  padding:0 .05em;
   background:linear-gradient(to bottom,rgba(26,31,43,.42) 0%,rgba(26,31,43,.16) 58%,rgba(26,31,43,.04) 92%);
   -webkit-background-clip:text;background-clip:text;color:transparent;
   transform:translateY(4%);
@@ -650,13 +657,14 @@ footer{position:relative;padding:40px 20px 0}
       <div class="meet-wrap">
         <div class="meet" id="meet">
           <div class="mtiles">
-            <div class="mtile"><img src="assets/av1.jpg" alt=""><span>Ronnie</span></div>
-            <div class="mtile"><img src="assets/av6.jpg" alt=""><span>Lena</span></div>
-            <div class="mtile"><img src="assets/av8.jpg" alt=""><span>Theo</span></div>
+            <div class="mtile"><img src="assets/meet-ronnie.jpg" alt=""><span>Ronnie</span></div>
+            <div class="mtile"><img src="assets/meet-lena.jpg" alt=""><span>Lena</span></div>
+            <div class="mtile"><img src="assets/meet-theo.jpg" alt=""><span>Theo</span></div>
             <div class="mtile you" id="mtileYou"><i>S</i><span>You</span></div>
           </div>
           <div class="mcap"><b>You</b><span id="mcapText"></span></div>
-          <div class="mbar"><span class="mtime">41:12</span><span class="mdot"></span><span class="mleave"></span></div>
+          <div class="mbar"><span class="mtime" id="mtime">41:12</span><span class="mdot"></span><span class="mleave"></span></div>
+          <div class="mended" id="mended">Meeting ended</div>
           <div class="mnotif" id="mnotif">
             <img src="assets/app-icon.jpg" alt="">
             <div><b>Draper</b><span id="mnotifText">that&rsquo;s a post. want it?</span></div>
@@ -667,8 +675,8 @@ footer{position:relative;padding:40px 20px 0}
     </div>
     <div class="txt" data-reveal style="--d:.12s">
       <span class="num">(3)</span>
-      <h3 class="serif-h">Texts you before the meeting ends</h3>
-      <p>Draper sits in on your calls like a colleague with an ear for the good lines. Say one and your phone buzzes while you&rsquo;re still talking</p>
+      <h3 class="serif-h">Texts you the second you hang up</h3>
+      <p>Draper sits in on your calls like a colleague with an ear for the good lines. Say one and the text is waiting when you hang up</p>
     </div>
   </section>
 
@@ -1105,13 +1113,19 @@ function playMeet(){
     setTimeout(()=>{if(!meetPaused())mcapText.textContent+=(i?' ':'')+w},t);
     t+=170+(i%3===2?160:0);
   });
-  /* the buzz lands right as the sentence finishes: someone was listening */
+  /* the call wraps first; the text is waiting the second you hang up */
   setTimeout(()=>{
     mtileYou.classList.remove('talking');
+    meet.classList.add('ended');
+  },t+900);
+  setTimeout(()=>{
     mnotifText.innerHTML=beat.note;
     mnotif.classList.add('show');
-  },t+420);
-  setTimeout(()=>{mIdx=(mIdx+1)%MEET_BEATS.length;playMeet()},t+5200);
+  },t+1650);
+  setTimeout(()=>{
+    meet.classList.remove('ended');
+    mIdx=(mIdx+1)%MEET_BEATS.length;playMeet();
+  },t+6600);
 }
 new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){playMeet();o.disconnect()}},{threshold:.35}).observe(meet);
 
