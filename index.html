@@ -271,39 +271,42 @@ h1,h2{font-variation-settings:'SOFT' 42}
 .memo .stop{width:16px;height:16px;border-radius:50%;background:#E23D3D;display:flex;align-items:center;justify-content:center}
 .memo .stop::after{content:"";width:6px;height:6px;background:#fff;border-radius:1.5px}
 
-/* (4) contacts grid + notification */
-.cgrid-wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
-.cgrid{
-  width:min(340px,88%);background:rgba(255,255,255,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  border-radius:24px;padding:30px 24px;display:grid;grid-template-columns:1fr 1fr;gap:26px 12px;
-  box-shadow:0 1px 2px rgba(30,30,25,.04),0 3px 8px rgba(30,30,25,.04),0 8px 28px rgba(30,30,25,.06);position:relative;
+/* (3) the meeting: someone is in the room with you */
+.meet-wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.meet{
+  position:relative;width:min(400px,88%);border-radius:22px;overflow:hidden;
+  background:#1d1f24;box-shadow:0 1px 2px rgba(30,30,25,.06),0 8px 28px rgba(30,30,25,.14),0 18px 50px rgba(30,30,25,.16);
+  padding:16px 16px 0;
 }
-.cperson{display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;transform:scale(.82) translateY(10px)}
-.cgrid.live .cperson{animation:popIn .55s var(--spring) forwards}
-.cgrid.live .cperson:nth-child(1){animation-delay:.05s}
-.cgrid.live .cperson:nth-child(2){animation-delay:.13s}
-.cgrid.live .cperson:nth-child(3){animation-delay:.21s}
-.cgrid.live .cperson:nth-child(4){animation-delay:.29s}
-.cperson .pav{width:66px;height:66px;border-radius:50%;overflow:hidden;box-shadow:0 3px 10px rgba(30,30,25,.18)}
-.cperson .pav.sq{border-radius:17px}
-.cperson .pav img{width:100%;height:100%;object-fit:cover}
-.cperson .pname{font-size:12px;font-weight:500;color:rgba(26,31,43,.75);display:inline-flex;align-items:center;gap:4px}
-/* Draper is in the room, listening: a soft ring breathes off its tile */
-.cperson .pav.sq{position:relative;overflow:visible}
-.cperson .pav.sq img{border-radius:17px}
-.cgrid.live .pav.sq::after{
-  content:"";position:absolute;inset:-2px;border-radius:19px;pointer-events:none;
-  border:2px solid rgba(52,120,246,.55);opacity:0;
-  animation:listen 2.6s var(--easeout) 1s infinite;
+.mtiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mtile{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:16/10.6;background:#2a2d34}
+.mtile img{width:100%;height:100%;object-fit:cover}
+.mtile span{position:absolute;left:8px;bottom:6px;font-size:10.5px;font-weight:600;color:rgba(255,255,255,.92);text-shadow:0 1px 4px rgba(0,0,0,.5)}
+.mtile.you{display:flex;align-items:center;justify-content:center}
+.mtile.you i{width:44px;height:44px;border-radius:50%;background:#5C82C9;color:#fff;font-style:normal;font-size:19px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.mtile.you.talking{box-shadow:inset 0 0 0 2.5px #7BA7F0}
+.mcap{
+  margin:12px 2px 0;min-height:38px;display:flex;gap:8px;align-items:baseline;
+  font-size:13px;line-height:1.35;color:rgba(255,255,255,.86);
 }
-@keyframes listen{0%{opacity:.75;transform:scale(1)}60%{opacity:0;transform:scale(1.22)}100%{opacity:0;transform:scale(1.22)}}
-.notif{
-  position:absolute;top:44%;left:50%;transform:translate(-50%,calc(-50% - 14px)) scale(.6);
-  background:#F1F1F0;border-radius:14px;padding:8px 12px;font-size:11px;font-weight:500;color:#3a3d44;
-  max-width:200px;text-align:center;line-height:1.35;box-shadow:0 1px 2px rgba(30,30,25,.06),0 4px 12px rgba(30,30,25,.08),0 8px 24px rgba(30,30,25,.10);
-  opacity:0;z-index:3;transition:opacity .45s var(--spring),transform .45s var(--spring);
+.mcap b{font-weight:600;color:rgba(255,255,255,.55);flex:none;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em}
+.mcap span{font-style:italic}
+.mbar{height:44px;display:flex;align-items:center;gap:10px;justify-content:center;position:relative}
+.mbar .mtime{position:absolute;left:2px;font-size:11px;font-weight:600;color:rgba(255,255,255,.4);font-variant-numeric:tabular-nums}
+.mbar .mdot{width:34px;height:26px;border-radius:8px;background:rgba(255,255,255,.12)}
+.mbar .mleave{width:44px;height:26px;border-radius:13px;background:#D0463C}
+.mnotif{
+  position:absolute;top:10px;left:10px;right:10px;z-index:3;
+  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;
+  background:rgba(248,247,244,.97);box-shadow:0 6px 22px rgba(0,0,0,.28);
+  opacity:0;transform:translateY(-115%);transition:opacity .5s var(--spring),transform .5s var(--spring);
 }
-.notif.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.mnotif.show{opacity:1;transform:translateY(0)}
+.mnotif img{width:30px;height:30px;border-radius:8px;flex:none}
+.mnotif div{flex:1;min-width:0;line-height:1.3}
+.mnotif b{display:block;font-size:12px;font-weight:600;color:#1a1c22}
+.mnotif span{font-size:12.5px;font-weight:500;color:#3a3d44}
+.mnotif em{font-style:normal;font-size:10.5px;color:rgba(20,22,28,.4);align-self:flex-start}
 
 /* (6) the quiet day: a workday passes, draper runs it, you send one thumbs-up */
 .kitchen{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
@@ -479,8 +482,6 @@ footer{position:relative;padding:40px 20px 0}
   .fits{padding-top:110px}
   .fits h2{font-size:27px}
   .footnote{padding-bottom:56px}
-  .cgrid{padding:24px 16px;gap:60px 10px}
-  .notif{max-width:190px;top:50%}
   .visual{height:360px;border-radius:22px}
   .phone{width:270px}
   .recipe-card{width:210px}
@@ -521,7 +522,7 @@ footer{position:relative;padding:40px 20px 0}
 @media (prefers-reduced-transparency:reduce){
   .nav.scrolled{background:var(--cream);backdrop-filter:none;-webkit-backdrop-filter:none}
   .btn-light{background:#fff;backdrop-filter:none;-webkit-backdrop-filter:none}
-  .cgrid{background:rgba(255,255,255,.94);backdrop-filter:none;-webkit-backdrop-filter:none}
+  .mnotif{background:#F8F7F4}
 }
 </style>
 </head>
@@ -551,13 +552,8 @@ footer{position:relative;padding:40px 20px 0}
 
   <!-- hero -->
   <header class="hero">
-    <a class="hero-badge pl" style="--d:.25s" href="#arcs">
-      <span class="chip">New</span>
-      <span>Draper Arcs</span>
-      <svg width="11" height="11" viewBox="0 0 10 10" fill="none"><path d="M3.5 2L6.5 5L3.5 8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </a>
     <h1 class="hero-h1 pl" style="--d:.35s" id="heroH1" aria-label="You do the talking. Draper does LinkedIn."></h1>
-    <p class="hero-sub pl" style="--d:.5s" id="heroSub">It joins your calls, writes the way you talk, and won’t post anything that reads like AI.</p>
+    <p class="hero-sub pl" style="--d:.5s" id="heroSub">Your own content hire, inside iMessage. It runs your whole LinkedIn so posting stops living in your head.</p>
 
     <div class="hero-video pl" style="--d:.6s">
       <video class="glow" id="heroGlow" muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1"></video>
@@ -615,47 +611,10 @@ footer{position:relative;padding:40px 20px 0}
 <div class="paper-zone">
   <hr class="hr">
 
-  <!-- (2) arcs -->
-  <section class="feature" id="arcs">
-    <div class="visual vis-first" data-reveal>
-      <img class="bgimg" loading="lazy" src="assets/sky-card.jpg" alt="">
-      <div class="fan" id="fan">
-        <div class="recipe-card">
-          <div class="rlogo"><img src="assets/icons/linkedin_com.png" alt=""></div>
-          <h4>Founder Arc</h4>
-          <p>The person. Where you came from, what you believe, what it cost</p>
-          <div class="rfoot"><span class="by"><img src="assets/app-icon.jpg" alt="">Draper</span><span>Running</span></div>
-        </div>
-        <div class="recipe-card">
-          <div class="rlogo"><img src="assets/icons/github_com.png" alt=""></div>
-          <h4>Builder Arc</h4>
-          <p>The work. What you are building, why it is hard, who it is for</p>
-          <div class="rfoot"><span class="by"><img src="assets/app-icon.jpg" alt="">Draper</span><span>Running</span></div>
-        </div>
-        <div class="recipe-card">
-          <div class="rlogo"><img src="assets/icons/granola_ai.png" alt=""></div>
-          <h4>Pulse Arc</h4>
-          <p>The market. What changed this week, and what you saw first</p>
-          <div class="rfoot"><span class="by"><img src="assets/app-icon.jpg" alt="">Draper</span><span>Running</span></div>
-        </div>
-      </div>
-    </div>
-    <div class="txt" data-reveal style="--d:.12s">
-      <span class="num">(2)</span>
-      <h3 class="serif-h">Learns your voice with Draper Arcs</h3>
-      <p>Three arcs run your story: the person, the work, the market. Every draft fits one, so your feed adds up to something</p>
-      <a class="learn" href="#waitlist">Learn more
-        <svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-    </div>
-  </section>
-
-  <hr class="hr">
-
-  <!-- (3) drafts + schedules -->
+  <!-- (2) drafts + schedules -->
   <section class="feature">
     <div class="txt" data-reveal>
-      <span class="num">(3)</span>
+      <span class="num">(2)</span>
       <h3 class="serif-h">Drafts and schedules while you work</h3>
       <p>Send a voice note between meetings, or attach a photo straight in the chat. Draper writes it like you, uses the picture where it earns its place and shows you before it goes. Your whole LinkedIn, run from one thread</p>
     </div>
@@ -684,35 +643,41 @@ footer{position:relative;padding:40px 20px 0}
 
   <hr class="hr">
 
-  <!-- (4) meeting mining -->
+  <!-- (3) meeting mining: someone is in the room with you -->
   <section class="feature">
     <div class="visual vis-first" data-reveal>
       <img class="bgimg" loading="lazy" src="assets/sunset-sky.jpg" alt="" style="opacity:.75">
-      <div class="cgrid-wrap">
-        <div class="cgrid">
-          <div class="cperson"><div class="pav"><img src="assets/av1.jpg" alt=""></div><span class="pname">Ronnie</span></div>
-          <div class="cperson"><div class="pav"><img src="assets/av6.jpg" alt=""></div><span class="pname">Lena</span></div>
-          <div class="cperson"><div class="pav"><img src="assets/av8.jpg" alt=""></div><span class="pname">Theo</span></div>
-          <div class="cperson"><div class="pav sq"><img src="assets/app-icon.jpg" alt=""></div><span class="pname">
-            <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="5" fill="#3478F6"/></svg>Draper
-          </span></div>
-          <div class="notif" id="notif">heard on your 2pm: "we hire slow on purpose". post?</div>
+      <div class="meet-wrap">
+        <div class="meet" id="meet">
+          <div class="mtiles">
+            <div class="mtile"><img src="assets/av1.jpg" alt=""><span>Ronnie</span></div>
+            <div class="mtile"><img src="assets/av6.jpg" alt=""><span>Lena</span></div>
+            <div class="mtile"><img src="assets/av8.jpg" alt=""><span>Theo</span></div>
+            <div class="mtile you" id="mtileYou"><i>S</i><span>You</span></div>
+          </div>
+          <div class="mcap"><b>You</b><span id="mcapText"></span></div>
+          <div class="mbar"><span class="mtime">41:12</span><span class="mdot"></span><span class="mleave"></span></div>
+          <div class="mnotif" id="mnotif">
+            <img src="assets/app-icon.jpg" alt="">
+            <div><b>Draper</b><span id="mnotifText">that&rsquo;s a post. want it?</span></div>
+            <em>now</em>
+          </div>
         </div>
       </div>
     </div>
     <div class="txt" data-reveal style="--d:.12s">
-      <span class="num">(4)</span>
-      <h3 class="serif-h">Comes back from your meetings with questions</h3>
-      <p>Draper sits in on your calls. Say something worth posting and it texts you before you have left the room, quote pulled, draft ready</p>
+      <span class="num">(3)</span>
+      <h3 class="serif-h">Texts you before the meeting ends</h3>
+      <p>Draper sits in on your calls like a colleague with an ear for the good lines. Say one and your phone buzzes while you&rsquo;re still talking</p>
     </div>
   </section>
 
   <hr class="hr">
 
-  <!-- (5) extraction: the interview -->
+  <!-- (4) extraction: the interview -->
   <section class="feature" id="extraction">
     <div class="txt" data-reveal>
-      <span class="num">(5)</span>
+      <span class="num">(4)</span>
       <h3 class="serif-h">Quiet week? It pulls one out of you</h3>
       <p>You set the cadence once and the chasing becomes Draper&rsquo;s job. It opens with one pointed question, hears the good bit in your answer and digs again. Two voice notes later the draft lands. Your words, minus the waffle</p>
     </div>
@@ -750,7 +715,7 @@ footer{position:relative;padding:40px 20px 0}
 
   <hr class="hr">
 
-  <!-- (6) earned autonomy -->
+  <!-- (5) earned autonomy -->
   <section class="feature" id="autonomy">
     <div class="visual vis-first" data-reveal>
       <img class="bgimg" loading="lazy" src="assets/sky-card.jpg" alt="">
@@ -768,7 +733,7 @@ footer{position:relative;padding:40px 20px 0}
       </div>
     </div>
     <div class="txt" data-reveal style="--d:.12s">
-      <span class="num">(6)</span>
+      <span class="num">(5)</span>
       <h3 class="serif-h">Earns the keys as you go</h3>
       <p>Timing is Draper&rsquo;s from day one. The words are yours: approve every draft, then just a veto window, then it posts on its own, still sounding exactly like you</p>
       <a class="learn" href="#waitlist">Learn more
@@ -776,6 +741,43 @@ footer{position:relative;padding:40px 20px 0}
       </a>
     </div>
   </section>
+
+  <!-- (6) arcs: the playbook -->
+  <section class="feature" id="arcs">
+    <div class="txt" data-reveal>
+      <span class="num">(6)</span>
+      <h3 class="serif-h">The agency playbook, in your pocket</h3>
+      <p>Three arcs run your story: the person, the work, the market. It&rsquo;s the same method our agency ran for the founders below, baked into Draper</p>
+      <a class="learn" href="#waitlist">Learn more
+        <svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <div class="visual" data-reveal style="--d:.12s">
+      <img class="bgimg" loading="lazy" src="assets/sky-card.jpg" alt="">
+      <div class="fan" id="fan">
+        <div class="recipe-card">
+          <div class="rlogo"><img src="assets/icons/linkedin_com.png" alt=""></div>
+          <h4>Founder Arc</h4>
+          <p>The person. Where you came from, what you believe, what it cost</p>
+          <div class="rfoot"><span class="by"><img src="assets/app-icon.jpg" alt="">Draper</span><span>Running</span></div>
+        </div>
+        <div class="recipe-card">
+          <div class="rlogo"><img src="assets/icons/github_com.png" alt=""></div>
+          <h4>Builder Arc</h4>
+          <p>The work. What you are building, why it is hard, who it is for</p>
+          <div class="rfoot"><span class="by"><img src="assets/app-icon.jpg" alt="">Draper</span><span>Running</span></div>
+        </div>
+        <div class="recipe-card">
+          <div class="rlogo"><img src="assets/icons/granola_ai.png" alt=""></div>
+          <h4>Pulse Arc</h4>
+          <p>The market. What changed this week, and what you saw first</p>
+          <div class="rfoot"><span class="by"><img src="assets/app-icon.jpg" alt="">Draper</span><span>Running</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="hr">
 
   <!-- veto: taste with a spine -->
   <section class="veto">
@@ -975,8 +977,7 @@ function revealNow(el){
   el.classList.add('in');revealEls.delete(el);ro.unobserve(el);
   /* demos that wake on first sight ride the reveal too, so a fast flick
      that outruns their own observers still starts them */
-  const cg=el.querySelector&&el.querySelector('.cgrid');
-  if(cg)cg.classList.add('live');
+  /* (meet, thread and exchange demos self-start via their own observers) */
 }
 const ro=new IntersectionObserver(es=>es.forEach(e=>{
   if(e.isIntersecting||e.boundingClientRect.top<0)revealNow(e.target);
@@ -1076,28 +1077,43 @@ function playExchange(){
 }
 new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){playExchange();o.disconnect()}},{threshold:.35}).observe(xpanel);
 
-/* ============ (4) meeting-mining notifications ============ */
-const notif=document.getElementById('notif');
-/* wake the room: contacts pop in and Draper starts listening on first sight */
-const cgridEl=document.querySelector('.cgrid');
-new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){cgridEl.classList.add('live');o.disconnect()}},{threshold:.4}).observe(cgridEl);
-const NOTES=[
-  'heard on your 2pm: "we hire slow on purpose". post?',
-  'your standup had a story in it. want the draft?',
-  'that line about pricing deserves daylight. thursday?'
+/* ============ (3) the meeting loop ============ */
+/* you say the line on the call; the text lands like a colleague who was
+   in the same room. captions build word by word, then the phone buzzes */
+const meet=document.getElementById('meet');
+const mcapText=document.getElementById('mcapText');
+const mnotif=document.getElementById('mnotif');
+const mnotifText=document.getElementById('mnotifText');
+const mtileYou=document.getElementById('mtileYou');
+const MEET_BEATS=[
+  {cap:'\u2026so we hire slow on purpose, that\u2019s the whole point of it\u2026',note:'that\u2019s a post. want it?'},
+  {cap:'\u2026we lost the deal because we told the truth too early\u2026',note:'that line. thursday 9am?'},
+  {cap:'\u2026everyone automates the wrong half of the job\u2026',note:'builder arc. drafting it now'}
 ];
-let nIdx=0;
-const notifPaused=gateLoop(notif);
-setInterval(()=>{
-  if(notifPaused())return;
-  notif.classList.remove('show');
+let mIdx=0;
+const meetPaused=gateLoop(meet);
+function playMeet(){
+  if(meetPaused()){setTimeout(playMeet,1200);return}
+  const beat=MEET_BEATS[mIdx];
+  mnotif.classList.remove('show');
+  mcapText.textContent='';
+  mtileYou.classList.add('talking');
+  /* captions arrive in small word-groups, like live transcription */
+  const words=beat.cap.split(' ');
+  let t=500;
+  words.forEach((w,i)=>{
+    setTimeout(()=>{if(!meetPaused())mcapText.textContent+=(i?' ':'')+w},t);
+    t+=170+(i%3===2?160:0);
+  });
+  /* the buzz lands right as the sentence finishes: someone was listening */
   setTimeout(()=>{
-    nIdx=(nIdx+1)%NOTES.length;
-    notif.textContent=NOTES[nIdx];
-    notif.classList.add('show');
-  },600);
-},4200);
-setTimeout(()=>notif.classList.add('show'),1500);
+    mtileYou.classList.remove('talking');
+    mnotifText.innerHTML=beat.note;
+    mnotif.classList.add('show');
+  },t+420);
+  setTimeout(()=>{mIdx=(mIdx+1)%MEET_BEATS.length;playMeet()},t+5200);
+}
+new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){playMeet();o.disconnect()}},{threshold:.35}).observe(meet);
 
 /* ============ (6) the quiet day loop ============ */
 /* a workday compresses into one thread. draper sends three calm updates;
