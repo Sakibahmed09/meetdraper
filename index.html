@@ -316,6 +316,7 @@ h1,h2{font-variation-settings:'SOFT' 42}
 .qday .qthumb{align-self:flex-end;font-size:46px;line-height:1;filter:drop-shadow(0 2px 6px rgba(30,30,25,.14))}
 
 /* ============ (5) extraction exchange ============ */
+#extraction .visual{height:530px}
 .xwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
 .xpanel{width:82%;display:flex;flex-direction:column;gap:11px}
 .xmsg{opacity:0;transform:scale(.8) translateY(10px)}
@@ -498,7 +499,7 @@ footer{position:relative;padding:40px 20px 0}
   .wform input{flex:none;width:100%}
   .community{padding-top:84px}
   .community h2{font-size:30px}
-  #extraction .visual{height:460px}
+  #extraction .visual{height:560px}
   #autonomy .visual{height:450px}
   .qday{width:88%}
   .qday .qin{font-size:13.5px;padding:9px 13px}
@@ -656,7 +657,7 @@ footer{position:relative;padding:40px 20px 0}
     <div class="txt" data-reveal>
       <span class="num">(3)</span>
       <h3 class="serif-h">Drafts and schedules while you work</h3>
-      <p>Send a voice note between meetings, or AirDrop it a photo from the thing you just did. Draper writes it like you, uses the picture where it earns its place and shows you before it goes</p>
+      <p>Send a voice note between meetings, or attach a photo straight in the chat. Draper writes it like you, uses the picture where it earns its place and shows you before it goes. Your whole LinkedIn, run from one thread</p>
     </div>
     <div class="visual" data-reveal style="--d:.12s">
       <img class="bgimg" loading="lazy" src="assets/sky-card.jpg" alt="" style="opacity:.8">
@@ -713,7 +714,7 @@ footer{position:relative;padding:40px 20px 0}
     <div class="txt" data-reveal>
       <span class="num">(5)</span>
       <h3 class="serif-h">Quiet week? It pulls one out of you</h3>
-      <p>You set the cadence once and the chasing becomes Draper&rsquo;s job. It opens with one pointed question, you ramble back a voice note between meetings, and the draft lands. Your words, minus the waffle</p>
+      <p>You set the cadence once and the chasing becomes Draper&rsquo;s job. It opens with one pointed question, hears the good bit in your answer and digs again. Two voice notes later the draft lands. Your words, minus the waffle</p>
     </div>
     <div class="visual" data-reveal style="--d:.12s">
       <img class="bgimg" loading="lazy" src="assets/sunset-sky.jpg" alt="" style="opacity:.55">
@@ -723,12 +724,21 @@ footer{position:relative;padding:40px 20px 0}
           <div class="xmsg xmemo">
             <div class="pill">
               <span class="xplay"></span>
-              <span class="xbars" id="xbars"></span>
+              <span class="xbars"></span>
               <span class="xdur">0:52</span>
             </div>
-            <div class="xtrans" id="xtrans">&ldquo;we thought speed was everything. rushed one and it nearly took the wheels off&rdquo;</div>
+            <div class="xtrans">&ldquo;we thought speed was everything. rushed one and it nearly took the wheels off&rdquo;</div>
           </div>
-          <div class="xmsg xr">there it is. belief, the cost, what changed</div>
+          <div class="xmsg xr">nearly took the wheels off how?</div>
+          <div class="xmsg xmemo">
+            <div class="pill">
+              <span class="xplay"></span>
+              <span class="xbars"></span>
+              <span class="xdur">0:34</span>
+            </div>
+            <div class="xtrans">&ldquo;three months unwinding it. two good people nearly walked&rdquo;</div>
+          </div>
+          <div class="xmsg xr">there it is. the belief, the cost, what changed</div>
           <div class="xmsg xdraft">
             <div class="xdhead"><span class="xin">in</span><span class="xdl">Draft</span></div>
             <div class="xdbody">We fired our fastest hire and promoted our slowest one. <span class="dim">Eighteen months ago I made the hire everyone told me to&hellip;</span></div>
@@ -1030,34 +1040,39 @@ function playThread(){
 new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){playThread();o.disconnect()}},{threshold:.4}).observe(thread);
 
 /* ============ (5) extraction exchange loop ============ */
+/* the interview digs: draper hears the good bit, mirrors it back, asks again.
+   two voice notes deep is where the real post lives */
 const xpanel=document.getElementById('xpanel');
-const xbarsEl=document.getElementById('xbars');
-const xtrans=document.getElementById('xtrans');
-/* speech-shaped bars: bursts over a floor, silent gaps read like breathing */
-(function(){
-  let seed=7;
+const xmemos=[...xpanel.querySelectorAll('.xmemo')];
+/* speech-shaped bars per memo: bursts over a floor, silent gaps read like breathing */
+xmemos.forEach((memo,mi)=>{
+  const barsEl=memo.querySelector('.xbars');
+  let seed=mi?13:7;
   const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
-  for(let i=0;i<34;i++){
+  const N=mi?26:34; /* the second note is shorter */
+  for(let i=0;i<N;i++){
     const b=document.createElement('i');
     const burst=Math.max(0,rnd()-.3)*1.5;
     b.style.height=(3+14*Math.min(1,rnd()*(0.3+burst)))+'px';
-    xbarsEl.appendChild(b);
+    barsEl.appendChild(b);
   }
-})();
+});
 const xmsgs=[...xpanel.querySelectorAll('.xmsg')];
 const xPaused=gateLoop(xpanel);
 function playExchange(){
   if(xPaused()){setTimeout(playExchange,1200);return}
   xmsgs.forEach(m=>m.classList.remove('show'));
-  xtrans.classList.remove('show');
-  [...xbarsEl.children].forEach(b=>b.classList.remove('on'));
-  const T=[400,1400,4600,5600];               /* q, memo, reply, draft */
+  xpanel.querySelectorAll('.xtrans').forEach(t=>t.classList.remove('show'));
+  xpanel.querySelectorAll('.xbars i').forEach(b=>b.classList.remove('on'));
+  const T=[400,1500,4700,5800,8800,9900];  /* q, vn1, the dig, vn2, there-it-is, draft */
   xmsgs.forEach((m,i)=>setTimeout(()=>m.classList.add('show'),T[i]));
-  /* playback: bars light left to right while the note "plays" */
-  const bars=[...xbarsEl.children];
-  bars.forEach((b,i)=>setTimeout(()=>{if(!xPaused())b.classList.add('on')},2000+i*74));
-  setTimeout(()=>xtrans.classList.add('show'),2600);
-  setTimeout(playExchange,10400);
+  /* playback per note: bars light left to right, transcript surfaces mid-play */
+  const PLAY=[2100,6400];
+  xmemos.forEach((memo,mi)=>{
+    [...memo.querySelectorAll('.xbars i')].forEach((b,i)=>setTimeout(()=>{if(!xPaused())b.classList.add('on')},PLAY[mi]+i*66));
+    setTimeout(()=>memo.querySelector('.xtrans').classList.add('show'),PLAY[mi]+600);
+  });
+  setTimeout(playExchange,15200);
 }
 new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){playExchange();o.disconnect()}},{threshold:.35}).observe(xpanel);
 
