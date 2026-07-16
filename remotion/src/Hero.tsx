@@ -43,7 +43,8 @@ type Msg =
   | {kind: 'in'; at: number; text: React.ReactNode; plain?: string; w?: number; typingFor?: number}
   | {kind: 'out'; at: number; text: string; big?: boolean; reactAt?: number}
   | {kind: 'draft'; at: number; revAt?: number}
-  | {kind: 'vn'; at: number; dur: string; transcript: string; playFrom: number; playTo: number; w?: number};
+  | {kind: 'vn'; at: number; dur: string; transcript: string; playFrom: number; playTo: number; w?: number}
+  | {kind: 'photo'; at: number; src: string; w?: number};
 
 type Scene = {stamp: string; enter: number; msgs: Msg[]};
 
@@ -147,6 +148,62 @@ const SCENES_MOBILE: Scene[] = [
       {kind: 'in', at: 1382, typingFor: 26, text: <>heads up. skipping tomorrow&rsquo;s slot</>},
       {kind: 'in', at: 1458, typingFor: 34, w: 520, text: <>nothing in the backlog earns it. fine doesn&rsquo;t get posted</>},
       {kind: 'out', at: 1560, text: 'ok fair', reactAt: 1606},
+    ],
+  },
+];
+
+export const LAUNCH_DURATION = 2606; /* 38s @ 60fps, the standalone launch cut */
+
+/* the launch cut: the meeting cold-open carries the quote, so the film opens
+   on the text already waiting. five beats, nothing repeated, no jargon */
+const SCENES_LAUNCH: Scene[] = [
+  {
+    stamp: 'Monday 14:47',
+    enter: 0,
+    msgs: [
+      {kind: 'in', at: 12, typingFor: 0, w: 540, plain: 'heard on your 2pm: "we hire slow on purpose"', text: (<>heard on your 2pm: <U>&ldquo;we hire slow on purpose&rdquo;</U></>)},
+      {kind: 'in', at: 96, typingFor: 16, text: <>draft it?</>},
+      {kind: 'out', at: 168, text: 'go'},
+    ],
+  },
+  {
+    stamp: 'Monday 15:12',
+    enter: 240,
+    msgs: [
+      {kind: 'draft', at: 300, revAt: 480},
+      {kind: 'out', at: 415, text: 'less motivational poster'},
+      {kind: 'in', at: 570, typingFor: 24, text: <>fair. queued for tuesday 9am, best slot left</>},
+      {kind: 'photo', at: 660, src: 'event-snap.jpg', w: 330},
+      {kind: 'in', at: 742, typingFor: 22, w: 460, text: <>keeper. thursday&rsquo;s post, photo leads</>},
+    ],
+  },
+  {
+    stamp: 'Tuesday 12:40',
+    enter: 870,
+    msgs: [
+      {kind: 'in', at: 928, typingFor: 26, w: 440, text: <>live as of 9. it&rsquo;s doing numbers</>},
+      /* camera visits the feed here: 987 -> 1522, and the numbers speak */
+    ],
+  },
+  {
+    stamp: 'Wednesday 09:15',
+    enter: 1560,
+    msgs: [
+      {kind: 'in', at: 1614, typingFor: 24, w: 500, text: <>quiet week. i&rsquo;ll pull one out of you</>},
+      {kind: 'in', at: 1692, typingFor: 34, w: 555, text: <>what did you believe about hiring when you started that you don&rsquo;t now?</>},
+      {kind: 'vn', at: 1809, dur: '0:52', playFrom: 1809, playTo: 1929, transcript: 'we thought speed was everything. rushed one and it nearly took the wheels off'},
+      {kind: 'in', at: 1980, typingFor: 28, w: 520, text: <>that&rsquo;s the safe version. took the wheels off how?</>},
+      {kind: 'out', at: 2092, text: 'nearly lost our biggest account'},
+      {kind: 'in', at: 2180, typingFor: 26, w: 520, text: <>there&rsquo;s the post. the account, not the lesson</>},
+    ],
+  },
+  {
+    stamp: 'Thursday 17:20',
+    enter: 2262,
+    msgs: [
+      {kind: 'in', at: 2314, typingFor: 22, text: <>heads up. skipping tomorrow&rsquo;s slot</>},
+      {kind: 'in', at: 2392, typingFor: 32, w: 520, text: <>nothing in the backlog earns it. fine doesn&rsquo;t get posted</>},
+      {kind: 'out', at: 2504, text: 'ok fair', reactAt: 2548},
     ],
   },
 ];
@@ -715,17 +772,17 @@ const camAt = (keys: CamKey[], f: number) => {
 /* print pipeline: true multi-sample motion blur — every output frame is four
    sub-frame exposures of the whole scene, so camera moves and element motion
    smear like a filmed shutter, not a post blur */
-export const Hero: React.FC<{mobile?: boolean}> = ({mobile = false}) => (
+export const Hero: React.FC<{mobile?: boolean; launch?: boolean}> = ({mobile = false, launch = false}) => (
   <CameraMotionBlur shutterAngle={200} samples={4}>
-    <HeroInner mobile={mobile} />
+    <HeroInner mobile={mobile} launch={launch} />
   </CameraMotionBlur>
 );
 
-const HeroInner: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
+const HeroInner: React.FC<{mobile?: boolean; launch?: boolean}> = ({mobile = false, launch = false}) => {
   const frame = useCurrentFrame();
   const {fps, width: W, height: H} = useVideoConfig();
-  const DUR = mobile ? MOBILE_DURATION : HERO_DURATION;
-  const SCENES = mobile ? SCENES_MOBILE : SCENES_FULL;
+  const DUR = launch ? LAUNCH_DURATION : mobile ? MOBILE_DURATION : HERO_DURATION;
+  const SCENES = launch ? SCENES_LAUNCH : mobile ? SCENES_MOBILE : SCENES_FULL;
 
   /* layout: desktop = landscape card; mobile = phone-proportioned portrait card */
   const cardW = mobile ? 820 : 780;
@@ -753,7 +810,43 @@ const HeroInner: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
      pull to a valley at every chapter boundary (re-establish), push into the
      new chapter, and rack in DEEP on the hero beats: the draft reveal, both
      voice notes, and — tightest of the film — the veto. */
-  const CAM: CamKey[] = mobile
+  const CAM_LAUNCH: CamKey[] = [
+    /* opens already inside the thread: the text was waiting before we arrived */
+    {f: 0, s: 1.66, y: -8},
+    {f: 70, s: 1.78, y: -12} /* push as "draft it?" types */,
+    {f: 190, s: 1.815, y: -14} /* creep on "go" */,
+    {f: 240, s: 1.6, y: -6} /* valley: the craft */,
+    {f: 315, s: 1.78, y: -12},
+    {f: 465, s: 1.9, y: -17} /* rack: v2 reveal */,
+    {f: 545, s: 1.9, y: -17},
+    {f: 610, s: 1.72, y: -11},
+    {f: 655, s: 1.82, y: -14} /* creep: the photo drops in */,
+    {f: 758, s: 1.82, y: -14},
+    {f: 827, s: 1.58, y: -6} /* valley: the outcome */,
+    {f: 887, s: 1.72, y: -10},
+    {f: 987, s: 1.34, y: -6, x: -900} /* pan: over to the feed */,
+    {f: 1462, s: 1.4, y: -8, x: -900} /* slow push while the numbers climb */,
+    {f: 1522, s: 1.72, y: -10, x: 0} /* pan home */,
+    {f: 1562, s: 1.56, y: -4} /* valley: the extraction */,
+    {f: 1626, s: 1.74, y: -10},
+    {f: 1779, s: 1.74, y: -10},
+    {f: 1824, s: 1.88, y: -18} /* rack: the voice note */,
+    {f: 1929, s: 1.88, y: -18},
+    {f: 1980, s: 1.76, y: -11} /* the dig */,
+    {f: 2092, s: 1.9, y: -19} /* creep: the confession */,
+    {f: 2172, s: 1.9, y: -19},
+    {f: 2226, s: 1.78, y: -12},
+    {f: 2258, s: 1.54, y: -2} /* deepest valley: before the veto */,
+    {f: 2328, s: 1.8, y: -14},
+    {f: 2378, s: 1.8, y: -14},
+    {f: 2418, s: 1.93, y: -22} /* tightest of the film: the no */,
+    {f: 2531, s: 1.93, y: -22},
+    {f: 2581, s: 1.78, y: -12} /* ease as the heart lands */,
+    {f: 2606, s: 1.74, y: -10} /* cut to the outro card */,
+  ];
+  const CAM: CamKey[] = launch
+    ? CAM_LAUNCH
+    : mobile
     ? [
         /* portrait cut, same grammar as the film: open on the identity mark,
            reveal, push per chapter, valley between, tightest on the veto.
@@ -834,10 +927,16 @@ const HeroInner: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
   const zoomP = Math.min(1, Math.max(0, (cam.s - 1) / (zoomT - 1))); /* 0 wide … 1 tight */
 
   /* feed visit: 0 → 1 while the camera is over the LinkedIn card */
-  const visitP = mobile ? 0 : interpolate(frame, [1150, 1215, 1560, 1625], [0, 1, 1, 0], {...clamp, easing: easeCam});
+  const visitP = mobile
+    ? 0
+    : launch
+    ? interpolate(frame, [987, 1052, 1462, 1522], [0, 1, 1, 0], {...clamp, easing: easeCam})
+    : interpolate(frame, [1150, 1215, 1560, 1625], [0, 1, 1, 0], {...clamp, easing: easeCam});
 
   /* contact <-> chat crossfade */
-  const swap = mobile ? {in: [150, 226] as const, out: [1580, 1656] as const} : {in: [166, 246] as const, out: [3150, 3240] as const};
+  const swap = launch
+    ? {in: [0, 1] as const, out: [999900, 999990] as const}
+    : mobile ? {in: [150, 226] as const, out: [1580, 1656] as const} : {in: [166, 246] as const, out: [3150, 3240] as const};
   const toChat = interpolate(frame, [...swap.in], [0, 1], {...clamp, easing: easePage});
   const toContact = interpolate(frame, [...swap.out], [0, 1], {...clamp, easing: easePage});
   const chatOp = toChat * (1 - toContact);
@@ -862,6 +961,7 @@ const HeroInner: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
   };
   const heightOf = (m: Msg) => {
     if (m.kind === 'draft') return 172;
+    if (m.kind === 'photo') return Math.round((m.w ?? 330) * 0.747) + 6;
     if (m.kind === 'vn') {
       const t = measureCached(`“${m.transcript}”`, 16, m.w ?? 384, 1.4, 'italic');
       return 58 + 16 + t;
@@ -885,6 +985,13 @@ const HeroInner: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
      context stays present, attention goes where the camera goes */
   const FOCUS = mobile
     ? []
+    : launch
+    ? [
+        {from: 476, to: 566, scene: 1, msg: 0} /* draft v2 reveal */,
+        {from: 1811, to: 1931, scene: 3, msg: 2} /* the voice note */,
+        {from: 2096, to: 2172, scene: 3, msg: 4} /* the confession */,
+        {from: 2396, to: 2524, scene: 4, msg: 1} /* the veto line */,
+      ]
     : [
         {from: 874, to: 965, scene: 1, msg: 0} /* draft v2 reveal */,
         {from: 2192, to: 2290, scene: 3, msg: 2} /* the voice note */,
@@ -919,6 +1026,13 @@ const HeroInner: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
             );
           } else if (m.kind === 'draft') {
             node = <DraftCard frame={frame} at={m.at} revAt={m.revAt} bottom={bs[i]} fps={fps} />;
+          } else if (m.kind === 'photo') {
+            const w = m.w ?? 330;
+            node = (
+              <div style={{position: 'absolute', bottom: bs[i], right: 0, width: w, borderRadius: 26, borderBottomRightRadius: 8, overflow: 'hidden', boxShadow: '0 3px 12px rgba(20,22,28,0.16)', transformOrigin: 'bottom right', ...pop(frame, m.at, fps, 0.8, 13)}}>
+                <Img src={staticFile(m.src)} style={{display: 'block', width: '100%', height: 'auto'}} />
+              </div>
+            );
           } else if (m.kind === 'out') {
             const reactP =
               m.reactAt && frame >= m.reactAt
@@ -985,7 +1099,7 @@ const HeroInner: React.FC<{mobile?: boolean}> = ({mobile = false}) => {
             x={cardX + cardW + 120}
             y={cardY + 10}
             w={cardW}
-            frame={frame}
+            frame={launch ? frame + 163 : frame}
             fps={fps}
             drift={drift.y * -1.6}
             blur={(6 + zoomP * 5) * (1 - visitP)}
