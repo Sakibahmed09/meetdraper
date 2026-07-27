@@ -38,25 +38,27 @@ export const Root: React.FC = () => {
         component={MeetScene}
         durationInFrames={MEET_DURATION}
         fps={60}
-        width={1440}
-        height={1080}
+        width={2880}
+        height={2160}
       />
+      {/* launch cut renders at 2x and is downscaled at assembly: supersampling
+          keeps text edges from crawling as the camera drifts */}
       <Composition
         id="DraperHeroLaunch"
         component={Hero}
         defaultProps={{launch: true}}
         durationInFrames={LAUNCH_DURATION}
         fps={60}
-        width={1440}
-        height={1080}
+        width={2880}
+        height={2160}
       />
       <Composition
         id="DraperOutro"
         component={Outro}
         durationInFrames={OUTRO_DURATION}
         fps={60}
-        width={1440}
-        height={1080}
+        width={2880}
+        height={2160}
       />
       <Still id="SocialCard" component={SocialCard} width={1200} height={630} />
     </>

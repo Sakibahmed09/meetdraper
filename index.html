@@ -440,6 +440,17 @@ h1,h2{font-variation-settings:'SOFT' 42}
 .stories-link{display:inline-flex;align-items:center;gap:6px;margin:24px -10px -12px;padding:12px 10px;font-size:14.5px;font-weight:500;color:var(--muted-2);text-decoration:none}
 .stories-link:hover{color:#111}
 
+/* ============ FAQ: the questions people actually ask, answered plainly ============ */
+.faq{max-width:760px;margin:0 auto;padding:104px 20px 8px}
+.faq h2{font-size:clamp(30px,3.2vw,42px);letter-spacing:-.03em;line-height:1.1;text-align:center;margin-bottom:12px}
+.faq .fintro{text-align:center;font-size:15.5px;font-weight:500;color:var(--muted-2);max-width:44ch;margin:0 auto 44px}
+.faq dl{margin:0}
+.faq dt{font-size:17px;font-weight:600;color:#14161c;letter-spacing:-.01em;margin-top:30px}
+.faq dt:first-of-type{margin-top:0}
+.faq dd{margin:9px 0 0;font-size:15.5px;font-weight:500;color:var(--muted-2);line-height:1.55}
+.faq .frule{border:0;border-top:1px solid var(--hairline);margin:30px 0 0}
+@media(max-width:640px){.faq{padding-top:80px}.faq dt{font-size:16px}.faq dd{font-size:15px}}
+
 /* ============ sunset zone: closing + footer ============ */
 .sunset-zone{position:relative;overflow:hidden;margin-top:60px}
 /* heavier localized grain: the footer reads as physical material */
@@ -537,6 +548,9 @@ footer{position:relative;padding:40px 20px 0}
   .mnotif{background:#F8F7F4}
 }
 </style>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Draper","url":"https://draperhq.com/meetdraper/","logo":"https://draperhq.com/meetdraper/assets/app-icon.png","description":"Draper is a LinkedIn content strategist that works over text, turning what founders say in meetings into posts in their own voice.","areaServed":"Worldwide","foundingLocation":{"@type":"Place","name":"London, United Kingdom"},"sameAs":["https://www.linkedin.com/company/draperhq/"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Draper","applicationCategory":"BusinessApplication","applicationSubCategory":"LinkedIn content strategist","operatingSystem":"iMessage, WhatsApp, Telegram","url":"https://draperhq.com/meetdraper/","description":"Draper sits in on your meetings, finds the posts inside what you already said, writes them in your voice and schedules them to LinkedIn. It works entirely over text on iMessage, WhatsApp or Telegram.","offers":{"@type":"Offer","availability":"https://schema.org/PreOrder","price":"0","priceCurrency":"GBP","description":"Early access waitlist"},"publisher":{"@type":"Organization","name":"Draper"}}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Draper?","acceptedAnswer":{"@type":"Answer","text":"Draper is a LinkedIn content strategist that works over text. It sits in on your meetings, finds the posts inside what you already said, writes them in your voice and schedules them. You approve from your phone."}},{"@type":"Question","name":"Which messaging apps does Draper work with?","acceptedAnswer":{"@type":"Answer","text":"Draper works on iMessage, WhatsApp and Telegram. You use whichever one you already text on, and there is nothing new to download."}},{"@type":"Question","name":"How is Draper different from ChatGPT or an AI writing tool?","acceptedAnswer":{"@type":"Answer","text":"A writing tool waits for a prompt. Draper starts the conversation. It joins your calls, notices the line worth posting, asks the follow-up question that gets the real story out of you, then drafts and schedules it. You never face a blank box."}},{"@type":"Question","name":"Will the posts sound like me or like AI?","acceptedAnswer":{"@type":"Answer","text":"They are built from your own words, taken from your meetings and voice notes. Draper also refuses to post filler. If nothing in the backlog earns the slot, it skips the day rather than publishing something forgettable under your name."}},{"@type":"Question","name":"Who is Draper for?","acceptedAnswer":{"@type":"Answer","text":"Founders and executives who are compelling in meetings but never get round to posting. It suits people whose best material comes out in conversation rather than at a keyboard."}},{"@type":"Question","name":"Do I have to approve every post?","acceptedAnswer":{"@type":"Answer","text":"At the start, yes. Draper earns autonomy as it learns you: approve every draft, then a veto window, then it posts to a cadence you set. Timing is Draper's from day one, and the words stay yours."}},{"@type":"Question","name":"Who is behind Draper?","acceptedAnswer":{"@type":"Answer","text":"Draper is built by the London team behind the Draper content agency, which has run LinkedIn for more than 50 founders, generating over 350 million views and £20M in attributed revenue. Draper is that method, made self-serve."}}]}</script>
 </head>
 <body>
 
@@ -853,6 +867,34 @@ footer{position:relative;padding:40px 20px 0}
     <a class="stories-link" href="https://draperhq.com" target="_blank" rel="noopener" data-reveal style="--d:.15s">See the full case studies
       <svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
+  </section>
+
+  <!-- FAQ: extractable answers, also the objection handler -->
+  <section class="faq" id="faq">
+    <h2 class="serif-h" data-reveal>Questions people ask</h2>
+    <p class="fintro" data-reveal style="--d:.06s">Everything worth knowing before you join the list.</p>
+    <dl data-reveal style="--d:.1s">
+      <dt>What is Draper?</dt>
+      <dd>Draper is a LinkedIn content strategist that works over text. It sits in on your meetings, finds the posts inside what you already said, writes them in your voice and schedules them. You approve from your phone.</dd>
+      <hr class="frule">
+      <dt>Which messaging apps does Draper work with?</dt>
+      <dd>Draper works on iMessage, WhatsApp and Telegram. You use whichever one you already text on, and there is nothing new to download.</dd>
+      <hr class="frule">
+      <dt>How is Draper different from ChatGPT or an AI writing tool?</dt>
+      <dd>A writing tool waits for a prompt. Draper starts the conversation. It joins your calls, notices the line worth posting, asks the follow-up question that gets the real story out of you, then drafts and schedules it. You never face a blank box.</dd>
+      <hr class="frule">
+      <dt>Will the posts sound like me or like AI?</dt>
+      <dd>They are built from your own words, taken from your meetings and voice notes. Draper also refuses to post filler. If nothing in the backlog earns the slot, it skips the day rather than publishing something forgettable under your name.</dd>
+      <hr class="frule">
+      <dt>Who is Draper for?</dt>
+      <dd>Founders and executives who are compelling in meetings but never get round to posting. It suits people whose best material comes out in conversation rather than at a keyboard.</dd>
+      <hr class="frule">
+      <dt>Do I have to approve every post?</dt>
+      <dd>At the start, yes. Draper earns autonomy as it learns you: approve every draft, then a veto window, then it posts to a cadence you set. Timing is Draper's from day one, and the words stay yours.</dd>
+      <hr class="frule">
+      <dt>Who is behind Draper?</dt>
+      <dd>Draper is built by the London team behind the Draper content agency, which has run LinkedIn for more than 50 founders, generating over 350 million views and £20M in attributed revenue. Draper is that method, made self-serve.</dd>
+    </dl>
   </section>
 </div>
 

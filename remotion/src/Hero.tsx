@@ -803,8 +803,8 @@ const HeroInner: React.FC<{mobile?: boolean; launch?: boolean}> = ({mobile = fal
 
   /* organic drift: seeded noise, loop-blended over the final 150 frames */
   const driftOf = (f: number) => ({
-    x: noise2D('draper-x', f * 0.0021, 0) * 4,
-    y: noise2D('draper-y', 0, f * 0.0017) * 5,
+    x: noise2D('draper-x', f * 0.0021, 0) * (launch ? 1.6 : 4),
+    y: noise2D('draper-y', 0, f * 0.0017) * (launch ? 2 : 5),
   });
   const blendW = interpolate(frame, [DUR - 150, DUR], [0, 1], clamp);
   const dNow = driftOf(frame);

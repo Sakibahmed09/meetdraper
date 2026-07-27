@@ -1,0 +1,40 @@
+# Draper
+
+> Draper is a LinkedIn content strategist that works over text. It sits in on your
+> meetings, finds the posts inside what you already said, writes them in your voice
+> and schedules them. It runs on iMessage, WhatsApp or Telegram, so there is nothing
+> new to download.
+
+## What it is
+
+Draper is a product for founders and executives who are compelling in meetings but
+never get round to posting. Rather than waiting for a prompt, Draper starts the
+conversation: it joins your calls, notices the line worth posting, asks the
+follow-up question that gets the real story out of you, then drafts and schedules.
+
+## How it works
+
+- Sits in on your calls and texts you the moment one ends, with the quote pulled.
+- Interviews you by voice note when the backlog is thin, digging past the first answer.
+- Accepts photos attached straight in the chat and places them where they earn a spot.
+- Schedules to a cadence you set, and chases you rather than the other way round.
+- Refuses to post filler. If nothing earns the slot, it skips the day.
+- Earns autonomy over time: approve every draft, then a veto window, then it posts.
+
+## Availability
+
+- Platforms: iMessage, WhatsApp, Telegram
+- Access: early-access waitlist at https://draperhq.com/meetdraper/
+- Demo with the founders: bookable from the same page
+
+## Who built it
+
+Draper is built by the London team behind the Draper content agency, which has run
+LinkedIn for more than 50 founders, generating over 350 million views and £20M in
+attributed revenue. Draper is that method, made self-serve.
+
+## Links
+
+- Product: https://draperhq.com/meetdraper/
+- Agency: https://draperhq.com
+- LinkedIn: https://www.linkedin.com/company/draperhq/
