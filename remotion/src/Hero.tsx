@@ -174,7 +174,7 @@ const SCENES_LAUNCH: Scene[] = [
       {kind: 'out', at: 415, text: 'less motivational poster'},
       {kind: 'in', at: 570, typingFor: 24, text: <>fair. queued for tuesday 9am, best slot left</>},
       {kind: 'photo', at: 660, src: 'event-snap.jpg', w: 330},
-      {kind: 'in', at: 742, typingFor: 22, w: 460, text: <>keeper. thursday&rsquo;s post, photo leads</>},
+      {kind: 'in', at: 742, typingFor: 22, w: 460, text: <>keeper. tuesday&rsquo;s post, photo leads</>},
     ],
   },
   {
@@ -573,7 +573,7 @@ const tick = (frame: number, from: number, to: number, a: number, b: number) => 
   return Math.round(a + (b - a) * p);
 };
 
-const FeedCard: React.FC<{x: number; y: number; w: number; frame: number; fps: number; drift: number; blur: number; opacity: number}> = ({
+const FeedCard: React.FC<{x: number; y: number; w: number; frame: number; fps: number; drift: number; blur: number; opacity: number; media?: string}> = ({
   x,
   y,
   w,
@@ -582,6 +582,7 @@ const FeedCard: React.FC<{x: number; y: number; w: number; frame: number; fps: n
   drift,
   blur,
   opacity,
+  media,
 }) => {
   const comments = tick(frame, 1240, 1560, 4, 41);
   const impressions = tick(frame, 1240, 1560, 1204, 12408);
@@ -600,7 +601,7 @@ const FeedCard: React.FC<{x: number; y: number; w: number; frame: number; fps: n
         left: x,
         top: y + drift,
         width: w,
-        height: 556,
+        height: media ? 740 : 556,
         borderRadius: 48,
         background: 'linear-gradient(180deg,#ffffff 0%,#f8f7f5 100%)',
         boxShadow: '0 24px 70px rgba(30,30,25,0.12)',
@@ -626,7 +627,12 @@ const FeedCard: React.FC<{x: number; y: number; w: number; frame: number; fps: n
           <span style={{color: 'rgba(38,38,42,0.45)'}}> And the worst one looked perfect. Eighteen months ago…</span>
           <span style={{color: MUTED, fontWeight: 600}}> see more</span>
         </div>
-        <div style={{marginTop: 16, paddingTop: 12, borderTop: '1px solid rgba(20,22,28,0.07)', display: 'flex', alignItems: 'center', gap: 10}}>
+        {media ? (
+          <div style={{marginTop: 12, borderRadius: 14, overflow: 'hidden', height: 240}}>
+            <Img src={staticFile(media)} style={{width: '100%', height: '100%', objectFit: 'cover'}} />
+          </div>
+        ) : null}
+        <div style={{marginTop: media ? 12 : 16, paddingTop: 12, borderTop: '1px solid rgba(20,22,28,0.07)', display: 'flex', alignItems: 'center', gap: 10}}>
           <div style={{display: 'flex'}}>
             {['👍', '❤️', '💡'].map((e, i) => (
               <div
@@ -697,10 +703,12 @@ const FeedCard: React.FC<{x: number; y: number; w: number; frame: number; fps: n
           </div>
         </div>
         {/* the thread continues below the fold */}
-        <div style={{background: 'rgba(255,255,255,0.6)', borderRadius: 18, padding: '13px 16px', border: '1px solid rgba(20,22,28,0.05)', opacity: 0.55, ...pop(frame, 1470, fps, 0.85, 13)}}>
-          <div style={{width: 150, height: 12, borderRadius: 6, background: 'rgba(20,22,28,0.10)'}} />
-          <div style={{width: 260, height: 12, borderRadius: 6, background: 'rgba(20,22,28,0.07)', marginTop: 8}} />
-        </div>
+        {media ? null : (
+          <div style={{background: 'rgba(255,255,255,0.6)', borderRadius: 18, padding: '13px 16px', border: '1px solid rgba(20,22,28,0.05)', opacity: 0.55, ...pop(frame, 1470, fps, 0.85, 13)}}>
+            <div style={{width: 150, height: 12, borderRadius: 6, background: 'rgba(20,22,28,0.10)'}} />
+            <div style={{width: 260, height: 12, borderRadius: 6, background: 'rgba(20,22,28,0.07)', marginTop: 8}} />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -1097,8 +1105,9 @@ const HeroInner: React.FC<{mobile?: boolean; launch?: boolean}> = ({mobile = fal
           /* the outcome surface: blurred neighbour until the camera visits */
           <FeedCard
             x={cardX + cardW + 120}
-            y={cardY + 10}
+            y={cardY + (launch ? -60 : 10)}
             w={cardW}
+            media={launch ? 'event-snap.jpg' : undefined}
             frame={launch ? frame + 163 : frame}
             fps={fps}
             drift={drift.y * -1.6}
