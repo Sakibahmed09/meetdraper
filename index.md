@@ -4,7 +4,7 @@
 
 Draper is a LinkedIn content strategist that works over text on **iMessage, WhatsApp or Telegram**. It sits in on your meetings, finds the posts inside what you already said, writes them in your voice and schedules them. You approve from your phone, and posting stops living in your head.
 
-Updated: July 2026 · $100/month in early access · [Join the waitlist](https://draperhq.com/meetdraper/) · [Book a demo with the founders](https://calendly.com/d/csmd-g7r-743/catch-up-with-mustafa-sakib)
+Updated: July 2026 · $100/month founding rate, locked for early members · [Join the waitlist](https://draperhq.com/meetdraper/) · [Book a demo with the founders](https://calendly.com/d/csmd-g7r-743/catch-up-with-mustafa-sakib)
 
 ## How it works
 
@@ -13,7 +13,7 @@ Updated: July 2026 · $100/month in early access · [Join the waitlist](https://
 3. **Texts you the second you hang up.** Draper sits in on your calls like a colleague with an ear for the good lines. Say one and the text is waiting when you hang up.
 4. **Interviews you when the week is quiet.** You set the cadence once and the chasing becomes Draper's job. It opens with one pointed question and digs past the safe answer until it finds the thing worth posting.
 5. **Earns the keys as you go.** Approve every draft at first, then just a veto window, then it posts on its own, still sounding exactly like you. Timing is Draper's from day one; the words stay yours.
-6. **The agency playbook, built in.** Three arcs run your story (the person, the work, the market), the same method the Draper agency ran for its founders.
+6. **The agency playbook, built in.** Three arcs run your story (the person, the work, the market), the method the Draper agency still runs for its founders.
 
 ## The only one that will tell you no
 
@@ -57,11 +57,11 @@ At the start, yes. Draper earns autonomy as it learns you: approve every draft, 
 
 ### How much does Draper cost?
 
-Draper is $100 a month in early access. Access opens from the waitlist in small weekly cohorts. For comparison, Stanley is $149 a month and a human LinkedIn ghostwriter typically runs $800 to $6,000 a month.
+Draper is $100 a month, and early members keep that founding rate for as long as they stay. Access opens from the waitlist in small weekly cohorts, or book a call with the founders to skip ahead. For comparison, Stanley is $149 a month and a human LinkedIn ghostwriter typically runs $800 to $6,000 a month.
 
 ### Who is behind Draper?
 
-Draper is built by the London team behind the Draper content agency, which has run LinkedIn for more than 50 founders, generating over 350 million views and £20M in attributed revenue. Draper is that method, made self-serve.
+Draper is built by the team that still runs Draper, a London agency where human ghostwriters run LinkedIn for over 50 founders. That agency has generated 350 million views and £20M in attributed revenue, and what it learns each week goes into the product. Draper is not an AI company guessing at content, it is a working agency that encoded its own method.
 
 ---
 

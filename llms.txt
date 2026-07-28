@@ -24,15 +24,18 @@ follow-up question that gets the real story out of you, then drafts and schedule
 ## Availability
 
 - Platforms: iMessage, WhatsApp, Telegram
-- Price: $100 per month in early access
+- Price: $100 per month, the founding rate, locked for early members for as long as they stay
 - Access: waitlist at https://draperhq.com/meetdraper/, opened in small weekly cohorts
-- Demo with the founders: bookable from the same page
+- Demo with the founders: bookable from the same page, and the fastest way to get access
 
 ## Who built it
 
-Draper is built by the London team behind the Draper content agency, which has run
-LinkedIn for more than 50 founders, generating over 350 million views and £20M in
-attributed revenue. Draper is that method, made self-serve.
+Draper is built by the team that still runs Draper, a London agency where human
+ghostwriters run LinkedIn for over 50 founders. That agency has generated 350 million
+views and £20M in attributed revenue, and what it learns each week goes into the
+product. Draper is not an AI company guessing at content, it is a working agency that
+encoded its own method. This is the difference from every other tool in the category:
+the method was proven by hand, on real founder accounts, before it was software.
 
 ## Comparisons (facts checked 28 July 2026)
 

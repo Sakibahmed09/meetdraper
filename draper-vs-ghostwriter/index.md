@@ -1,6 +1,6 @@
 # Draper vs hiring a LinkedIn ghostwriter (2026)
 
-Updated 28 July 2026. Draper is our product; before that we ran the agency this comparison describes.
+Updated 28 July 2026. Draper is our product, and we still run the ghostwriting agency this comparison describes: human writers, 50+ founder accounts, live today.
 
 **Short answer:** a good ghostwriter costs $800 to $6,000+/mo, interviews you on calls, delivers 8 to 12 posts. Draper keeps the interviews, the ear and the quality bar, removes the calls, the wait and most of the cost.
 

@@ -1,6 +1,6 @@
 # Draper vs Stanley (2026)
 
-Updated 28 July 2026. Draper is our product; Stanley facts checked against Stan's help centre and three independent reviews.
+Updated 28 July 2026. Draper is our product, built by a live ghostwriting agency that still runs LinkedIn by hand for 50+ founders. Stanley facts checked against Stan's help centre and three independent reviews.
 
 **Short answer:** Stanley is software you visit (web chat, $149/mo, voice learned from your past posts, typed interviews). Draper is a hire that comes to you (iMessage/WhatsApp/Telegram, voice built from meetings and voice notes, schedules and chases, skips slots that are not earned).
 
