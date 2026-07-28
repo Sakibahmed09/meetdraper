@@ -6,7 +6,7 @@ Updated 28 July 2026. Prices checked against primary sources on the same date. D
 
 | Tool | Price/mo | Interface | Voice learned from | Trial |
 |---|---|---|---|---|
-| Draper (ours) | Early access | iMessage, WhatsApp, Telegram | Meetings + voice notes | Waitlist |
+| Draper (ours) | $100 (early access) | iMessage, WhatsApp, Telegram | Meetings + voice notes | Waitlist |
 | Stanley | $149 | Web chat | Past LinkedIn posts | No |
 | Taplio | $39 to $199 | Web app + extension | Viral-post database | 7 days |
 | Supergrow | $19 to $139 | Web app | Content DNA + voice interview | 7 days |

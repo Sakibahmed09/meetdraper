@@ -6,7 +6,7 @@ Updated 28 July 2026. Draper is our product; Stanley facts checked against Stan'
 
 | | Draper | Stanley |
 |---|---|---|
-| Price | Early access | $149/mo, no trial |
+| Price | $100/mo, early access | $149/mo, no trial |
 | Interface | iMessage/WhatsApp/Telegram | Web chat |
 | Voice source | Meetings + voice notes | Past LinkedIn posts |
 | Meeting ingestion | Yes | No |

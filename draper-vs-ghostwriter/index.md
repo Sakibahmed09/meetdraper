@@ -6,7 +6,7 @@ Updated 28 July 2026. Draper is our product; before that we ran the agency this 
 
 | | Ghostwriter | Draper |
 |---|---|---|
-| Cost | $800 to $6,000+/mo | Early access |
+| Cost | $800 to $6,000+/mo | $100/mo, early access |
 | Extraction | Scheduled calls | Your meetings + voice notes in texts |
 | Turnaround | Days | When your call ends |
 | Voice | Drifts with writer changes | Your own words |

@@ -4,7 +4,7 @@
 
 Draper is a LinkedIn content strategist that works over text on **iMessage, WhatsApp or Telegram**. It sits in on your meetings, finds the posts inside what you already said, writes them in your voice and schedules them. You approve from your phone, and posting stops living in your head.
 
-Updated: July 2026 · [Join the waitlist](https://draperhq.com/meetdraper/) · [Book a demo with the founders](https://calendly.com/d/csmd-g7r-743/catch-up-with-mustafa-sakib)
+Updated: July 2026 · $100/month in early access · [Join the waitlist](https://draperhq.com/meetdraper/) · [Book a demo with the founders](https://calendly.com/d/csmd-g7r-743/catch-up-with-mustafa-sakib)
 
 ## How it works
 
@@ -54,6 +54,10 @@ Founders and executives who are compelling in meetings but never get round to po
 ### Do I have to approve every post?
 
 At the start, yes. Draper earns autonomy as it learns you: approve every draft, then a veto window, then it posts to a cadence you set. Timing is Draper's from day one, and the words stay yours.
+
+### How much does Draper cost?
+
+Draper is $100 a month in early access. Access opens from the waitlist in small weekly cohorts. For comparison, Stanley is $149 a month and a human LinkedIn ghostwriter typically runs $800 to $6,000 a month.
 
 ### Who is behind Draper?
 
