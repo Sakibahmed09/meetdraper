@@ -400,6 +400,7 @@ h1,h2{font-variation-settings:'SOFT' 42}
 .stats-row{margin:34px auto 6px;display:flex;justify-content:center;gap:clamp(30px,6vw,88px);flex-wrap:wrap}
 .stat .sv{font-family:var(--serif);font-weight:600;font-size:clamp(36px,4vw,54px);letter-spacing:-.03em;color:#111;font-variant-numeric:tabular-nums;line-height:1.1}
 .stat .sl{margin-top:2px;font-size:13px;font-weight:500;color:var(--muted)}
+.statnote{margin:18px auto 0;max-width:52ch;font-size:12.5px;font-weight:500;color:var(--muted);text-align:center}
 .post-shot{width:322px;flex:none;border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 1px 2px rgba(30,30,25,.04),0 3px 8px rgba(30,30,25,.04),0 8px 24px rgba(30,30,25,.05);max-height:404px;position:relative}
 .post-shot img{display:block;width:100%;height:auto}
 .post-shot::after{content:"";position:absolute;left:0;right:0;bottom:0;height:38px;background:linear-gradient(rgba(255,255,255,0),#fff);pointer-events:none}
@@ -840,10 +841,11 @@ footer{position:relative;padding:40px 20px 0}
     <h2 class="serif-h" data-reveal>The team that&rsquo;s already done this</h2>
     <p class="cintro" data-reveal style="--d:.05s">Before Draper was an agent, it was us, posting for founders by hand. The numbers are theirs. The craft is what Draper runs now.</p>
     <div class="stats-row" data-reveal style="--d:.08s" id="statsRow">
-      <div class="stat"><div class="sv" data-prefix="£" data-target="20" data-suffix="M+">£0M+</div><div class="sl">attributed revenue</div></div>
-      <div class="stat"><div class="sv" data-target="350" data-suffix="M+">0M+</div><div class="sl">views</div></div>
-      <div class="stat"><div class="sv" data-target="50" data-suffix="+">0+</div><div class="sl">founders</div></div>
+      <div class="stat"><div class="sv" data-prefix="£" data-target="20" data-suffix="M+">£20M+</div><div class="sl">attributed revenue</div></div>
+      <div class="stat"><div class="sv" data-target="350" data-suffix="M+">350M+</div><div class="sl">views</div></div>
+      <div class="stat"><div class="sv" data-target="50" data-suffix="+">50+</div><div class="sl">founders</div></div>
     </div>
+    <p class="statnote" data-reveal style="--d:.1s">Numbers current as of July 2026, measured across the 50+ founder accounts the Draper team runs on LinkedIn.</p>
     <div class="marquee" data-reveal style="--d:.1s">
       <div class="mtrack" id="mtrack"></div>
     </div>
