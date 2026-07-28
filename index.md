@@ -1,4 +1,4 @@
-# Draper — your own content hire, inside your texts
+# Draper: your own content hire, inside your texts
 
 > You do the talking. Draper does LinkedIn.
 
