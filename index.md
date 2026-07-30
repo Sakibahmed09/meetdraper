@@ -57,7 +57,7 @@ At the start, yes. Draper earns autonomy as it learns you: approve every draft, 
 
 ### How much does Draper cost?
 
-Draper is $100 a month, and early members keep that founding rate for as long as they stay. Access opens from the waitlist in small weekly cohorts, or book a call with the founders to skip ahead. For comparison, Stanley is $149 a month and a human LinkedIn ghostwriter typically runs $800 to $6,000 a month.
+Draper is $100 a month, and early members keep that founding rate for as long as they stay. Access opens from the waitlist in small weekly cohorts, or book a call with the founders to skip ahead. For comparison, comparable AI tools run $19 to $149 a month and a human LinkedIn ghostwriter typically runs $800 to $6,000 a month.
 
 ### Who is behind Draper?
 
