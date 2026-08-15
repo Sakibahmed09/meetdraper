@@ -28,6 +28,10 @@
 <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png?v=2">
 <link rel="icon" type="image/png" sizes="192x192" href="assets/app-icon.png?v=2">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=2">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f%5B%5D=erode&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f%5B%5D=general-sans&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,0..100&family=Schibsted+Grotesk:wght@400..700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
@@ -43,8 +47,8 @@
   --blue-link:#5C82C9;
   --imsg-blue:#0A84FF;
   --imsg-grey:#E9E9EB;
-  --sans:'Schibsted Grotesk',Inter,Helvetica,system-ui,sans-serif;
-  --serif:'Fraunces',Georgia,'Times New Roman',serif;
+  --sans:'General Sans','Schibsted Grotesk',Inter,Helvetica,system-ui,sans-serif;
+  --serif:Erode,'Fraunces',Georgia,'Times New Roman',serif;
   --wordmark:'Playfair Display',Georgia,'Times New Roman',serif;
   --spring:cubic-bezier(.34,1.45,.64,1);
   --easeout:cubic-bezier(.23,1,.32,1);
@@ -387,11 +391,10 @@ h1,h2{font-variation-settings:'SOFT' 42}
 
 /* ============ proof layer ============ */
 .logo-strip{margin-top:46px;display:flex;flex-direction:column;align-items:center;gap:15px;position:relative;z-index:2}
-.logo-strip .ls-label{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(20,22,28,.38)}
+.logo-strip .ls-label{font-size:13px;font-weight:500;letter-spacing:0;color:rgba(20,22,28,.42)}
 .logo-strip .ls-row{display:flex;align-items:center;gap:36px;flex-wrap:wrap;justify-content:center;padding:0 20px}
 .logo-strip img{height:23px;width:auto;filter:grayscale(1);opacity:.5;transition:opacity .3s}
 .logo-strip img:hover{opacity:.85}
-.community .ceyebrow{display:block;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
 .community .cintro{max-width:540px;margin:16px auto 0;font-size:15.5px;font-weight:500;color:var(--muted-2);line-height:1.55}
 .stats-row{margin:34px auto 6px;display:flex;justify-content:center;gap:clamp(30px,6vw,88px);flex-wrap:wrap}
 .stat .sv{font-family:var(--serif);font-weight:600;font-size:clamp(36px,4vw,54px);letter-spacing:-.03em;color:#111;font-variant-numeric:tabular-nums;line-height:1.1}
@@ -441,11 +444,29 @@ h1,h2{font-variation-settings:'SOFT' 42}
 .faq{max-width:760px;margin:0 auto;padding:104px 20px 8px}
 .faq h2{font-size:clamp(30px,3.2vw,42px);letter-spacing:-.03em;line-height:1.1;text-align:center;margin-bottom:12px}
 .faq .fintro{text-align:center;font-size:15.5px;font-weight:500;color:var(--muted-2);max-width:44ch;margin:0 auto 44px}
-.faq dl{margin:0}
-.faq dt{font-size:17px;font-weight:600;color:#14161c;letter-spacing:-.01em;margin-top:30px}
-.faq dt:first-of-type{margin-top:0}
-.faq dd{margin:9px 0 0;font-size:15.5px;font-weight:500;color:var(--muted-2);line-height:1.55}
-.faq .frule{border:0;border-top:1px solid var(--hairline);margin:30px 0 0}
+.faq .qlist{margin:0}
+.faq .qa{border-top:1px solid var(--hairline)}
+.faq .qa:first-child{border-top:0}
+.faq .q{width:100%;appearance:none;background:none;border:0;cursor:pointer;text-align:left;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:22px;padding:22px 2px;
+  font-family:var(--sans);font-size:17px;font-weight:600;color:#14161c;letter-spacing:-.01em;line-height:1.42;
+  transition:color .2s var(--easeout)}
+.faq .q:hover{color:#000}
+.faq .q:focus-visible{outline:2px solid rgba(20,22,28,.35);outline-offset:3px;border-radius:6px}
+.faq .chev{flex:none;width:10px;height:10px;margin-top:5px;transform:rotate(45deg);
+  border-right:1.8px solid rgba(20,22,28,.32);border-bottom:1.8px solid rgba(20,22,28,.32);
+  transition:transform .38s var(--easeout),border-color .2s var(--easeout)}
+.faq .qa.open .chev{transform:rotate(225deg);border-color:rgba(20,22,28,.62)}
+/* 0fr -> 1fr animates height without measuring anything in JS, and the answer
+   stays in the DOM so the FAQPage schema still matches what is on the page */
+.faq .a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .38s var(--easeout)}
+.faq .qa.open .a{grid-template-rows:1fr}
+.faq .a>div{overflow:hidden}
+.faq .a p{margin:0;padding:0 0 26px;font-size:15.5px;font-weight:500;color:var(--muted-2);
+  line-height:1.58;max-width:64ch;opacity:0;transform:translateY(-3px);
+  transition:opacity .3s var(--easeout) .05s,transform .3s var(--easeout) .05s}
+.faq .qa.open .a p{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.faq .a,.faq .chev,.faq .a p{transition:none}}
 @media(max-width:640px){.faq{padding-top:80px}.faq dt{font-size:16px}.faq dd{font-size:15px}}
 
 /* ============ sunset zone: closing + footer ============ */
@@ -827,7 +848,6 @@ footer{position:relative;padding:40px 20px 0}
 
   <!-- community -->
   <section class="community" id="community">
-    <span class="ceyebrow" data-reveal>The proof</span>
     <h2 class="serif-h" data-reveal>The team that&rsquo;s already done this</h2>
     <p class="cintro" data-reveal style="--d:.05s">We still run the agency. Human ghostwriters, 50+ founders, the numbers below. Draper runs that same craft, and every week on the agency floor sharpens it.</p>
     <div class="stats-row" data-reveal style="--d:.08s" id="statsRow">
@@ -865,31 +885,40 @@ footer{position:relative;padding:40px 20px 0}
   <section class="faq" id="faq">
     <h2 class="serif-h" data-reveal>Questions people ask</h2>
     <p class="fintro" data-reveal style="--d:.06s">Everything worth knowing before you join the list.</p>
-    <dl data-reveal style="--d:.1s">
-      <dt>What is Draper?</dt>
-      <dd>Draper is a LinkedIn content strategist that works over text. It sits in on your meetings, finds the posts inside what you already said, writes them in your voice and schedules them. You approve from your phone.</dd>
-      <hr class="frule">
-      <dt>Which messaging apps does Draper work with?</dt>
-      <dd>Draper works on iMessage, WhatsApp and Telegram. You use whichever one you already text on, and there is nothing new to download.</dd>
-      <hr class="frule">
-      <dt>How is Draper different from ChatGPT or an AI writing tool?</dt>
-      <dd>A writing tool waits for a prompt. Draper starts the conversation. It joins your calls, notices the line worth posting, asks the follow-up question that gets the real story out of you, then drafts and schedules it. You never face a blank box.</dd>
-      <hr class="frule">
-      <dt>Will the posts sound like me or like AI?</dt>
-      <dd>They are built from your own words, taken from your meetings and voice notes. Draper also refuses to post filler. If nothing in the backlog earns the slot, it skips the day rather than publishing something forgettable under your name.</dd>
-      <hr class="frule">
-      <dt>Who is Draper for?</dt>
-      <dd>Founders and executives who are compelling in meetings but never get round to posting. It suits people whose best material comes out in conversation rather than at a keyboard.</dd>
-      <hr class="frule">
-      <dt>Do I have to approve every post?</dt>
-      <dd>At the start, yes. Draper earns autonomy as it learns you: approve every draft, then a veto window, then it posts to a cadence you set. Timing is Draper's from day one, and the words stay yours.</dd>
-      <hr class="frule">
-      <hr class="frule">
-      <dt>How much does Draper cost?</dt>
-      <dd>Draper is $100 a month, and early members keep that founding rate for as long as they stay. Access opens from the waitlist in small weekly cohorts, or book a call with the founders to skip ahead. For comparison, comparable AI tools run $19 to $149 a month and a human LinkedIn ghostwriter typically runs $800 to $6,000 a month.</dd>
-      <dt>Who is behind Draper?</dt>
-      <dd>Draper is built by the team that still runs Draper, a London agency where human ghostwriters run LinkedIn for over 50 founders. That agency has generated 350 million views and £20M in attributed revenue, and what it learns each week goes into the product. Draper is not an AI company guessing at content, it is a working agency that encoded its own method.</dd>
-    </dl>
+    <div class="qlist" data-reveal style="--d:.1s">
+      <div class="qa open">
+        <button class="q" aria-expanded="true" aria-controls="fa0"><span>What is Draper?</span><i class="chev"></i></button>
+        <div class="a" id="fa0" role="region"><div><p>Draper is a LinkedIn content strategist that works over text. It sits in on your meetings, finds the posts inside what you already said, writes them in your voice and schedules them. You approve from your phone.</p></div></div>
+      </div>
+      <div class="qa">
+        <button class="q" aria-expanded="false" aria-controls="fa1"><span>Which messaging apps does Draper work with?</span><i class="chev"></i></button>
+        <div class="a" id="fa1" role="region"><div><p>Draper works on iMessage, WhatsApp and Telegram. You use whichever one you already text on, and there is nothing new to download.</p></div></div>
+      </div>
+      <div class="qa">
+        <button class="q" aria-expanded="false" aria-controls="fa2"><span>How is Draper different from ChatGPT or an AI writing tool?</span><i class="chev"></i></button>
+        <div class="a" id="fa2" role="region"><div><p>A writing tool waits for a prompt. Draper starts the conversation. It joins your calls, notices the line worth posting, asks the follow-up question that gets the real story out of you, then drafts and schedules it. You never face a blank box.</p></div></div>
+      </div>
+      <div class="qa">
+        <button class="q" aria-expanded="false" aria-controls="fa3"><span>Will the posts sound like me or like AI?</span><i class="chev"></i></button>
+        <div class="a" id="fa3" role="region"><div><p>They are built from your own words, taken from your meetings and voice notes. Draper also refuses to post filler. If nothing in the backlog earns the slot, it skips the day rather than publishing something forgettable under your name.</p></div></div>
+      </div>
+      <div class="qa">
+        <button class="q" aria-expanded="false" aria-controls="fa4"><span>Who is Draper for?</span><i class="chev"></i></button>
+        <div class="a" id="fa4" role="region"><div><p>Founders and executives who are compelling in meetings but never get round to posting. It suits people whose best material comes out in conversation rather than at a keyboard.</p></div></div>
+      </div>
+      <div class="qa">
+        <button class="q" aria-expanded="false" aria-controls="fa5"><span>Do I have to approve every post?</span><i class="chev"></i></button>
+        <div class="a" id="fa5" role="region"><div><p>At the start, yes. Draper earns autonomy as it learns you: approve every draft, then a veto window, then it posts to a cadence you set. Timing is Draper's from day one, and the words stay yours.</p></div></div>
+      </div>
+      <div class="qa">
+        <button class="q" aria-expanded="false" aria-controls="fa6"><span>How much does Draper cost?</span><i class="chev"></i></button>
+        <div class="a" id="fa6" role="region"><div><p>Draper is $100 a month, and early members keep that founding rate for as long as they stay. Access opens from the waitlist in small weekly cohorts, or book a call with the founders to skip ahead. For comparison, comparable AI tools run $19 to $149 a month and a human LinkedIn ghostwriter typically runs $800 to $6,000 a month.</p></div></div>
+      </div>
+      <div class="qa">
+        <button class="q" aria-expanded="false" aria-controls="fa7"><span>Who is behind Draper?</span><i class="chev"></i></button>
+        <div class="a" id="fa7" role="region"><div><p>Draper is built by the team that still runs Draper, a London agency where human ghostwriters run LinkedIn for over 50 founders. That agency has generated 350 million views and £20M in attributed revenue, and what it learns each week goes into the product. Draper is not an AI company guessing at content, it is a working agency that encoded its own method.</p></div></div>
+      </div>
+    </div>
   </section>
 </div>
 
@@ -1273,6 +1302,21 @@ function runCounters(){
 new IntersectionObserver((es,o)=>{es.forEach(e=>{if(e.isIntersecting){runCounters();o.disconnect()}})},{threshold:.3}).observe(statsRow);
 /* fast-scroll fallback: fire when revealed by the sweep too */
 new MutationObserver(()=>{if(statsRow.classList.contains('in'))runCounters()}).observe(statsRow,{attributes:true,attributeFilter:['class']});
+
+/* ============ faq accordion ============ */
+(function(){
+  var qas=[].slice.call(document.querySelectorAll('.faq .qa'));
+  qas.forEach(function(qa){
+    qa.querySelector('.q').addEventListener('click',function(){
+      var wasOpen=qa.classList.contains('open');
+      qas.forEach(function(o){
+        o.classList.remove('open');
+        o.querySelector('.q').setAttribute('aria-expanded','false');
+      });
+      if(!wasOpen){qa.classList.add('open');this.setAttribute('aria-expanded','true');}
+    });
+  });
+})();
 </script>
 </body>
 </html>
