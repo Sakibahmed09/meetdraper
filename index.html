@@ -553,10 +553,15 @@ footer{position:relative;padding:40px 20px 0}
     60% {opacity:1}
     to  {opacity:1;transform:none}
   }
+  /* dots and the reply they precede share one slot, so the dots are replaced
+     in place rather than stacking. keeps the thread at four slots, which is
+     what the phone is sized for, and matches how iMessage actually behaves. */
+  .ctrack .bslot{display:grid;justify-items:start}
+  .ctrack .bslot>*{grid-area:1/1;align-self:end}
   .ctrack .thread>:nth-child(1){animation-range:cover 26% cover 34%}
-  .ctrack .thread>:nth-child(3){animation-range:cover 44% cover 52%}
-  .ctrack .thread>:nth-child(5){animation-range:cover 62% cover 70%}
-  .ctrack .thread>:nth-child(7){animation-range:cover 80% cover 88%}
+  .ctrack .thread>:nth-child(2) .bubble{animation-range:cover 46% cover 56%}
+  .ctrack .thread>:nth-child(3){animation-range:cover 62% cover 70%}
+  .ctrack .thread>:nth-child(4) .bubble{animation-range:cover 80% cover 90%}
 
   /* the memo's waveform fills as you scroll through it: you play it yourself */
   .ctrack .bubble.memo .bars{--fill:0}
@@ -578,10 +583,9 @@ footer{position:relative;padding:40px 20px 0}
     72%{opacity:1;transform:none}
     100%{opacity:0;transform:scale(.9)}
   }
-  /* dots lead each reply and fade out exactly as it lands */
-  .ctrack .thread>:nth-child(2){animation-range:cover 36% cover 46%}
-  .ctrack .thread>:nth-child(4){animation-range:cover 54% cover 64%}
-  .ctrack .thread>:nth-child(6){animation-range:cover 72% cover 82%}
+  /* dots lead each reply and hand over exactly as it lands */
+  .ctrack .thread>:nth-child(2) .typing{animation-range:cover 36% cover 48%}
+  .ctrack .thread>:nth-child(4) .typing{animation-range:cover 70% cover 82%}
   .ctrack .typing i{width:6px;height:6px;border-radius:50%;background:rgba(20,22,28,.42);
     animation:cDot 1.25s ease-in-out infinite;animation-timeline:auto}
   .ctrack .typing i:nth-child(2){animation-delay:.16s}
@@ -595,8 +599,13 @@ footer{position:relative;padding:40px 20px 0}
     .cstick{grid-template-columns:1fr;gap:22px;align-content:center;
       padding:calc(60px + 12px) 20px 16px}
     .cstick .txt{order:-1}
-    .ctrack .visual{height:min(44svh,400px)}
-    .ctrack .phone{width:238px}
+    .ctrack .visual{height:min(50svh,430px)}
+    .ctrack .phone{width:256px}
+    /* (5) also carries a Learn more link, so its stage needs 54px back */
+    /* (5) carries a Learn more link, so its stage is shorter than (2)'s,
+       but not so short that the 08:41 stamp clips off the top: the day
+       has to be seen starting. 96px of headroom measured, ~60 given back. */
+    #autonomy.ctrack .visual{height:min(50svh,400px)}
   }
 
   /* ---- (5) the quiet day: pinned, because scrolling becomes the day ---- */
@@ -824,12 +833,9 @@ footer{position:relative;padding:40px 20px 0}
                 <span class="bars"></span>
                 <span class="dur">0:07</span>
               </div>
-              <div class="typing"><i></i><i></i><i></i></div>
-              <div class="bubble in">drafted and queued. tuesday 9am, best slot left</div>
-              <div class="typing"><i></i><i></i><i></i></div>
+              <div class="bslot"><div class="typing"><i></i><i></i><i></i></div><div class="bubble in">drafted and queued. tuesday 9am, best slot left</div></div>
               <div class="bubble photo"><img src="assets/event-snap.jpg" alt="" loading="lazy"></div>
-              <div class="typing"><i></i><i></i><i></i></div>
-              <div class="bubble in">keeper. thursday&rsquo;s post, photo leads</div>
+              <div class="bslot"><div class="typing"><i></i><i></i><i></i></div><div class="bubble in">keeper. thursday&rsquo;s post, photo leads</div></div>
             </div>
           </div>
         </div>
