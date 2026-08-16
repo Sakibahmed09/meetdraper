@@ -627,20 +627,22 @@ footer{position:relative;padding:40px 20px 0}
   /* ---- (4) extraction: driven in place, no pin ---- */
   #extraction .visual{view-timeline-name:--ex;view-timeline-axis:block}
   #extraction .xmsg{opacity:0;animation:cArrive linear both;animation-timeline:--ex}
-  #extraction .xpanel>:nth-child(1){animation-range:entry 40% entry 78%}
-  #extraction .xpanel>:nth-child(2){animation-range:entry 62% entry 96%}
-  #extraction .xpanel>:nth-child(3){animation-range:entry 88% cover 26%}
-  #extraction .xpanel>:nth-child(4){animation-range:cover 14% cover 38%}
-  #extraction .xpanel>:nth-child(5){animation-range:cover 32% cover 52%}
-  #extraction .xpanel>:nth-child(6){animation-range:cover 46% cover 66%}
+  /* one phase only, strictly increasing. mixing entry and cover here made the
+     percentages incomparable and the order non-monotonic: 4 arrived before 2. */
+  #extraction .xpanel>:nth-child(1){animation-range:cover 18% cover 26%}
+  #extraction .xpanel>:nth-child(2){animation-range:cover 30% cover 38%}
+  #extraction .xpanel>:nth-child(3){animation-range:cover 42% cover 50%}
+  #extraction .xpanel>:nth-child(4){animation-range:cover 54% cover 62%}
+  #extraction .xpanel>:nth-child(5){animation-range:cover 66% cover 74%}
+  #extraction .xpanel>:nth-child(6){animation-range:cover 78% cover 86%}
   /* each voice note plays itself as you pass it */
   #extraction .xbars i{opacity:.26;animation:cBar linear both;animation-timeline:--ex}
-  #extraction .xmsg:nth-child(2) .xbars i{animation-range:entry 70% cover 8%}
-  #extraction .xmsg:nth-child(4) .xbars i{animation-range:cover 20% cover 42%}
+  #extraction .xmsg:nth-child(2) .xbars i{animation-range:cover 32% cover 39%}
+  #extraction .xmsg:nth-child(4) .xbars i{animation-range:cover 56% cover 63%}
   /* transcript surfaces mid-playback, never before */
   #extraction .xtrans{opacity:0;animation:cArrive linear both;animation-timeline:--ex}
-  #extraction .xmsg:nth-child(2) .xtrans{animation-range:entry 84% cover 12%}
-  #extraction .xmsg:nth-child(4) .xtrans{animation-range:cover 30% cover 48%}
+  #extraction .xmsg:nth-child(2) .xtrans{animation-range:cover 37% cover 44%}
+  #extraction .xmsg:nth-child(4) .xtrans{animation-range:cover 61% cover 68%}
 
   @media (max-width:980px){#autonomy.ctrack{height:300vh}}
   @media (prefers-reduced-motion:reduce){
