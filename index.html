@@ -723,6 +723,28 @@ footer{position:relative;padding:40px 20px 0}
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Draper","url":"https://draperhq.com/meetdraper/","logo":"https://draperhq.com/meetdraper/assets/app-icon.png","description":"Draper is a LinkedIn content strategist that works over text, turning what founders say in meetings into posts in their own voice. It is built by the London agency of the same name, whose human ghostwriters run LinkedIn for over 50 founders.","areaServed":"Worldwide","foundingLocation":{"@type":"Place","name":"London, United Kingdom"},"sameAs":["https://www.linkedin.com/company/draperhq/"]}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Draper","applicationCategory":"BusinessApplication","applicationSubCategory":"LinkedIn content strategist","operatingSystem":"iMessage, WhatsApp, Telegram","url":"https://draperhq.com/meetdraper/","description":"Draper sits in on your meetings, finds the posts inside what you already said, writes them in your voice and schedules them to LinkedIn. It works entirely over text on iMessage, WhatsApp or Telegram.","offers":{"@type":"Offer","availability":"https://schema.org/PreOrder","price":"100","priceCurrency":"USD","description":"Founding rate, $100 per month, locked for early members. Opened from the waitlist or by booking a call with the founders"},"publisher":{"@type":"Organization","name":"Draper"}}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Draper?","acceptedAnswer":{"@type":"Answer","text":"Draper is a LinkedIn content strategist that works over text. It sits in on your meetings, finds the posts inside what you already said, writes them in your voice and schedules them. You approve from your phone."}},{"@type":"Question","name":"Which messaging apps does Draper work with?","acceptedAnswer":{"@type":"Answer","text":"Draper works on iMessage, WhatsApp and Telegram. You use whichever one you already text on, and there is nothing new to download."}},{"@type":"Question","name":"How is Draper different from ChatGPT or an AI writing tool?","acceptedAnswer":{"@type":"Answer","text":"A writing tool waits for a prompt. Draper starts the conversation. It joins your calls, notices the line worth posting, asks the follow-up question that gets the real story out of you, then drafts and schedules it. You never face a blank box."}},{"@type":"Question","name":"Will the posts sound like me or like AI?","acceptedAnswer":{"@type":"Answer","text":"They are built from your own words, taken from your meetings and voice notes. Draper also refuses to post filler. If nothing in the backlog earns the slot, it skips the day rather than publishing something forgettable under your name."}},{"@type":"Question","name":"Who is Draper for?","acceptedAnswer":{"@type":"Answer","text":"Founders and executives who are compelling in meetings but never get round to posting. It suits people whose best material comes out in conversation rather than at a keyboard."}},{"@type":"Question","name":"Do I have to approve every post?","acceptedAnswer":{"@type":"Answer","text":"At the start, yes. Draper earns autonomy as it learns you: approve every draft, then a veto window, then it posts to a cadence you set. Timing is Draper's from day one, and the words stay yours."}},{"@type":"Question","name":"How much does Draper cost?","acceptedAnswer":{"@type":"Answer","text":"Draper is $100 a month, and early members keep that founding rate for as long as they stay. Access opens from the waitlist in small weekly cohorts, or book a call with the founders to skip ahead. For comparison, comparable AI tools run $19 to $149 a month and a human LinkedIn ghostwriter typically runs $800 to $6,000 a month."}},{"@type":"Question","name":"Who is behind Draper?","acceptedAnswer":{"@type":"Answer","text":"Draper is built by the team that still runs Draper, a London agency where human ghostwriters run LinkedIn for over 50 founders. That agency has generated 350 million views and £20M in attributed revenue, and what it learns each week goes into the product. Draper is not an AI company guessing at content, it is a working agency that encoded its own method."}}]}</script>
+<script>
+/* Refresh must not land you in the footer.
+   Browsers default to history.scrollRestoration='auto', so a refresh replays
+   your old pixel offset. That offset is restored BEFORE lazy images and the
+   vh-based sticky tracks have settled, so the document is still short and the
+   restore clamps to the current maximum, which is the bottom of the page. The
+   page is now ~1458vh, so those offsets are large and the clamp lands in the
+   footer. html{scroll-behavior:smooth} then animates the whole way there,
+   which is why it is so visible.
+   Taking manual control: honour a #hash, otherwise start at the top. */
+(function(){
+  if(!('scrollRestoration' in history))return;
+  history.scrollRestoration='manual';
+  if(location.hash)return;                 /* deep links still work */
+  addEventListener('load',function(){
+    var b=document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior='auto';   /* never animate this */
+    scrollTo(0,0);
+    requestAnimationFrame(function(){document.documentElement.style.scrollBehavior=b||''});
+  });
+})();
+</script>
 </head>
 <body>
 
