@@ -31,6 +31,7 @@
 <link rel="preconnect" href="https://api.fontshare.com">
 <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
 <link href="https://api.fontshare.com/v2/css?f%5B%5D=erode&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f%5B%5D=jet-brains-mono&display=swap" rel="stylesheet">
 <link href="https://api.fontshare.com/v2/css?f%5B%5D=general-sans&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -49,6 +50,7 @@
   --imsg-grey:#E9E9EB;
   --sans:'General Sans','Schibsted Grotesk',Inter,Helvetica,system-ui,sans-serif;
   --serif:Erode,'Fraunces',Georgia,'Times New Roman',serif;
+  --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
   --wordmark:'Playfair Display',Georgia,'Times New Roman',serif;
   --spring:cubic-bezier(.34,1.45,.64,1);
   --easeout:cubic-bezier(.23,1,.32,1);
@@ -109,7 +111,7 @@ h1,h2{font-variation-settings:'SOFT' 42}
 .btn-light:active{transform:scale(.97)}
 
 /* scroll reveal: blur-fade stagger */
-[data-reveal]{opacity:0;filter:blur(3px);transform:translateY(6px);transition:opacity var(--t-reveal) var(--easeout),filter var(--t-reveal) var(--easeout),transform var(--t-reveal) var(--easeout);transition-delay:var(--d,0s)}
+[data-reveal]{opacity:0;filter:blur(5px);transform:translateY(6px);transition:opacity var(--t-reveal) var(--easeout),filter var(--t-reveal) var(--easeout),transform var(--t-reveal) var(--easeout);transition-delay:var(--d,0s)}
 [data-reveal].in{opacity:1;filter:blur(0);transform:none}
 
 /* page-load stagger (hero only) */
@@ -659,6 +661,39 @@ footer{position:relative;padding:40px 20px 0}
     .ctrack .typing{display:none}
   }
 }
+
+
+/* ============ instrument labels ============ */
+/* Small metadata goes mono: the numerals, clock times, durations, status.
+   It reads as measurement rather than as copy, which is most of why Orchid and
+   Chloe Yan's pages feel built rather than styled. Mono sets wider per
+   character, so each of these loses ~1px and some tracking to hold its box. */
+.num{font-family:var(--mono);font-size:15px;letter-spacing:-.02em}
+.qday .qstamp{font-family:var(--mono);font-size:10.5px;letter-spacing:-.01em}
+.xdur{font-family:var(--mono);font-size:11.5px;letter-spacing:-.02em}
+.mtime{font-family:var(--mono);font-size:10.5px;letter-spacing:-.02em}
+.stat .sl{font-family:var(--mono);font-size:11.5px;letter-spacing:-.01em}
+.tcard .tsl{font-family:var(--mono);font-size:11.5px;letter-spacing:-.01em}
+.status{font-family:var(--mono);font-size:12px;letter-spacing:-.01em}
+.fbottom{font-family:var(--mono);font-size:11.5px;letter-spacing:-.01em}
+.logo-strip .ls-label{font-family:var(--mono);font-size:11.5px;letter-spacing:-.01em}
+.mcap b{font-family:var(--mono);letter-spacing:0}
+
+/* a quote should look like something a person said, not like UI text */
+.tcard .tq{font-family:var(--serif)}
+
+/* ============ interaction states ============ */
+/* one ring for everything focusable, so keyboard users are never lost */
+a:focus-visible,button:focus-visible,input:focus-visible,
+summary:focus-visible,[tabindex]:focus-visible{
+  outline:2px solid rgba(20,22,28,.55);outline-offset:3px;border-radius:7px
+}
+/* every press acknowledges itself. on touch this is the whole difference
+   between confidence and wondering whether the tap registered. */
+.faq .q:active{opacity:.6}
+.wform button:active{transform:scale(.97)}
+.nav-logo:active,.nav-center a:active,.fcol a:active,.nav-right .login:active{opacity:.5}
+.marquee.swipe:active{cursor:grabbing}
 
 /* ============ responsive ============ */
 @media (max-width:980px){
