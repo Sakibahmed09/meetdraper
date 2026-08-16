@@ -528,6 +528,126 @@ footer{position:relative;padding:40px 20px 0}
   transform:translateY(4%);
 }
 
+
+/* ============ sticky scroll-driven chat ============ */
+/* The sequence rides a scroll timeline, so transform/opacity are handed to the
+   compositor and the motion is welded to the thumb: no rAF, no main-thread
+   work, nothing that can drop a frame. The typing dots run on the document
+   timeline at the same time, so they keep breathing even when you stop
+   scrolling. One element, two timelines. */
+@supports (animation-timeline: view()) {
+  .ctrack{height:300vh;display:block;padding:0;view-timeline-name:--chat;view-timeline-axis:block}
+  .cstick{position:sticky;top:0;min-height:100svh;display:grid;
+    grid-template-columns:1fr 1fr;gap:56px;align-items:center;
+    max-width:1160px;margin:0 auto;padding:0 20px}
+
+  /* phone eases forward as the section takes the screen, then holds */
+  .ctrack .visual{animation:cLift linear both;animation-timeline:--chat;
+    animation-range:cover 6% cover 26%}
+  @keyframes cLift{from{transform:scale(.965) translateY(14px)}to{transform:none}}
+
+  /* every bubble: same arrival, different slice of the scroll */
+  .ctrack .bubble{opacity:0;animation:cArrive linear both;animation-timeline:--chat}
+  @keyframes cArrive{
+    from{opacity:0;transform:translateY(9px) scale(.94)}
+    60% {opacity:1}
+    to  {opacity:1;transform:none}
+  }
+  .ctrack .thread>:nth-child(1){animation-range:cover 26% cover 34%}
+  .ctrack .thread>:nth-child(3){animation-range:cover 44% cover 52%}
+  .ctrack .thread>:nth-child(5){animation-range:cover 62% cover 70%}
+  .ctrack .thread>:nth-child(7){animation-range:cover 80% cover 88%}
+
+  /* the memo's waveform fills as you scroll through it: you play it yourself */
+  .ctrack .bubble.memo .bars{--fill:0}
+  .ctrack .bubble.memo .bars i{opacity:.28;animation:cBar linear both;animation-timeline:--chat}
+  @keyframes cBar{to{opacity:1}}
+  .ctrack .bubble.memo .bars i:nth-child(-n+6) {animation-range:cover 28% cover 31%}
+  .ctrack .bubble.memo .bars i:nth-child(n+7):nth-child(-n+12){animation-range:cover 31% cover 34%}
+  .ctrack .bubble.memo .bars i:nth-child(n+13):nth-child(-n+17){animation-range:cover 34% cover 37%}
+  .ctrack .bubble.memo .bars i:nth-child(n+18){animation-range:cover 37% cover 40%}
+
+  /* typing dots: appear on the scroll timeline, pulse on the document one */
+  .ctrack .typing{align-self:flex-start;display:flex;gap:4px;align-items:center;
+    background:var(--imsg-grey);padding:11px 14px;border-radius:16px;
+    border-bottom-left-radius:5px;width:fit-content;opacity:0;
+    animation:cType linear both;animation-timeline:--chat}
+  @keyframes cType{
+    0%{opacity:0;transform:translateY(6px) scale(.9)}
+    28%{opacity:1;transform:none}
+    72%{opacity:1;transform:none}
+    100%{opacity:0;transform:scale(.9)}
+  }
+  /* dots lead each reply and fade out exactly as it lands */
+  .ctrack .thread>:nth-child(2){animation-range:cover 36% cover 46%}
+  .ctrack .thread>:nth-child(4){animation-range:cover 54% cover 64%}
+  .ctrack .thread>:nth-child(6){animation-range:cover 72% cover 82%}
+  .ctrack .typing i{width:6px;height:6px;border-radius:50%;background:rgba(20,22,28,.42);
+    animation:cDot 1.25s ease-in-out infinite;animation-timeline:auto}
+  .ctrack .typing i:nth-child(2){animation-delay:.16s}
+  .ctrack .typing i:nth-child(3){animation-delay:.32s}
+  @keyframes cDot{0%,60%,100%{transform:translateY(0);opacity:.42}30%{transform:translateY(-3px);opacity:.9}}
+
+  @media (max-width:980px){
+    .ctrack{height:280vh}
+    /* the pinned stack has to clear the fixed nav and still fit one screen,
+       or the heading gets sliced in half by the header */
+    .cstick{grid-template-columns:1fr;gap:22px;align-content:center;
+      padding:calc(60px + 12px) 20px 16px}
+    .cstick .txt{order:-1}
+    .ctrack .visual{height:min(44svh,400px)}
+    .ctrack .phone{width:238px}
+  }
+
+  /* ---- (5) the quiet day: pinned, because scrolling becomes the day ---- */
+  /* 08:41 to 17:42 under your thumb. The only thing the reader contributes
+     all day is the thumbs-up at the end, same as the original script. */
+  #autonomy.ctrack{height:320vh}
+  #autonomy .qday>*{opacity:0;animation:cArrive linear both;animation-timeline:--day}
+  #autonomy.ctrack{view-timeline-name:--day;view-timeline-axis:block}
+  /* stamp leads its message by a breath; wide gaps read as hours passing */
+  #autonomy .qday>:nth-child(1){animation-range:cover 20% cover 26%}
+  #autonomy .qday>:nth-child(2){animation-range:cover 24% cover 31%}
+  #autonomy .qday>:nth-child(3){animation-range:cover 38% cover 44%}
+  #autonomy .qday>:nth-child(4){animation-range:cover 42% cover 49%}
+  #autonomy .qday>:nth-child(5){animation-range:cover 56% cover 62%}
+  #autonomy .qday>:nth-child(6){animation-range:cover 60% cover 67%}
+  #autonomy .qday>:nth-child(7){animation-range:cover 74% cover 80%}
+  #autonomy .qday>:nth-child(8){animation-range:cover 78% cover 86%}
+
+  /* ---- (4) extraction: driven in place, no pin ---- */
+  #extraction .visual{view-timeline-name:--ex;view-timeline-axis:block}
+  #extraction .xmsg{opacity:0;animation:cArrive linear both;animation-timeline:--ex}
+  #extraction .xpanel>:nth-child(1){animation-range:entry 40% entry 78%}
+  #extraction .xpanel>:nth-child(2){animation-range:entry 62% entry 96%}
+  #extraction .xpanel>:nth-child(3){animation-range:entry 88% cover 26%}
+  #extraction .xpanel>:nth-child(4){animation-range:cover 14% cover 38%}
+  #extraction .xpanel>:nth-child(5){animation-range:cover 32% cover 52%}
+  #extraction .xpanel>:nth-child(6){animation-range:cover 46% cover 66%}
+  /* each voice note plays itself as you pass it */
+  #extraction .xbars i{opacity:.26;animation:cBar linear both;animation-timeline:--ex}
+  #extraction .xmsg:nth-child(2) .xbars i{animation-range:entry 70% cover 8%}
+  #extraction .xmsg:nth-child(4) .xbars i{animation-range:cover 20% cover 42%}
+  /* transcript surfaces mid-playback, never before */
+  #extraction .xtrans{opacity:0;animation:cArrive linear both;animation-timeline:--ex}
+  #extraction .xmsg:nth-child(2) .xtrans{animation-range:entry 84% cover 12%}
+  #extraction .xmsg:nth-child(4) .xtrans{animation-range:cover 30% cover 48%}
+
+  @media (max-width:980px){#autonomy.ctrack{height:300vh}}
+  @media (prefers-reduced-motion:reduce){
+    #autonomy.ctrack{height:auto}
+    #autonomy .qday>*,#extraction .xmsg,#extraction .xtrans,#extraction .xbars i{
+      animation:none;opacity:1;transform:none}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .ctrack{height:auto}
+    .cstick{position:static;min-height:0}
+    .ctrack .bubble,.ctrack .visual{animation:none;opacity:1;transform:none}
+    .ctrack .typing{display:none}
+  }
+}
+
 /* ============ responsive ============ */
 @media (max-width:980px){
   .nav-center{display:none}
@@ -684,7 +804,8 @@ footer{position:relative;padding:40px 20px 0}
   <hr class="hr">
 
   <!-- (2) drafts + schedules -->
-  <section class="feature">
+  <section class="feature ctrack">
+    <div class="cstick">
     <div class="txt" data-reveal>
       <span class="num">(2)</span>
       <h3 class="serif-h">Drafts and schedules while you work</h3>
@@ -703,13 +824,17 @@ footer{position:relative;padding:40px 20px 0}
                 <span class="bars"></span>
                 <span class="dur">0:07</span>
               </div>
+              <div class="typing"><i></i><i></i><i></i></div>
               <div class="bubble in">drafted and queued. tuesday 9am, best slot left</div>
+              <div class="typing"><i></i><i></i><i></i></div>
               <div class="bubble photo"><img src="assets/event-snap.jpg" alt="" loading="lazy"></div>
+              <div class="typing"><i></i><i></i><i></i></div>
               <div class="bubble in">keeper. thursday&rsquo;s post, photo leads</div>
             </div>
           </div>
         </div>
       </div>
+    </div>
     </div>
   </section>
 
@@ -789,8 +914,9 @@ footer{position:relative;padding:40px 20px 0}
   <hr class="hr">
 
   <!-- (5) earned autonomy -->
-  <section class="feature" id="autonomy">
-    <div class="visual vis-first" data-reveal>
+  <section class="feature ctrack" id="autonomy">
+<div class="cstick">
+        <div class="visual vis-first" data-reveal>
       <img class="bgimg" loading="lazy" src="assets/sky-card.jpg" alt="">
       <div class="kitchen">
         <div class="qday" id="qday">
@@ -812,6 +938,7 @@ footer{position:relative;padding:40px 20px 0}
       <a class="learn" href="#waitlist">Learn more
         <svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
+    </div>
     </div>
   </section>
 
@@ -1145,6 +1272,8 @@ function threadProgress(){
   return Math.max(0,Math.min(1,(from-r.top)/(from-to)));
 }
 function paintThread(){
+  /* CSS scroll timeline owns this section where supported */
+  if(CSS.supports('animation-timeline','view()'))return;
   if(REDUCED.matches){bubbles.forEach(b=>b.classList.add('show'));memo.classList.add('playing');return}
   const n=Math.round(threadProgress()*bubbles.length);
   bubbles.forEach((b,i)=>b.classList.toggle('show',i<n));
@@ -1181,6 +1310,7 @@ xmemos.forEach((memo,mi)=>{
 const xmsgs=[...xpanel.querySelectorAll('.xmsg')];
 const xPaused=gateLoop(xpanel);
 function playExchange(){
+  if(CSS.supports('animation-timeline','view()'))return;
   if(xPaused()){setTimeout(playExchange,1200);return}
   xmsgs.forEach(m=>m.classList.remove('show'));
   xpanel.querySelectorAll('.xtrans').forEach(t=>t.classList.remove('show'));
@@ -1248,6 +1378,7 @@ const qday=document.getElementById('qday');
 const qItems=[...qday.children];
 const qPaused=gateLoop(qday);
 function playQday(){
+  if(CSS.supports('animation-timeline','view()'))return;
   if(qPaused()){setTimeout(playQday,1200);return}
   qItems.forEach(el=>el.classList.remove('show'));
   /* stamp leads its message by a breath; long gaps read as hours passing */
