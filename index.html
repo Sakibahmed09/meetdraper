@@ -131,6 +131,12 @@ h1,h2{font-variation-settings:'SOFT' 42}
   transition:background var(--t-base),box-shadow var(--t-base);
 }
 .nav.scrolled{background:rgba(238,235,230,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 1px 0 rgba(20,20,15,.07)}
+/* Safari grows the viewport upward when its toolbar collapses; a fixed
+   top:0 bar does not follow, leaving a strip of scrolling content above it.
+   This band covers that strip. Off-screen and invisible when there is none. */
+.nav.scrolled::before{content:"";position:absolute;left:0;right:0;bottom:100%;height:160px;
+  background:rgba(238,235,230,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  pointer-events:none}
 .nav-logo{display:flex;align-items:center;text-decoration:none;color:var(--black);font-family:var(--wordmark);font-weight:700;font-size:24px;letter-spacing:-.05em;line-height:1}
 .nav-center{position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:26px;align-items:center}
 .nav-center a{font-size:15px;font-weight:500;color:#1C1C1C;text-decoration:none;display:inline-flex;align-items:center;gap:4px;opacity:.9;transition:opacity .2s}
