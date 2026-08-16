@@ -118,9 +118,16 @@ h1,h2{font-variation-settings:'SOFT' 42}
 
 /* ============ nav ============ */
 .nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;height:60px;
+  /* the page is viewport-fit=cover, so on iOS the true top of the viewport sits
+     BEHIND the status bar. Without the inset the bar's background starts below
+     it and page content scrolls through the unpainted strip above, which reads
+     as a detached header. Grow the bar into the inset so it paints to the edge. */
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:calc(60px + env(safe-area-inset-top,0px));
+  padding-top:env(safe-area-inset-top,0px);
+  padding-left:max(clamp(16px,3vw,40px),env(safe-area-inset-left,0px));
+  padding-right:max(clamp(16px,3vw,40px),env(safe-area-inset-right,0px));
   display:flex;align-items:center;
-  padding:0 clamp(16px,3vw,40px);
   transition:background var(--t-base),box-shadow var(--t-base);
 }
 .nav.scrolled{background:rgba(238,235,230,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 1px 0 rgba(20,20,15,.07)}
@@ -272,8 +279,9 @@ h1,h2{font-variation-settings:'SOFT' 42}
   flex:none;max-width:82%;padding:8px 12px;font-size:12.5px;font-weight:500;line-height:1.35;border-radius:16px;
   opacity:0;transform:scale(.7) translateY(8px);
 }
-.bubble.show{animation:popIn .45s var(--spring) forwards}
-@keyframes popIn{from{opacity:0;transform:scale(.7) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.bubble{transition:opacity .34s var(--spring),transform .34s var(--spring)}
+.bubble.show{opacity:1;transform:scale(1) translateY(0)}
+@media (prefers-reduced-motion:reduce){.bubble{opacity:1;transform:none;transition:none}}
 .bubble.in{align-self:flex-start;background:var(--imsg-grey);color:#111;border-bottom-left-radius:5px}
 .bubble.out{align-self:flex-end;background:var(--imsg-blue);color:#fff;border-bottom-right-radius:5px}
 .bubble.chipmsg{align-self:flex-end;background:var(--imsg-blue);color:#fff;padding:8px 14px}
@@ -1116,21 +1124,34 @@ const bubbles=[...thread.children];
 const memo=document.getElementById('memo');
 const barsEl=memo.querySelector('.bars');
 for(let i=0;i<22;i++){const b=document.createElement('i');b.style.height=(4+Math.round(9*Math.abs(Math.sin(i*1.35))))+'px';b.style.setProperty('--i',i);barsEl.appendChild(b)}
-const threadPaused=gateLoop(thread);
-function playThread(){
-  if(threadPaused()){setTimeout(playThread,1200);return}
-  bubbles.forEach(b=>{b.classList.remove('show');memo.classList.remove('playing')});
-  let t=500;
-  bubbles.forEach(b=>{
-    setTimeout(()=>{
-      b.classList.add('show');
-      if(b===memo)memo.classList.add('playing');
-    },t);
-    t+=900;
-  });
-  setTimeout(playThread,t+4200);
+/* The conversation is driven by scroll position, not a timer. You scroll,
+   Draper replies. Reversible: scroll back up and the thread retreats, because
+   the reader should feel they are pulling this out of it. */
+const threadHost=thread.closest('.visual')||thread;
+const REDUCED=matchMedia('(prefers-reduced-motion:reduce)');
+
+function threadProgress(){
+  const r=threadHost.getBoundingClientRect(), vh=innerHeight||1;
+  /* first bubble lands as the phone clears the lower third; last one as it
+     reaches the upper third. keeps the whole exchange inside one screenful. */
+  const from=vh*0.78, to=vh*0.30;
+  return Math.max(0,Math.min(1,(from-r.top)/(from-to)));
 }
-new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){playThread();o.disconnect()}},{threshold:.4}).observe(thread);
+function paintThread(){
+  if(REDUCED.matches){bubbles.forEach(b=>b.classList.add('show'));memo.classList.add('playing');return}
+  const n=Math.round(threadProgress()*bubbles.length);
+  bubbles.forEach((b,i)=>b.classList.toggle('show',i<n));
+  memo.classList.toggle('playing',n>0);
+}
+let threadTick=0;
+function onThreadScroll(){
+  if(threadTick)return;
+  threadTick=requestAnimationFrame(()=>{threadTick=0;paintThread()});
+}
+addEventListener('scroll',onThreadScroll,{passive:true});
+addEventListener('resize',onThreadScroll,{passive:true});
+REDUCED.addEventListener('change',paintThread);
+paintThread();
 
 /* ============ (5) extraction exchange loop ============ */
 /* the interview digs: draper hears the good bit, mirrors it back, asks again.
