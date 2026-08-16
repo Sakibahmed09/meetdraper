@@ -254,7 +254,8 @@ h1,h2{font-variation-settings:'SOFT' 42}
   position:relative;height:440px;border-radius:28px;overflow:hidden;
   background:#dfe4e8;box-shadow:0 1px 2px rgba(30,30,25,.04),0 3px 8px rgba(30,30,25,.04),0 8px 28px rgba(30,30,25,.05),0 12px 44px rgba(30,30,25,.05);
 }
-.visual>.bgimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(1.03) saturate(.95)}
+.visual>.bgimg{position:absolute;inset:-9% 0;width:100%;height:118%;object-fit:cover;
+  object-position:center 52%;filter:brightness(1.03) saturate(.95)}
 
 /* (2) arc card fan */
 .fan{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
@@ -347,7 +348,7 @@ h1,h2{font-variation-settings:'SOFT' 42}
 .meet.ended .mended{opacity:1;transform:translate(-50%,-50%) scale(1)}
 
 /* (6) the quiet day: a workday passes, draper runs it, you send one thumbs-up */
-.kitchen{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.kitchen{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px 0}
 .qday{width:80%;display:flex;flex-direction:column;gap:10px}
 .qday .qstamp{align-self:center;font-size:11.5px;font-weight:600;color:var(--muted);opacity:0;transform:translateY(6px);transition:opacity var(--t-slow) var(--easeout),transform var(--t-slow) var(--easeout)}
 .qday .qstamp.show{opacity:1;transform:none}
@@ -358,7 +359,7 @@ h1,h2{font-variation-settings:'SOFT' 42}
 
 /* ============ (5) extraction exchange ============ */
 #extraction .visual{height:530px}
-.xwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.xwrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:26px 0}
 .xpanel{width:82%;display:flex;flex-direction:column;gap:11px}
 .xmsg{opacity:0;transform:scale(.8) translateY(10px)}
 .xmsg.show{animation:popIn .5s var(--spring) forwards}
