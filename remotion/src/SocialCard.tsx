@@ -1,12 +1,12 @@
 import React from 'react';
 import {AbsoluteFill, Img, staticFile} from 'remotion';
-import {loadFont as loadDM} from '@remotion/google-fonts/SchibstedGrotesk';
+import {loadFont as loadSchibsted} from '@remotion/google-fonts/SchibstedGrotesk';
 import {loadFont as loadFraunces} from '@remotion/google-fonts/Fraunces';
-import {loadFont as loadPlayfair} from '@remotion/google-fonts/PlayfairDisplay';
+import {loadFont as loadSpectral} from '@remotion/google-fonts/Spectral';
 
-const {fontFamily: DM} = loadDM();
+const {fontFamily: DM} = loadSchibsted();
 const {fontFamily: FRAUNCES} = loadFraunces();
-const {fontFamily: PLAYFAIR} = loadPlayfair();
+const {fontFamily: SPECTRAL} = loadSpectral();
 
 const INK = '#1A1F2B';
 
@@ -83,7 +83,7 @@ export const SocialCard: React.FC = () => {
 
       {/* left: wordmark, headline, sub */}
       <div style={{position: 'absolute', left: 84, top: 92, width: 690}}>
-        <div style={{fontFamily: PLAYFAIR, fontWeight: 700, fontSize: 54, letterSpacing: '-0.05em', color: '#111110'}}>Draper</div>
+        <div style={{fontFamily: SPECTRAL, fontWeight: 700, fontSize: 54, letterSpacing: '-0.05em', color: '#111110'}}>Draper</div>
         <div
           style={{
             marginTop: 40,

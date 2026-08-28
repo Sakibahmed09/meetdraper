@@ -5,7 +5,7 @@
   --hairline:rgba(20,20,15,.10);--blue-link:#5C82C9;
   --sans:'Schibsted Grotesk',Inter,Helvetica,system-ui,sans-serif;
   --serif:'Fraunces',Georgia,'Times New Roman',serif;
-  --wordmark:'Playfair Display',Georgia,serif;
+  --wordmark:'Spectral',Georgia,serif;
   --easeout:cubic-bezier(.23,1,.32,1);
 }
 *{margin:0;padding:0;box-sizing:border-box}

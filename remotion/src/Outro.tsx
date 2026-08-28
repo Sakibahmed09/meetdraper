@@ -1,8 +1,8 @@
 import React from 'react';
 import {AbsoluteFill, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig, Easing} from 'remotion';
-import {loadFont as loadPlayfair} from '@remotion/google-fonts/PlayfairDisplay';
+import {loadFont as loadSpectral} from '@remotion/google-fonts/Spectral';
 
-const {fontFamily: PLAYFAIR} = loadPlayfair();
+const {fontFamily: SPECTRAL} = loadSpectral();
 const SANS = "-apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Segoe UI', sans-serif";
 const clamp = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
 
@@ -41,7 +41,7 @@ export const Outro: React.FC = () => {
         <div
           style={{
             marginTop: 34,
-            fontFamily: PLAYFAIR,
+            fontFamily: SPECTRAL,
             fontWeight: 700,
             fontSize: 92,
             letterSpacing: '-0.05em',

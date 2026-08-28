@@ -35,7 +35,7 @@
 <link href="https://api.fontshare.com/v2/css?f%5B%5D=general-sans&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,0..100&family=Schibsted+Grotesk:wght@400..700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,0..100&family=Schibsted+Grotesk:wght@400..700&family=Spectral:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700&display=swap" rel="stylesheet">
 <style>
 /* ============ tokens ============ */
 :root{
@@ -51,7 +51,7 @@
   --sans:'General Sans','Schibsted Grotesk',Inter,Helvetica,system-ui,sans-serif;
   --serif:Erode,'Fraunces',Georgia,'Times New Roman',serif;
   --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
-  --wordmark:'Playfair Display',Georgia,'Times New Roman',serif;
+  --wordmark:'Spectral',Georgia,'Times New Roman',serif;
   --spring:cubic-bezier(.34,1.45,.64,1);
   --easeout:cubic-bezier(.23,1,.32,1);
   /* one duration scale. entrances stay under half a second so a section is
@@ -1546,6 +1546,56 @@ new MutationObserver(()=>{if(statsRow.classList.contains('in'))runCounters()}).o
       if(!wasOpen){qa.classList.add('open');this.setAttribute('aria-expanded','true');}
     });
   });
+})();
+</script>
+
+<canvas id="dust" aria-hidden="true"></canvas>
+<style>
+/* ============ dust ============ */
+/* One fixed canvas of slow-drifting motes, under the grain. The threshold rule:
+   alive only when looked for. Warm dark on cream so it reads as fibre in the
+   paper, pale gold over the dark photo zones so it reads as light catching dust. */
+#dust{position:fixed;inset:0;width:100vw;height:100vh;z-index:998;pointer-events:none}
+@media (prefers-reduced-motion:reduce){#dust{display:none}}
+</style>
+<script>
+(function(){
+  var cv=document.getElementById('dust');
+  var REDUCED=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  if(REDUCED||!cv.getContext){cv.remove();return}
+  var ctx=cv.getContext('2d'),DPR=Math.min(devicePixelRatio||1,1.5),W,H,P=[];
+  function size(){W=innerWidth;H=innerHeight;cv.width=W*DPR;cv.height=H*DPR;ctx.setTransform(DPR,0,0,DPR,0,0)}
+  size();addEventListener('resize',size,{passive:true});
+  var N=Math.min(44,Math.round(W*H/26000));
+  for(var i=0;i<N;i++)P.push({
+    x:Math.random()*1,y:Math.random()*1,
+    r:.5+Math.random()*1.1,
+    a:.05+Math.random()*.08,
+    vx:(Math.random()-.5)*.000045,
+    vy:-.00002-Math.random()*.00004,      /* dust rises, barely */
+    ph:Math.random()*6.283, sp:.0003+Math.random()*.0005
+  });
+  var last=0;
+  function frame(t){
+    requestAnimationFrame(frame);
+    if(document.hidden)return;
+    if(t-last<33)return;                   /* 30fps is plenty for dust */
+    last=t;
+    ctx.clearRect(0,0,W,H);
+    for(var i=0;i<P.length;i++){
+      var p=P[i];
+      p.x+=p.vx+Math.sin(t*p.sp+p.ph)*.00003;
+      p.y+=p.vy;
+      if(p.y<-.02)p.y=1.02,p.x=Math.random();
+      if(p.x<-.02)p.x=1.02; if(p.x>1.02)p.x=-.02;
+      var tw=.75+.25*Math.sin(t*.0011+p.ph*3); /* slow twinkle */
+      ctx.beginPath();
+      ctx.arc(p.x*W,p.y*H,p.r,0,6.283);
+      ctx.fillStyle='rgba(96,84,60,'+(p.a*tw)+')';
+      ctx.fill();
+    }
+  }
+  requestAnimationFrame(frame);
 })();
 </script>
 </body>
